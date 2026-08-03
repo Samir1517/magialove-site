@@ -14,6 +14,7 @@
 
 import { digitSum, reduceLifePath } from "./utils";
 import { parseBirthDate, type Person, type SystemReport } from "./types";
+import { assertLicensed } from "./license-guard";
 
 import lifePathData from "../data/numerology/life_path.json";
 import pairMatrixData from "../data/numerology/pair_matrix.json";
@@ -166,6 +167,7 @@ export interface NumerologyRawFeatures {
 }
 
 export function calcNumerologyCompatibility(a: Person, b: Person): SystemReport<NumerologyRawFeatures> {
+  assertLicensed();
   const aLifePath = calcLifePath(a);
   const bLifePath = calcLifePath(b);
   const { key: pairKey, entry } = getPairMatrixEntry(aLifePath, bLifePath);

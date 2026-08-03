@@ -13,7 +13,7 @@ export function HeroForm({ targetPath = "/rezultat" }: { targetPath?: string }) 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!dateA || !dateB) {
-      setError("Укажите обе даты рождения");
+      setError("Укажи обе даты рождения");
       return;
     }
     setError(null);
@@ -24,7 +24,7 @@ export function HeroForm({ targetPath = "/rezultat" }: { targetPath?: string }) 
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <label className={styles.field}>
-        <span className={styles.fieldLabel}>Ваша дата рождения</span>
+        <span className={styles.fieldLabel}>Твоя дата рождения</span>
         <input
           type="date"
           className={styles.input}

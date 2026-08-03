@@ -88,13 +88,14 @@
 /* --- Форма догрузки --- */
 
 .unlockCard {
-  background: #fff;
-  border: 1px dashed #e0d0dc;
+  background: linear-gradient(170deg, #fff 55%, var(--accent-lilac) 160%);
+  border: 1px solid #f0dfe8;
   border-radius: 24px;
   padding: 30px;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  box-shadow: var(--card-shadow);
 }
 
 .unlockTitle {
@@ -181,13 +182,51 @@
 /* --- Шеринг результата --- */
 
 .shareBlock {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 20px;
-  background: #fff;
-  border-radius: 24px;
-  padding: 28px;
+  gap: 18px;
+  background: linear-gradient(160deg, var(--accent-pink) 0%, var(--accent-lilac) 65%, #fff 100%);
+  border-radius: 28px;
+  padding: 32px 28px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow-lg);
+}
+
+.shareBlock::before {
+  content: "";
+  position: absolute;
+  top: -70px;
+  right: -70px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.55), transparent 70%);
+  pointer-events: none;
+}
+
+.shareEyebrow {
+  font: 700 12px var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.shareHeading {
+  font: italic 400 26px/1.25 var(--font-display);
+  color: var(--ink);
+  text-align: center;
+  margin: 0;
+  text-wrap: balance;
+}
+
+.shareSubtext {
+  font: 400 13.5px/1.6 var(--font-body);
+  color: var(--ink-soft);
+  text-align: center;
+  max-width: 380px;
+  margin: -10px 0 0;
 }
 
 .shareCardPreview {
@@ -207,24 +246,55 @@
 }
 
 .shareButtons {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
 }
 
+.sharePrimaryBtn {
+  padding: 15px 30px;
+  font: 700 14.5px var(--font-body);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent));
+  box-shadow: 0 10px 26px rgba(162, 105, 138, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: shareGlow 2.4s ease-in-out infinite;
+}
+.sharePrimaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(162, 105, 138, 0.5);
+}
+.sharePrimaryBtn:disabled {
+  opacity: 0.7;
+  cursor: default;
+  animation: none;
+}
+
+@keyframes shareGlow {
+  0%, 100% { box-shadow: 0 10px 26px rgba(162, 105, 138, 0.4); }
+  50% { box-shadow: 0 10px 32px rgba(162, 105, 138, 0.65); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sharePrimaryBtn { animation: none; }
+}
+
 .shareSecondaryBtn {
   padding: 13px 22px;
   font: 500 13px var(--font-body);
   color: var(--accent);
-  background: var(--accent-lilac);
+  background: rgba(255, 255, 255, 0.7);
   border: none;
   border-radius: 100px;
   cursor: pointer;
   transition: background 0.15s ease;
 }
 .shareSecondaryBtn:hover {
-  background: var(--accent-pink);
+  background: #fff;
 }
 .shareSecondaryBtn:disabled {
   opacity: 0.6;

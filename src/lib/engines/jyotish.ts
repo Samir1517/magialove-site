@@ -27,6 +27,7 @@ import {
   type RashiName,
 } from "./jyotish-tables";
 import { parseBirthDate, type Person, type SystemReport } from "./types";
+import { assertLicensed } from "./license-guard";
 
 import nakshatraData from "../data/jyotish/nakshatra.json";
 import kutasData from "../data/jyotish/kutas.json";
@@ -109,6 +110,7 @@ const NAVAGRAHA: { key: string; name: string; symbol: string }[] = [
 ];
 
 export function calcNavagraha(person: Person): GrahaPosition[] {
+  assertLicensed();
   const utc = birthMoment(person);
   return NAVAGRAHA.map(({ key, name, symbol }) => {
     let tropical: number;
@@ -273,6 +275,7 @@ export interface JyotishRawFeatures {
 }
 
 export function calcJyotishCompatibility(a: Person, b: Person): SystemReport<JyotishRawFeatures> {
+  assertLicensed();
   const aMoon = calcMoonPosition(a);
   const bMoon = calcMoonPosition(b);
 

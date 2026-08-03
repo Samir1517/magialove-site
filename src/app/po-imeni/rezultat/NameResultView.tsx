@@ -59,7 +59,7 @@ export function NameResultView() {
       </h1>
       <p className={resultStyles.lede}>
         Число Имени показывает манеру самоподачи каждого из вас, а не жизненную задачу.
-        Для полного разбора пары по 4 системам нужны даты рождения — начните на{" "}
+        Для полного разбора пары по 4 системам нужны даты рождения — начни на{" "}
         <Link href="/">главной странице</Link>.
       </p>
 
@@ -95,12 +95,22 @@ export function NameResultView() {
 
       {articleA && (
         <div className={contentStyles.card}>
-          <ArticleDisclosure article={articleA} eyebrow={`${nameA} · Число имени ${aNumbers.expression}`} />
+          <ArticleDisclosure
+            article={articleA}
+            eyebrow={`${nameA} · Число имени ${aNumbers.expression}`}
+            moreHref={`/po-imeni/chislo-imeni/${aNumbers.expression}/`}
+            moreLabel={`Число Имени ${aNumbers.expression}: манера самоподачи в паре →`}
+          />
         </div>
       )}
       {articleB && aNumbers.expression !== bNumbers.expression && (
         <div className={contentStyles.card}>
-          <ArticleDisclosure article={articleB} eyebrow={`${nameB} · Число имени ${bNumbers.expression}`} />
+          <ArticleDisclosure
+            article={articleB}
+            eyebrow={`${nameB} · Число имени ${bNumbers.expression}`}
+            moreHref={`/po-imeni/chislo-imeni/${bNumbers.expression}/`}
+            moreLabel={`Число Имени ${bNumbers.expression}: манера самоподачи в паре →`}
+          />
         </div>
       )}
 

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { Article } from "@/lib/content/articles";
 import { MarkdownBody, renderInline } from "./MarkdownBody";
 import styles from "./article.module.css";
@@ -11,11 +12,19 @@ export function ArticleDisclosure({
   article,
   eyebrow,
   defaultOpen = false,
+  moreHref,
+  moreLabel,
 }: {
   article: Article;
   /** Короткая подпись над капсулой, напр. «Аркан 5 · Иерофант». */
   eyebrow?: string;
   defaultOpen?: boolean;
+  /** Ссылка на отдельную SEO-страницу этой же сущности (аркан/канал/накшатра и т.д.) —
+   * гонит реальный клик реального посетителя на страницу, которую мы продвигаем, а не
+   * только дублирует текст здесь. Анкор передавайте с ключевыми словами (moreLabel), не
+   * общим «подробнее» — это тоже сигнал релевантности. */
+  moreHref?: string;
+  moreLabel?: string;
 }) {
   return (
     <div className={styles.wrap}>
@@ -31,6 +40,11 @@ export function ArticleDisclosure({
             </div>
           ))}
           {article.disclaimer && <p className={styles.disclaimer}>{article.disclaimer}</p>}
+          {moreHref && (
+            <Link href={moreHref} className={styles.moreLink}>
+              {moreLabel ?? "Читать полностью →"}
+            </Link>
+          )}
         </div>
       </details>
     </div>

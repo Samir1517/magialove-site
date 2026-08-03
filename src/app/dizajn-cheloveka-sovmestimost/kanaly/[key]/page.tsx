@@ -43,8 +43,8 @@ export default async function ChannelPage({ params }: { params: Promise<{ key: s
       <ArticleFull article={article} />
 
       <CalcCta
-        title="Узнайте, есть ли этот канал в вашем композите"
-        text="Введите даты и время рождения обоих партнёров, чтобы увидеть реальный композитный бодиграф вашей пары."
+        title="Узнай, есть ли этот канал в твоём композите"
+        text="Введи даты и время рождения обоих партнёров, чтобы увидеть реальный композитный бодиграф твоей пары."
         href="/dizajn-cheloveka-sovmestimost/"
       />
     </ContentShell>

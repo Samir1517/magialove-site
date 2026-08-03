@@ -19,14 +19,29 @@ const manrope = Manrope({
   weight: ["400", "500", "600", "700"],
 });
 
+const TITLE = "Совместимость мужчины и женщины — расчёт по 4 системам сразу";
+const DESCRIPTION =
+  "Бесплатный тест на совместимость мужчины и женщины онлайн — сразу по 4 системам: Матрица судьбы, Нумерология, Дизайн человека, Джйотиш. Без регистрации, 2 минуты.";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Совместимость мужчины и женщины — расчёт по 4 системам",
-  description:
-    "Мягкий и честный расчёт совместимости по нумерологии, Дизайну человека, Джйотиш и Матрице судьбы. Бесплатно, без регистрации, 2 минуты.",
+  title: TITLE,
+  description: DESCRIPTION,
   verification: {
     google: "u6DbBMzc-cIrYQy76NneNnxBMEwe-SbcPKjZ5sv649M",
     yandex: "e0734ba61a986dda",
+  },
+  openGraph: {
+    type: "website",
+    locale: "ru_RU",
+    siteName: "Совместимость",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
   },
 };
 

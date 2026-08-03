@@ -22,7 +22,7 @@ import styles from "./systems.module.css";
 const CHARACTER_NOTE: Record<"harmonic" | "tense" | "other", string> = {
   harmonic: "Аркан работает на эту зону: качество здесь включается легко и само.",
   tense: "Аркан даёт этой зоне напряжение — не поломку, а задачу, которую придётся решать осознанно.",
-  other: "Аркан для этой зоны нейтрален по формуле — но нейтральных качеств не бывает. Куда оно повернётся, решает то, служит оно вам двоим или одному из вас.",
+  other: "Аркан для этой зоны нейтрален по формуле — но нейтральных качеств не бывает. Куда оно повернётся, решает то, служит оно вам двоим или только одному из двоих.",
 };
 
 export function MatrixSection({
@@ -48,11 +48,11 @@ export function MatrixSection({
           )}
         </div>
         <h2 id="matrix-title" className={styles.sectionTitle}>
-          Пять зон вашего союза
+          Пять зон твоего союза
         </h2>
         <p className={styles.sectionLede}>
-          Ваши матрицы наложены друг на друга — получается третья, общая. Её точки и
-          показывают, где паре легко, а где придётся работать осознанно.
+          Твоя матрица и матрица партнёра наложены друг на друга — получается третья,
+          общая. Её точки показывают, где вам легко, а где придётся работать осознанно.
         </p>
       </div>
 
@@ -84,6 +84,8 @@ export function MatrixSection({
                   <ArticleDisclosure
                     article={article}
                     eyebrow={`Аркан ${info.number} «${info.name}» в зоне «${ZONE_TITLES[zone]}»`}
+                    moreHref={`/po-date-rozhdeniya/matrica-sudby-sovmestimost/arkany/${info.number}/`}
+                    moreLabel={`Аркан ${info.number} «${info.name}»: значение и совместимость →`}
                   />
                 )}
               </div>

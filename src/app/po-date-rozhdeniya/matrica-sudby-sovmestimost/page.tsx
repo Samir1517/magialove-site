@@ -53,6 +53,13 @@ export default function MatrixHubPage() {
           );
         })}
       </div>
+
+      <div className={styles.grid}>
+        <Link href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/karta/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Карта раздела →</span>
+          <span className={styles.gridLinkText}>Все страницы Матрицы судьбы на сервисе в одном месте</span>
+        </Link>
+      </div>
     </ContentShell>
   );
 }

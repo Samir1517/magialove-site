@@ -54,8 +54,8 @@ export default async function NakshatraPage({ params }: { params: Promise<{ n: s
       <ArticleFull article={article} />
 
       <CalcCta
-        title="Узнайте накшатру вашей пары"
-        text="Введите точное время и место рождения обоих — накшатра определяется положением Луны на момент рождения."
+        title="Узнай накшатру твоей пары"
+        text="Введи точное время и место рождения обоих — накшатра определяется положением Луны на момент рождения."
         href="/dzhyotish-sovmestimost/"
       />
 

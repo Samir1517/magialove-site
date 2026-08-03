@@ -93,11 +93,11 @@ export function NumerologySection({
           )}
         </div>
         <h2 id="numerology-title" className={styles.sectionTitle}>
-          Числа вашей пары
+          Числа твоей пары
         </h2>
         <p className={styles.sectionLede}>
           Западная пифагорейско-халдейская традиция плюс Квадрат Пифагора. Мы смотрим не
-          «сошлись ли числа», а где вы совпадаете — и что это совпадение вам стоит.
+          «сошлись ли числа», а где вы с партнёром совпадаете — и что это совпадение вам стоит.
         </p>
       </div>
 
@@ -137,6 +137,8 @@ export function NumerologySection({
               key={n}
               article={article}
               eyebrow={`Число ${n} — ${name}`}
+              moreHref={`/po-date-rozhdeniya/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`}
+              moreLabel={`Число жизненного пути ${n}: характеристика и совместимость →`}
             />
           ) : null;
         })}
@@ -145,7 +147,7 @@ export function NumerologySection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Квадрат Пифагора: из чего вы собраны</h3>
+        <h3 className={styles.blockTitle}>Квадрат Пифагора: из чего вы с партнёром собраны</h3>
         <div className={styles.squares}>
           <PythagorasSquare name={nameA} digits={f.aDigits} />
           <PythagorasSquare name={nameB} digits={f.bDigits} />
@@ -160,14 +162,14 @@ export function NumerologySection({
         <p className={styles.note}>
           Избыток здесь не «лучше», а недостаток не «хуже»: пустая ячейка означает, что
           качество не включается само собой, а тройка и больше — что оно включается даже
-          тогда, когда не нужно. Наведите курсор на ячейку, чтобы прочитать её трактовку.
+          тогда, когда не нужно. Наведи курсор на ячейку, чтобы прочитать её трактовку.
         </p>
       </div>
 
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>8 линий: где вы совпадаете, а где дополняете</h3>
+        <h3 className={styles.blockTitle}>8 линий: где вы с партнёром совпадаете, а где дополняете</h3>
         <div className={styles.bars}>
           {lineKeys.map((key) => {
             const diff = f.lineDiffs[key];
@@ -182,7 +184,14 @@ export function NumerologySection({
                   showBandLabel={false}
                   caption={`${DIFF_BAND_TITLE[band]} (разница ${diff}). ${LINE_READINGS[key][band]}`}
                 />
-                {article && <ArticleDisclosure article={article} eyebrow={LINE_TITLES[key]} />}
+                {article && (
+                  <ArticleDisclosure
+                    article={article}
+                    eyebrow={LINE_TITLES[key]}
+                    moreHref="/po-date-rozhdeniya/numerologiya-sovmestimost/psihomatritsa/"
+                    moreLabel={`Психоматрица: линия «${LINE_TITLES[key]}» подробно →`}
+                  />
+                )}
               </div>
             );
           })}

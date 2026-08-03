@@ -55,8 +55,8 @@ export default async function ArcanumPage({ params }: { params: Promise<{ n: str
       <ArticleFull article={article} />
 
       <CalcCta
-        title="Узнайте свой аркан пары"
-        text="Этот разбор — часть общей матрицы совместимости. Введите обе даты рождения, чтобы увидеть, какие 5 арканов сложились именно в вашей паре."
+        title="Узнай свой аркан пары"
+        text="Этот разбор — часть общей матрицы совместимости. Введи обе даты рождения, чтобы увидеть, какие 5 арканов сложились именно в твоей паре."
         href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/"
       />
 

@@ -45,7 +45,7 @@ export function NumerologyResultView() {
 
       <div className={resultStyles.eyebrow}>Нумерология</div>
       <h1 className={resultStyles.title}>
-        {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Ваша совместимость"} — {formatScore(report.score)}%
+        {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Твоя совместимость"} — {formatScore(report.score)}%
       </h1>
       <p className={resultStyles.lede}>
         Расчёт только по Нумерологии — число жизненного пути и психоматрица по датам рождения.
@@ -61,7 +61,7 @@ export function NumerologyResultView() {
       <NumerologySection report={report} nameA={nameA} nameB={nameB} />
 
       <UpsellToFullCta
-        text="Матрица судьбы, Дизайн человека и Джйотиш смотрят на вашу пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
+        text="Матрица судьбы, Дизайн человека и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
       />
 

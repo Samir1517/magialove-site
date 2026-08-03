@@ -72,7 +72,7 @@ export function ShareActions({
       const shareData = {
         files: [file],
         title: "Совместимость",
-        text: "Наша совместимость по 4 системам — посчитайте свою на magialove.ru",
+        text: "Наша совместимость по 4 системам — посчитай свою на magialove.ru",
       };
       if (navigator.canShare?.(shareData)) {
         await navigator.share(shareData);
@@ -94,18 +94,23 @@ export function ShareActions({
 
   return (
     <div className={styles.shareBlock}>
+      <div className={styles.shareEyebrow}>✨ Твоя карточка готова</div>
+      <h2 className={styles.shareHeading}>Поделись результатом</h2>
+      <p className={styles.shareSubtext}>
+        Сохрани красивую карточку себе или отправь подруге — пусть она тоже узнает
+        свою совместимость.
+      </p>
       <div className={styles.shareCardPreview}>
         <ShareCard ref={svgRef} nameA={nameA} nameB={nameB} score={score} verdictLabel={verdictLabel} />
       </div>
       <div className={styles.shareButtons}>
         <button
           type="button"
-          className="btn"
-          style={{ padding: "13px 24px", fontSize: 13.5 }}
+          className={styles.sharePrimaryBtn}
           onClick={handleShare}
           disabled={busy !== null}
         >
-          {busy === "share" ? "Готовим…" : "Поделиться в Stories"}
+          {busy === "share" ? "Готовим…" : "💌 Поделиться в Stories"}
         </button>
         <button type="button" className={styles.shareSecondaryBtn} onClick={handleDownload} disabled={busy !== null}>
           {busy === "download" ? "Готовим…" : "Скачать картинку"}

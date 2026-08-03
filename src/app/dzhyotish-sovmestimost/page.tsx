@@ -40,6 +40,10 @@ export default function JyotishHubPage() {
           <span className={styles.gridLinkTitle}>27 накшатр →</span>
           <span className={styles.gridLinkText}>Лунные дома ведической астрологии: божество, символ, гана</span>
         </Link>
+        <Link href="/dzhyotish-sovmestimost/karta/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Карта раздела →</span>
+          <span className={styles.gridLinkText}>Все страницы Джйотиш на сервисе в одном месте</span>
+        </Link>
       </div>
     </ContentShell>
   );

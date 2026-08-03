@@ -55,7 +55,7 @@ export function HumanDesignSection({
           )}
         </div>
         <h2 id="hd-title" className={styles.sectionTitle}>
-          Композит: что вы создаёте вдвоём
+          Композит: что вы с партнёром создаёте вдвоём
         </h2>
         <p className={styles.sectionLede}>
           В Дизайне человека пара образует третью карту — композит. В нём каналы обоих
@@ -109,11 +109,11 @@ export function HumanDesignSection({
 
         <div className={styles.graphSide}>
           <div>
-            <h3 className={styles.blockTitle}>Ваши двери наружу</h3>
+            <h3 className={styles.blockTitle}>Твои двери наружу</h3>
             {composite.openCenters.length === 0 ? (
               <p className={styles.doshaText}>
                 Открытых центров нет — вся девятка определена. Внешнему миру попасть внутрь
-                вашей пары почти нечем.
+                твоей пары почти нечем.
               </p>
             ) : (
               <ul className={styles.openList}>
@@ -127,7 +127,7 @@ export function HumanDesignSection({
             )}
             <p className={styles.note}>
               Какие именно центры открыты, важнее их количества: открытые центры — это места,
-              где вы обусловливаетесь внешним вдвоём и одновременно.
+              где вы с партнёром обусловливаетесь внешним вдвоём и одновременно.
             </p>
           </div>
         </div>
@@ -155,7 +155,13 @@ export function HumanDesignSection({
                 {group.items.map((c) => {
                   const article = getHDChannelArticle(c.key);
                   return article ? (
-                    <ArticleDisclosure key={c.key} article={article} eyebrow={`${c.name} (${c.key})`} />
+                    <ArticleDisclosure
+                      key={c.key}
+                      article={article}
+                      eyebrow={`${c.name} (${c.key})`}
+                      moreHref={`/dizajn-cheloveka-sovmestimost/kanaly/${c.key}/`}
+                      moreLabel={`Канал ${c.name} (${c.key}): разбор для пары →`}
+                    />
                   ) : (
                     <p key={c.key} className={styles.channelList}>
                       {c.name} ({c.key})
@@ -171,7 +177,7 @@ export function HumanDesignSection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Типы связи, которые сложились у вас</h3>
+        <h3 className={styles.blockTitle}>Типы связи, которые сложились у вас с партнёром</h3>
         <p className={styles.note} style={{ marginBottom: 4 }}>
           Классические 4 типа связи каналов Дизайна человека — отдельная от Connection
           Theme классификация: она смотрит не на композит целиком, а на то, как именно
@@ -187,6 +193,8 @@ export function HumanDesignSection({
                   key={themeKey}
                   article={article}
                   eyebrow={`${article.title.split(" в композите")[0]} — ${f.connections[themeKey].length} канал(ов)`}
+                  moreHref="/dizajn-cheloveka-sovmestimost/kanaly-svyazi/"
+                  moreLabel={`${article.title.split(" в композите")[0]}: подробный разбор →`}
                 />
               ) : null;
             })}
@@ -217,12 +225,26 @@ export function HumanDesignSection({
         <div className={styles.bars} style={{ marginTop: 16 }}>
           {Array.from(new Set([f.a.type, f.b.type])).map((type) => {
             const article = getHDTypeArticle(type);
-            return article ? <ArticleDisclosure key={type} article={article} eyebrow={`Тип «${type}»`} /> : null;
+            return article ? (
+              <ArticleDisclosure
+                key={type}
+                article={article}
+                eyebrow={`Тип «${type}»`}
+                moreHref="/dizajn-cheloveka-sovmestimost/tipy/"
+                moreLabel={`Тип «${type}» в паре: подробный разбор →`}
+              />
+            ) : null;
           })}
           {Array.from(new Set([f.a.authority, f.b.authority])).map((authority) => {
             const article = getHDAuthorityArticle(authority);
             return article ? (
-              <ArticleDisclosure key={authority} article={article} eyebrow={`Авторитет «${authority}»`} />
+              <ArticleDisclosure
+                key={authority}
+                article={article}
+                eyebrow={`Авторитет «${authority}»`}
+                moreHref="/dizajn-cheloveka-sovmestimost/avtoritety/"
+                moreLabel={`Авторитет «${authority}»: подробный разбор →`}
+              />
             ) : null;
           })}
         </div>

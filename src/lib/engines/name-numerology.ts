@@ -24,6 +24,7 @@
  */
 
 import { reduceLifePath } from "./utils";
+import { assertLicensed } from "./license-guard";
 
 const ALPHABET =
   "абвгдеёжзийклмнопрстуфхцчшщъыьэюя".split("");
@@ -109,6 +110,7 @@ export interface NameCompatibilityResult {
 }
 
 export function calcNameCompatibility(nameA: string, nameB: string): NameCompatibilityResult {
+  assertLicensed();
   const aNumbers = calcNameNumbers(nameA);
   const bNumbers = calcNameNumbers(nameB);
 

@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { TIMEZONES, DEFAULT_TZ } from "@/lib/data/timezones";
+import { DEFAULT_TZ } from "@/lib/data/timezones";
+import { CityTimezoneInput } from "@/components/system-calc/CityTimezoneInput";
 import styles from "./result.module.css";
 
 /**
@@ -27,7 +28,7 @@ export function FullReportForm() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!timeA || !timeB) {
-      setError("Укажите время рождения обоих — без него эти две системы не считаются");
+      setError("Укажи время рождения обоих — без него эти две системы не считаются");
       return;
     }
     setError(null);
@@ -50,8 +51,8 @@ export function FullReportForm() {
         <p className={styles.unlockText}>
           Дизайн человека и Джйотиш работают не с датой, а с моментом рождения: Луна
           проходит знак примерно за два с половиной дня, а тип в Дизайне человека может
-          смениться за несколько минут. Если знаете время из свидетельства о рождении —
-          добавьте, и мы посчитаем оставшиеся две системы.
+          смениться за несколько минут. Если знаешь время из свидетельства о рождении —
+          добавь, и мы посчитаем оставшиеся две системы.
         </p>
         <button type="button" className={`btn ${styles.unlockButton}`} onClick={() => setOpen(true)}>
           Добавить время рождения
@@ -86,16 +87,7 @@ export function FullReportForm() {
               required
             />
           </label>
-          <label className={styles.field}>
-            <span className={styles.fieldLabel}>Часовой пояс места рождения</span>
-            <select className={styles.input} value={tzA} onChange={(e) => setTzA(e.target.value)}>
-              {TIMEZONES.map((t) => (
-                <option key={t.tz} value={t.tz}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <CityTimezoneInput value={tzA} onChange={setTzA} label="Город рождения" />
         </div>
 
         <div className={styles.formCol}>
@@ -120,16 +112,7 @@ export function FullReportForm() {
               required
             />
           </label>
-          <label className={styles.field}>
-            <span className={styles.fieldLabel}>Часовой пояс места рождения</span>
-            <select className={styles.input} value={tzB} onChange={(e) => setTzB(e.target.value)}>
-              {TIMEZONES.map((t) => (
-                <option key={t.tz} value={t.tz}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <CityTimezoneInput value={tzB} onChange={setTzB} label="Город рождения" />
         </div>
       </div>
 
@@ -140,7 +123,7 @@ export function FullReportForm() {
       </button>
       <p className={styles.unlockNote}>
         Время нужно только для расчёта — мы ничего не сохраняем и не отправляем на сервер,
-        все вычисления идут прямо в вашем браузере.
+        все вычисления идут прямо в твоём браузере.
       </p>
     </form>
   );

@@ -13,7 +13,7 @@ export function NameForm() {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!nameA.trim() || !nameB.trim()) {
-      setError("Введите оба имени кириллицей");
+      setError("Введи оба имени кириллицей");
       return;
     }
     if (!/[а-яё]/i.test(nameA) || !/[а-яё]/i.test(nameB)) {
@@ -28,7 +28,7 @@ export function NameForm() {
   return (
     <form className={styles.form} onSubmit={handleSubmit} noValidate>
       <label className={styles.field}>
-        <span className={styles.fieldLabel}>Ваше имя</span>
+        <span className={styles.fieldLabel}>Твоё имя</span>
         <input
           type="text"
           className={styles.input}

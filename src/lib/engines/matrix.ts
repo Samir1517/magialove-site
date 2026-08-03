@@ -35,6 +35,7 @@
 
 import { reduceTo } from "./utils";
 import { parseBirthDate, type Person, type SystemReport } from "./types";
+import { assertLicensed } from "./license-guard";
 
 import arcanaData from "../data/matrix/arcana.json";
 import zonesData from "../data/matrix/compatibility_zones.json";
@@ -219,6 +220,7 @@ export function getArcanumInfo(n: number): ArcanumInfo {
 }
 
 export function calcMatrixCompatibility(a: Person, b: Person): SystemReport<MatrixRawFeatures> {
+  assertLicensed();
   const aMatrix = calcIndividualMatrix(a);
   const bMatrix = calcIndividualMatrix(b);
   const pairMatrix = overlayPair(aMatrix, bMatrix);

@@ -39,6 +39,10 @@ export default function HumanDesignHubPage() {
           <span className={styles.gridLinkTitle}>Каналы связи →</span>
           <span className={styles.gridLinkText}>Электромагнитная, компаньонство, доминирование, компромисс</span>
         </Link>
+        <Link href="/dizajn-cheloveka-sovmestimost/karta/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Карта раздела →</span>
+          <span className={styles.gridLinkText}>Все страницы Дизайна человека на сервисе в одном месте</span>
+        </Link>
       </div>
     </ContentShell>
   );

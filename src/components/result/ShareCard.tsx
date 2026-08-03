@@ -15,7 +15,7 @@ export const ShareCard = forwardRef<
 >(function ShareCard({ nameA, nameB, score, verdictLabel }, ref) {
   const band = bandStyle(score);
   const pct = formatScore(score);
-  const title = nameA && nameB ? `${nameA} и ${nameB}` : "Ваша пара";
+  const title = nameA && nameB ? `${nameA} и ${nameB}` : "Твоя пара";
 
   return (
     <svg ref={ref} width={W} height={H} viewBox={`0 0 ${W} ${H}`} xmlns="http://www.w3.org/2000/svg">

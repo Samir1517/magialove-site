@@ -58,8 +58,8 @@ export default async function NameNumberPage({ params }: { params: Promise<{ n: 
       <ArticleFull article={article} />
 
       <CalcCta
-        title="Узнайте число имени вашей пары"
-        text="Введите оба имени кириллицей — расчёт займёт секунды и не требует даты рождения."
+        title="Узнай число имени твоей пары"
+        text="Введи оба имени кириллицей — расчёт займёт секунды и не требует даты рождения."
         href="/po-imeni/"
       />
 

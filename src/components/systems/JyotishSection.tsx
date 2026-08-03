@@ -76,7 +76,13 @@ export function JyotishSection({
           ].map(({ name, idx, nakshatra }) => {
             const article = getJyotishNakshatraArticle(idx);
             return article ? (
-              <ArticleDisclosure key={name} article={article} eyebrow={`${name} · Накшатра «${nakshatra}»`} />
+              <ArticleDisclosure
+                key={name}
+                article={article}
+                eyebrow={`${name} · Накшатра «${nakshatra}»`}
+                moreHref={`/dzhyotish-sovmestimost/nakshatry/${idx}/`}
+                moreLabel={`Накшатра «${nakshatra}»: полное описание →`}
+              />
             ) : null;
           })}
         </div>
@@ -93,7 +99,7 @@ export function JyotishSection({
           showAsFraction
           showBandLabel={false}
           ticks={GUNA_THRESHOLDS.map((t) => t / 36)}
-          caption={`Традиционные пороги отмечены на шкале: 18 — приемлемо, 24 — хорошо, 30 — отлично. Ваш результат — ${gunaBandLabel(total)}.`}
+          caption={`Традиционные пороги отмечены на шкале: 18 — приемлемо, 24 — хорошо, 30 — отлично. Твой результат — ${gunaBandLabel(total)}.`}
         />
       </div>
 
@@ -118,7 +124,14 @@ export function JyotishSection({
                   showBandLabel={false}
                   caption={high ? reading.high : reading.low}
                 />
-                {article && <ArticleDisclosure article={article} eyebrow={`Кута «${kuta.title}»`} />}
+                {article && (
+                  <ArticleDisclosure
+                    article={article}
+                    eyebrow={`Кута «${kuta.title}»`}
+                    moreHref="/dzhyotish-sovmestimost/8-kut/"
+                    moreLabel={`Кута «${kuta.title}»: подробный разбор →`}
+                  />
+                )}
               </div>
             );
           })}
@@ -153,7 +166,14 @@ export function JyotishSection({
                 <p className={styles.doshaText}>{text}</p>
                 {(() => {
                   const article = getJyotishDoshaArticle(d.key);
-                  return article ? <ArticleDisclosure article={article} eyebrow={d.title} /> : null;
+                  return article ? (
+                    <ArticleDisclosure
+                      article={article}
+                      eyebrow={d.title}
+                      moreHref="/dzhyotish-sovmestimost/doshi/"
+                      moreLabel={`${d.title}: подробный разбор →`}
+                    />
+                  ) : null;
                 })()}
               </div>
             );

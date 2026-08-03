@@ -1,11 +1,28 @@
 import type { Article } from "@/lib/content/articles";
 import { MarkdownBody, renderInline } from "@/components/viz/MarkdownBody";
+import { SITE_URL } from "@/lib/site-config";
 import styles from "./content.module.css";
+
+function articleSchema(article: Article) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: article.title,
+    description: article.capsule.replace(/\*\*/g, "").slice(0, 200),
+    inLanguage: "ru",
+    publisher: { "@type": "Organization", name: "Совместимость", url: SITE_URL, logo: `${SITE_URL}/icon.svg` },
+  };
+}
 
 /** Полный текст статьи как основной контент SEO-страницы (не свёрнуто). */
 export function ArticleFull({ article }: { article: Article }) {
   return (
     <article className={styles.card} style={{ display: "flex", flexDirection: "column", gap: 20 }}>
+      <script
+        type="application/ld+json"
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema(article)) }}
+      />
       <p style={{ font: "italic 400 16px/1.65 var(--font-display)", color: "var(--ink)", margin: 0 }}>
         {renderInline(article.capsule, "capsule")}
       </p>

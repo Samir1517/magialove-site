@@ -30,7 +30,12 @@ body {
 body {
   min-height: 100%;
   margin: 0;
-  background: var(--bg);
+  background:
+    radial-gradient(680px circle at 8% 0%, rgba(237, 196, 205, 0.22), transparent 60%),
+    radial-gradient(620px circle at 100% 18%, rgba(244, 238, 250, 0.55), transparent 60%),
+    radial-gradient(560px circle at 4% 78%, rgba(214, 189, 152, 0.12), transparent 65%),
+    var(--bg);
+  background-attachment: fixed;
   color: var(--ink);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
@@ -91,6 +96,12 @@ button {
 .method-card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+@media (max-width: 780px) {
+  body {
+    background-attachment: scroll;
+  }
+}
+
 .method-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 16px 34px rgba(180, 140, 160, 0.16);

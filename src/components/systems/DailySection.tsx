@@ -33,7 +33,7 @@ export function DailySection({ a, b }: { a: Person; b: Person }) {
         <div className={styles.sectionHead}>
           <div className={styles.eyebrow}>Сегодня</div>
           <h2 id="daily-title" className={styles.sectionTitle}>
-            Аркан дня для вашей пары
+            Аркан дня для твоей пары
           </h2>
           <p className={styles.sectionLede}>Считаем на сегодняшнюю дату…</p>
         </div>
@@ -49,12 +49,12 @@ export function DailySection({ a, b }: { a: Person; b: Person }) {
       <div className={styles.sectionHead}>
         <div className={styles.eyebrow}>Сегодня · {formatRuDate(today)}</div>
         <h2 id="daily-title" className={styles.sectionTitle}>
-          Аркан дня для вашей пары
+          Аркан дня для твоей пары
         </h2>
         <p className={styles.sectionLede}>
           Этот блок пересчитывается каждые сутки. Общий разбор пары не меняется — а вот
-          то, что подсвечивается в ваших отношениях сегодня, будет другим уже завтра.
-          Сохраните страницу и загляните, когда день не задастся.
+          то, что подсвечивается в твоих отношениях сегодня, будет другим уже завтра.
+          Сохрани страницу и загляни сюда, когда день не задастся.
         </p>
       </div>
 
@@ -88,8 +88,8 @@ export function DailySection({ a, b }: { a: Person; b: Person }) {
       <p className={styles.doshaText}>{dailyNumberText(daily.pairNumber)}</p>
 
       <p className={styles.note}>
-        Аркан дня пары считается наложением сегодняшней даты на центр вашей общей
-        матрицы, поэтому у каждой пары он свой: у вас и у ваших друзей в один и тот же
+        Аркан дня пары считается наложением сегодняшней даты на центр твоей общей
+        матрицы, поэтому у каждой пары он свой: у тебя и у твоих подруг в один и тот же
         день будут разные арканы.
       </p>
     </section>

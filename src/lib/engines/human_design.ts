@@ -22,6 +22,7 @@ import {
   type GateLine,
 } from "./human-design-tables";
 import type { Person, SystemReport } from "./types";
+import { assertLicensed } from "./license-guard";
 
 import typesData from "../data/human_design/types.json";
 import connectionThemesData from "../data/human_design/connection_themes.json";
@@ -316,6 +317,7 @@ function typeAuthorityModifier(a: PersonalDesign, b: PersonalDesign): number {
 }
 
 export function calcHumanDesignCompatibility(a: Person, b: Person): SystemReport<HumanDesignRawFeatures> {
+  assertLicensed();
   const aDesign = calcPersonalDesign(a);
   const bDesign = calcPersonalDesign(b);
   const connections = calcConnections(aDesign, bDesign);

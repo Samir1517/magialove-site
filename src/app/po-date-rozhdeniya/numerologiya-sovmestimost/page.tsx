@@ -69,6 +69,10 @@ export default function NumerologyHubPage() {
           <span className={styles.gridLinkTitle}>Число Имени →</span>
           <span className={styles.gridLinkText}>Та же нумерология, но по имени партнёров, а не по дате рождения</span>
         </Link>
+        <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/karta/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Карта раздела →</span>
+          <span className={styles.gridLinkText}>Все страницы Нумерологии на сервисе в одном месте</span>
+        </Link>
       </div>
     </ContentShell>
   );

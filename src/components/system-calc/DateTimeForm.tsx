@@ -2,7 +2,8 @@
 
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
-import { TIMEZONES, DEFAULT_TZ } from "@/lib/data/timezones";
+import { DEFAULT_TZ } from "@/lib/data/timezones";
+import { CityTimezoneInput } from "./CityTimezoneInput";
 import styles from "@/components/result/result.module.css";
 
 /**
@@ -25,7 +26,7 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!dateA || !dateB || !timeA || !timeB) {
-      setError("Укажите даты и время рождения обоих партнёров");
+      setError("Укажи даты и время рождения обоих партнёров");
       return;
     }
     setError(null);
@@ -72,16 +73,7 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
               required
             />
           </label>
-          <label className={styles.field}>
-            <span className={styles.fieldLabel}>Часовой пояс места рождения</span>
-            <select className={styles.input} value={tzA} onChange={(e) => setTzA(e.target.value)}>
-              {TIMEZONES.map((t) => (
-                <option key={t.tz} value={t.tz}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <CityTimezoneInput value={tzA} onChange={setTzA} label="Город рождения" />
         </div>
 
         <div className={styles.formCol}>
@@ -116,16 +108,7 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
               required
             />
           </label>
-          <label className={styles.field}>
-            <span className={styles.fieldLabel}>Часовой пояс места рождения</span>
-            <select className={styles.input} value={tzB} onChange={(e) => setTzB(e.target.value)}>
-              {TIMEZONES.map((t) => (
-                <option key={t.tz} value={t.tz}>
-                  {t.label}
-                </option>
-              ))}
-            </select>
-          </label>
+          <CityTimezoneInput value={tzB} onChange={setTzB} label="Город рождения" />
         </div>
       </div>
 
@@ -136,7 +119,7 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
       </button>
       <p className={styles.unlockNote}>
         Время нужно для расчёта — мы ничего не сохраняем и не отправляем на сервер, все
-        вычисления идут прямо в вашем браузере.
+        вычисления идут прямо в твоём браузере.
       </p>
     </form>
   );

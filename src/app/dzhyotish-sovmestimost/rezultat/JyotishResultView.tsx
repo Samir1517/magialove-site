@@ -67,7 +67,7 @@ export function JyotishResultView() {
 
       <div className={resultStyles.eyebrow}>Джйотиш</div>
       <h1 className={resultStyles.title}>
-        {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Ваша совместимость"} — {formatScore(report.score)}%
+        {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Твоя совместимость"} — {formatScore(report.score)}%
       </h1>
       <p className={resultStyles.lede}>
         Расчёт только по Джйотиш — Гуна-милан и доши по точному моменту рождения обоих.
@@ -102,7 +102,7 @@ export function JyotishResultView() {
       )}
 
       <UpsellToFullCta
-        text="Матрица судьбы, Нумерология и Дизайн человека смотрят на вашу пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
+        text="Матрица судьбы, Нумерология и Дизайн человека смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
       />
 

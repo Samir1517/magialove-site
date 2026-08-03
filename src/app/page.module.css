@@ -126,7 +126,7 @@
 .cardTitle {
   font: 600 15px var(--font-body);
   color: var(--ink);
-  margin-bottom: 8px;
+  margin: 0 0 8px;
 }
 .cardText {
   font: 400 13.5px/1.6 var(--font-body);

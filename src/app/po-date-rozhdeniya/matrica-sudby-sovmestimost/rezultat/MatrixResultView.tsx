@@ -45,7 +45,7 @@ export function MatrixResultView() {
 
       <div className={resultStyles.eyebrow}>Матрица судьбы</div>
       <h1 className={resultStyles.title}>
-        {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Ваша совместимость"} — {formatScore(report.score)}%
+        {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Твоя совместимость"} — {formatScore(report.score)}%
       </h1>
       <p className={resultStyles.lede}>
         Расчёт только по Матрице судьбы — по датам рождения, без времени и места.
@@ -61,7 +61,7 @@ export function MatrixResultView() {
       <MatrixSection report={report} />
 
       <UpsellToFullCta
-        text="Нумерология, Дизайн человека и Джйотиш смотрят на вашу пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
+        text="Нумерология, Дизайн человека и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
       />
 
