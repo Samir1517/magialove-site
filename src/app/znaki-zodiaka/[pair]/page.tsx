@@ -22,7 +22,7 @@ function canonicalPair(a: ZodiacSign, b: ZodiacSign): [ZodiacSign, ZodiacSign] {
   return a.name <= b.name ? [a, b] : [b, a];
 }
 
-function allPairSlugs(): string[] {
+export function allZodiacPairSlugs(): string[] {
   const seen = new Set<string>();
   const slugs: string[] = [];
   for (const s1 of ZODIAC_SIGNS) {
@@ -52,7 +52,7 @@ function parseSlug(slug: string): [ZodiacSign, ZodiacSign] | null {
 }
 
 export function generateStaticParams() {
-  return allPairSlugs().map((pair) => ({ pair }));
+  return allZodiacPairSlugs().map((pair) => ({ pair }));
 }
 
 export async function generateMetadata({

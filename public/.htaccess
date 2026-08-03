@@ -1,0 +1,8 @@
+# 301: /index.html -> / (канонический URL без index.html, чтобы Яндекс и Google
+# не индексировали два разных адреса одной и той же главной страницы).
+RewriteEngine On
+RewriteRule ^index\.html$ / [R=301,L]
+
+# HTTPS уже обязателен, когда SSL-сертификат подключён на хостинге:
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]

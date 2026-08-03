@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Manrope } from "next/font/google";
+import { SITE_URL } from "@/lib/site-config";
 import "./globals.css";
 
 // Instrument Serif / Sora (исходный дизайн) не имеют кириллического набора
@@ -18,6 +19,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Совместимость мужчины и женщины — расчёт по 4 системам",
   description:
     "Мягкий и честный расчёт совместимости по нумерологии, Дизайну человека, Джйотиш и Матрице судьбы. Бесплатно, без регистрации, 2 минуты.",
