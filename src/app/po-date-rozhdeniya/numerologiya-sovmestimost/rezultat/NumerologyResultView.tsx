@@ -5,8 +5,10 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { calcNumerologyCompatibility } from "@/lib/engines/numerology";
 import { makePerson, safely } from "@/lib/engines/person";
+import { getVerdict } from "@/lib/engines/synthesis";
 import { NumerologySection } from "@/components/systems/NumerologySection";
 import { UpsellToFullCta } from "@/components/system-calc/UpsellToFullCta";
+import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
 import resultStyles from "@/components/result/result.module.css";
 
@@ -48,6 +50,13 @@ export function NumerologyResultView() {
       <p className={resultStyles.lede}>
         Расчёт только по Нумерологии — число жизненного пути и психоматрица по датам рождения.
       </p>
+
+      <ShareActions
+        nameA={nameA !== "Первый партнёр" ? nameA : ""}
+        nameB={nameB !== "Второй партнёр" ? nameB : ""}
+        score={report.score}
+        verdictLabel={getVerdict(report.score).label}
+      />
 
       <NumerologySection report={report} nameA={nameA} nameB={nameB} />
 

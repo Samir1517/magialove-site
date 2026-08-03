@@ -5,9 +5,11 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { calcHumanDesignCompatibility } from "@/lib/engines/human_design";
 import { makePerson, safely } from "@/lib/engines/person";
+import { getVerdict } from "@/lib/engines/synthesis";
 import { HumanDesignSection } from "@/components/systems/HumanDesignSection";
 import { UpsellToFullCta } from "@/components/system-calc/UpsellToFullCta";
 import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
+import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
 import resultStyles from "@/components/result/result.module.css";
 
@@ -63,6 +65,13 @@ export function HumanDesignResultView() {
       <p className={resultStyles.lede}>
         Расчёт только по Дизайну человека — композит пары по точному моменту рождения обоих.
       </p>
+
+      <ShareActions
+        nameA={nameA !== "Первый партнёр" ? nameA : ""}
+        nameB={nameB !== "Второй партнёр" ? nameB : ""}
+        score={report.score}
+        verdictLabel={getVerdict(report.score).label}
+      />
 
       <HumanDesignSection report={report} nameA={nameA} nameB={nameB} />
 

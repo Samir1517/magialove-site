@@ -23,7 +23,8 @@ export function ContentShell({
       <Breadcrumbs items={breadcrumbs} />
       <div className={styles.wrap}>{children}</div>
       <footer className={styles.footer}>
-        © Совместимость. Расчёт носит рекомендательный характер.{" "}
+        © {new Date().getFullYear()} Совместимость. Все права защищены. Расчёт носит рекомендательный
+        характер. Копирование текстов сайта без разрешения запрещено.{" "}
         <Link href="/o-servise/">О сервисе</Link> · <Link href="/faq/">Вопросы и ответы</Link> ·{" "}
         <Link href="/politika-konfidentsialnosti/">Конфиденциальность</Link>
       </footer>

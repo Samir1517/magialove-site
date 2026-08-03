@@ -5,9 +5,11 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { calcJyotishCompatibility, calcNavagraha } from "@/lib/engines/jyotish";
 import { makePerson, safely } from "@/lib/engines/person";
+import { getVerdict } from "@/lib/engines/synthesis";
 import { JyotishSection } from "@/components/systems/JyotishSection";
 import { UpsellToFullCta } from "@/components/system-calc/UpsellToFullCta";
 import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
+import { ShareActions } from "@/components/result/ShareActions";
 import { Biwheel } from "@/components/viz/Biwheel";
 import { formatScore } from "@/components/viz/scale";
 import resultStyles from "@/components/result/result.module.css";
@@ -70,6 +72,13 @@ export function JyotishResultView() {
       <p className={resultStyles.lede}>
         Расчёт только по Джйотиш — Гуна-милан и доши по точному моменту рождения обоих.
       </p>
+
+      <ShareActions
+        nameA={nameA !== "Первый партнёр" ? nameA : ""}
+        nameB={nameB !== "Второй партнёр" ? nameB : ""}
+        score={report.score}
+        verdictLabel={getVerdict(report.score).label}
+      />
 
       <JyotishSection report={report} nameA={nameA} nameB={nameB} />
 

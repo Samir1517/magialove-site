@@ -5,8 +5,10 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { calcMatrixCompatibility } from "@/lib/engines/matrix";
 import { makePerson, safely } from "@/lib/engines/person";
+import { getVerdict } from "@/lib/engines/synthesis";
 import { MatrixSection } from "@/components/systems/MatrixSection";
 import { UpsellToFullCta } from "@/components/system-calc/UpsellToFullCta";
+import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
 import resultStyles from "@/components/result/result.module.css";
 
@@ -48,6 +50,13 @@ export function MatrixResultView() {
       <p className={resultStyles.lede}>
         Расчёт только по Матрице судьбы — по датам рождения, без времени и места.
       </p>
+
+      <ShareActions
+        nameA={nameA !== "Первый партнёр" ? nameA : ""}
+        nameB={nameB !== "Второй партнёр" ? nameB : ""}
+        score={report.score}
+        verdictLabel={getVerdict(report.score).label}
+      />
 
       <MatrixSection report={report} />
 

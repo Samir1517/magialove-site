@@ -249,7 +249,8 @@ export default function Home() {
           <Link href="/politika-konfidentsialnosti/">Конфиденциальность</Link>
         </nav>
         <div className={styles.footerText}>
-          © Совместимость. Расчёт носит рекомендательный характер.
+          © {new Date().getFullYear()} Совместимость. Все права защищены. Расчёт носит
+          рекомендательный характер. Копирование текстов сайта без разрешения запрещено.
         </div>
       </footer>
     </>

@@ -19,6 +19,7 @@ import { JyotishSection } from "@/components/systems/JyotishSection";
 import { DailySection } from "@/components/systems/DailySection";
 import { SynthesisPanel } from "@/components/systems/SynthesisPanel";
 import { FullReportForm } from "@/components/result/FullReportForm";
+import { ShareActions } from "@/components/result/ShareActions";
 import { Biwheel } from "@/components/viz/Biwheel";
 import { bandStyle, formatScore } from "@/components/viz/scale";
 import styles from "@/components/result/result.module.css";
@@ -135,6 +136,13 @@ export function ResultView() {
           .
         </p>
       </div>
+
+      <ShareActions
+        nameA={nameA !== "Первый партнёр" ? nameA : ""}
+        nameB={nameB !== "Второй партнёр" ? nameB : ""}
+        score={overall}
+        verdictLabel={verdict.label}
+      />
 
       <DailySection a={data.a} b={data.b} />
 

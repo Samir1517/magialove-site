@@ -5,8 +5,10 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { calcNameCompatibility } from "@/lib/engines/name-numerology";
 import { getNameNumberArticle } from "@/lib/content/articles";
+import { getVerdict } from "@/lib/engines/synthesis";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { ScoreRing } from "@/components/viz/ScoreRing";
+import { ShareActions } from "@/components/result/ShareActions";
 import resultStyles from "@/components/result/result.module.css";
 import contentStyles from "@/components/content/content.module.css";
 
@@ -67,6 +69,8 @@ export function NameResultView() {
         label="Совместимость чисел имени"
         caption={`Числа Имени: ${aNumbers.expression} и ${bNumbers.expression}.`}
       />
+
+      <ShareActions nameA={nameA} nameB={nameB} score={result.score} verdictLabel={getVerdict(result.score).label} />
 
       <div className={contentStyles.grid} style={{ gridTemplateColumns: "1fr 1fr" }}>
         <div className={contentStyles.card}>

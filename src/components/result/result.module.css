@@ -49,6 +49,10 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  /* Результат нарочно нельзя выделить/скопировать текстом — вместо этого ниже
+     стоит блок «Поделиться», который несёт бренд вместе с результатом. */
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .systemScores {
@@ -172,6 +176,59 @@
   align-self: flex-start;
   padding: 14px 28px;
   font-size: 13.5px;
+}
+
+/* --- Шеринг результата --- */
+
+.shareBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  border-radius: 24px;
+  padding: 28px;
+}
+
+.shareCardPreview {
+  user-select: none;
+  -webkit-user-select: none;
+  width: 100%;
+  max-width: 320px;
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: var(--card-shadow-lg);
+}
+
+.shareCardPreview svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.shareButtons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+}
+
+.shareSecondaryBtn {
+  padding: 13px 22px;
+  font: 500 13px var(--font-body);
+  color: var(--accent);
+  background: var(--accent-lilac);
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.shareSecondaryBtn:hover {
+  background: var(--accent-pink);
+}
+.shareSecondaryBtn:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .missing {
