@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   title: "Совместимость мужчины и женщины — расчёт по 4 системам",
   description:
     "Мягкий и честный расчёт совместимости по нумерологии, Дизайну человека, Джйотиш и Матрице судьбы. Бесплатно, без регистрации, 2 минуты.",
+  verification: {
+    google: "u6DbBMzc-cIrYQy76NneNnxBMEwe-SbcPKjZ5sv649M",
+    yandex: "e0734ba61a986dda",
+  },
 };
 
 export default function RootLayout({
