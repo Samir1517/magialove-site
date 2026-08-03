@@ -1,0 +1,428 @@
+/* Общие стили секций систем на странице результата. */
+
+.section {
+  background: #fff;
+  border-radius: 24px;
+  padding: 32px 30px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+}
+
+.sectionHead {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sectionHeadRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.detailLink {
+  font: 500 12.5px var(--font-body);
+  color: var(--accent);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.detailLink:hover {
+  color: var(--accent-hover);
+}
+
+.eyebrow {
+  font: 600 11px var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.sectionTitle {
+  font: italic 400 27px/1.25 var(--font-display);
+  color: var(--ink);
+  margin: 0;
+}
+
+.sectionLede {
+  font: 400 14px/1.7 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 62ch;
+}
+
+.blockTitle {
+  font: 600 13px var(--font-body);
+  letter-spacing: 0.03em;
+  color: var(--ink);
+  margin: 0 0 14px;
+}
+
+.bars {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.note {
+  font: 400 12.5px/1.6 var(--font-body);
+  color: var(--ink-faint);
+  margin: 0;
+  padding-top: 4px;
+  border-top: 1px solid #f4eef1;
+}
+
+.divider {
+  height: 1px;
+  background: #f4eef1;
+  border: none;
+  margin: 0;
+}
+
+.doshaRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.doshaHead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.doshaTitle {
+  font: 600 13px var(--font-body);
+  color: var(--ink);
+}
+
+.doshaText {
+  font: 400 12.5px/1.6 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font: 600 11px var(--font-body);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.synthesisBars {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.synthesisBarItem {
+  display: grid;
+  grid-template-columns: 108px 1fr 44px;
+  align-items: center;
+  gap: 10px;
+}
+
+.synthesisBarLabel {
+  font: 500 11.5px var(--font-body);
+  color: var(--ink-faint);
+}
+
+.synthesisBarTrack {
+  height: 6px;
+  border-radius: 99px;
+  background: #f3edf1;
+  overflow: hidden;
+}
+
+.synthesisBarFill {
+  height: 100%;
+  border-radius: 99px;
+}
+
+.synthesisBarValue {
+  font: 600 11.5px var(--font-body);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-soft);
+  text-align: right;
+}
+
+@media (max-width: 520px) {
+  .synthesisBarItem {
+    grid-template-columns: 84px 1fr 38px;
+  }
+}
+
+/* --- Квадрат Пифагора --- */
+
+.squares {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.squareWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.squareName {
+  font: 600 12px var(--font-body);
+  color: var(--ink-soft);
+}
+
+.square {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.cell {
+  border-radius: 12px;
+  padding: 10px 8px;
+  min-height: 62px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  text-align: center;
+  cursor: default;
+}
+
+.cellDigits {
+  font: 600 15px/1.1 var(--font-body);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+}
+
+.cellLabel {
+  font: 400 9.5px/1.2 var(--font-body);
+  color: var(--ink-faint);
+}
+
+/* --- Пара чисел жизненного пути --- */
+
+.pathPair {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.pathCard {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  background: var(--accent-lilac);
+  border-radius: 14px;
+  padding: 11px 15px;
+}
+
+.pathNumber {
+  font: italic 400 26px/1 var(--font-display);
+  color: var(--accent);
+}
+
+.pathMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.pathName {
+  font: 600 13px var(--font-body);
+  color: var(--ink);
+}
+
+.pathLove {
+  font: 400 11.5px/1.4 var(--font-body);
+  color: var(--ink-soft);
+  max-width: 24ch;
+}
+
+.pathJoin {
+  font: 400 18px var(--font-display);
+  color: var(--ink-faint);
+}
+
+/* --- Дизайн человека: Connection Theme --- */
+
+.themeCard {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  background: linear-gradient(135deg, #faf5f7, #f4eefa);
+  border-radius: 18px;
+  padding: 22px 24px;
+}
+
+.themeKey {
+  font: italic 400 52px/1 var(--font-display);
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.themeMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.themeTitle {
+  font: 600 15px var(--font-body);
+  color: var(--ink);
+}
+
+.themeFolk {
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.themeEssence {
+  font: 400 13px/1.65 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.lightShadow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.lightCard,
+.shadowCard {
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.lightCard {
+  background: #f6efe2;
+}
+
+.shadowCard {
+  background: #f2ecf8;
+}
+
+.lsLabel {
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.lsText {
+  font: 400 13px/1.65 var(--font-body);
+  color: var(--ink);
+  margin: 0;
+}
+
+.stepCard {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  border-left: 3px solid var(--accent-pink);
+  padding: 4px 0 4px 16px;
+}
+
+.stepText {
+  font: italic 400 17px/1.5 var(--font-display);
+  color: var(--ink);
+  margin: 0;
+}
+
+.graphLayout {
+  display: grid;
+  grid-template-columns: minmax(0, 300px) minmax(0, 1fr);
+  gap: 30px;
+  align-items: start;
+}
+
+.graphSide {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.openList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.openItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.openName {
+  font: 600 12.5px var(--font-body);
+  color: var(--ink);
+}
+
+.legendSwatchInline {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.channelList {
+  font: 400 11.5px/1.6 var(--font-body);
+  color: var(--ink-faint);
+  margin: 0;
+}
+
+.personCard {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: var(--accent-lilac);
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+
+.personType {
+  font: italic 400 21px/1.2 var(--font-display);
+  color: var(--accent);
+}
+
+@media (max-width: 860px) {
+  .graphLayout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 700px) {
+  .section {
+    padding: 26px 20px;
+    border-radius: 20px;
+  }
+  .squares,
+  .lightShadow {
+    grid-template-columns: 1fr;
+  }
+  .themeCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

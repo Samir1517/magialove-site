@@ -1,0 +1,109 @@
+{
+  "description": "Зоны матрицы пары и их вклад в блоки отчёта",
+  "zones": {
+    "love": {
+      "title": "Линия любви",
+      "maps_to": [
+        "essence",
+        "strengths",
+        "dangers"
+      ],
+      "harmonic_arcana": [
+        3,
+        6,
+        14,
+        17,
+        19,
+        2
+      ],
+      "tense_arcana": [
+        15,
+        16,
+        18,
+        13
+      ]
+    },
+    "money": {
+      "title": "Финансовая линия пары",
+      "maps_to": [
+        "potential",
+        "risks",
+        "roles"
+      ],
+      "harmonic_arcana": [
+        4,
+        8,
+        1,
+        7,
+        19
+      ],
+      "tense_arcana": [
+        12,
+        16,
+        18
+      ]
+    },
+    "kids": {
+      "title": "Линия детей и творчества",
+      "maps_to": [
+        "potential",
+        "positive_types"
+      ],
+      "harmonic_arcana": [
+        3,
+        6,
+        19,
+        17
+      ],
+      "tense_arcana": [
+        15,
+        13,
+        16
+      ]
+    },
+    "purpose": {
+      "title": "Предназначение союза",
+      "maps_to": [
+        "essence",
+        "potential",
+        "roles"
+      ],
+      "harmonic_arcana": [
+        20,
+        21,
+        5,
+        9,
+        14
+      ],
+      "tense_arcana": [
+        12,
+        16
+      ]
+    },
+    "center": {
+      "title": "Точка комфорта пары",
+      "maps_to": [
+        "strengths",
+        "positive_types"
+      ],
+      "harmonic_arcana": [
+        6,
+        3,
+        14,
+        19,
+        21
+      ],
+      "tense_arcana": [
+        15,
+        18,
+        16
+      ]
+    }
+  },
+  "scoring": {
+    "harmonic": 1.0,
+    "neutral": 0.5,
+    "tense": 0.15,
+    "note": "score = среднее по 5 зонам × 100; аркан вне списков = neutral"
+  }
+}

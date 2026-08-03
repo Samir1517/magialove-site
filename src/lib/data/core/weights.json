@@ -1,0 +1,42 @@
+{
+  "description": "Веса систем для Сводного индекса совместимости (СИС). Сумма = 1.0",
+  "profiles": {
+    "default": {
+      "jyotish": 0.3,
+      "human_design": 0.3,
+      "numerology": 0.2,
+      "matrix": 0.2
+    },
+    "брак_семья": {
+      "jyotish": 0.4,
+      "human_design": 0.25,
+      "numerology": 0.2,
+      "matrix": 0.15
+    },
+    "текущие_отношения": {
+      "human_design": 0.35,
+      "jyotish": 0.25,
+      "matrix": 0.2,
+      "numerology": 0.2
+    },
+    "на_старте": {
+      "human_design": 0.3,
+      "numerology": 0.25,
+      "matrix": 0.25,
+      "jyotish": 0.2
+    },
+    "деловое_партнёрство": {
+      "human_design": 0.35,
+      "numerology": 0.3,
+      "matrix": 0.2,
+      "jyotish": 0.15
+    },
+    "no_birth_time": {
+      "matrix": 0.45,
+      "numerology": 0.45,
+      "jyotish": 0.05,
+      "human_design": 0.05,
+      "note": "Если нет точного времени — вес уходит на системы по дате"
+    }
+  }
+}

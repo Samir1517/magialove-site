@@ -1,0 +1,106 @@
+{
+  "description": "8 кут Ашткута (Гуна-милан), максимум 36 баллов",
+  "kutas": [
+    {
+      "key": "varna",
+      "title": "Варна",
+      "max": 1,
+      "checks": "духовная/эго-совместимость",
+      "maps_to": [
+        "roles"
+      ]
+    },
+    {
+      "key": "vashya",
+      "title": "Вашья",
+      "max": 2,
+      "checks": "притяжение и баланс власти",
+      "maps_to": [
+        "strengths",
+        "dangers"
+      ]
+    },
+    {
+      "key": "tara",
+      "title": "Тара",
+      "max": 3,
+      "checks": "здоровье и удача союза",
+      "maps_to": [
+        "risks",
+        "potential"
+      ]
+    },
+    {
+      "key": "yoni",
+      "title": "Йони",
+      "max": 4,
+      "checks": "сексуальная и физическая совместимость",
+      "maps_to": [
+        "essence",
+        "strengths"
+      ]
+    },
+    {
+      "key": "graha_maitri",
+      "title": "Граха Майтри",
+      "max": 5,
+      "checks": "ментальная и интеллектуальная дружба",
+      "maps_to": [
+        "strengths",
+        "roles"
+      ]
+    },
+    {
+      "key": "gana",
+      "title": "Гана",
+      "max": 6,
+      "checks": "темперамент (дэва/манушья/ракшаса)",
+      "maps_to": [
+        "weaknesses",
+        "dangers"
+      ]
+    },
+    {
+      "key": "bhakoot",
+      "title": "Бхакут",
+      "max": 7,
+      "checks": "эмоции и финансы, благополучие семьи",
+      "maps_to": [
+        "potential",
+        "risks"
+      ]
+    },
+    {
+      "key": "nadi",
+      "title": "Нади",
+      "max": 8,
+      "checks": "здоровье и потомство (важнейший)",
+      "maps_to": [
+        "potential",
+        "dangers"
+      ]
+    }
+  ],
+  "score_bands": [
+    {
+      "min": 33,
+      "max": 36,
+      "label": "отличная"
+    },
+    {
+      "min": 25,
+      "max": 32,
+      "label": "хорошая"
+    },
+    {
+      "min": 18,
+      "max": 24,
+      "label": "приемлемая"
+    },
+    {
+      "min": 0,
+      "max": 17,
+      "label": "низкая"
+    }
+  ]
+}

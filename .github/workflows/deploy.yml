@@ -1,0 +1,54 @@
+# Автосборка сайта и выкладка на Беггет по FTP.
+# Запускается: при изменении кода (push в main) и вручную (кнопкой Run workflow).
+#
+# Перед первым запуском добавьте в Settings → Secrets and variables → Actions
+# этого репозитория 4 секрета:
+#   FTP_HOST     — адрес FTP-сервера Беггет
+#   FTP_USER     — логин FTP
+#   FTP_PASSWORD — пароль FTP
+#   FTP_DIR      — папка сайта на хостинге (веб-корень домена), например
+#                  example.ru/public_html/
+# Без них шаг деплоя будет падать — это ожидаемо, пока секреты не заданы.
+name: Собрать и выложить на Беггет
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}       # ручной запуск кнопкой в разделе Actions
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Забрать код
+        uses: actions/checkout@v4
+
+      - name: Установить Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Установить зависимости
+        run: npm ci
+
+      - name: Собрать статику (папка out/)
+        run: npm run build
+
+      - name: Путь на сервере — гарантировать / в конце
+        env:
+          RAW_FTP_DIR: ${{ secrets.FTP_DIR }}
+        run: |
+          d="$RAW_FTP_DIR"
+          case "$d" in */) ;; *) d="$d/" ;; esac
+          echo "SERVER_DIR=$d" >> "$GITHUB_ENV"
+
+      - name: Выложить на Беггет по FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_HOST }}
+          username: ${{ secrets.FTP_USER }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          server-dir: ${{ env.SERVER_DIR }}
+          local-dir: ./out/
+          # Заливаются только изменившиеся файлы (быстро).

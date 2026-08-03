@@ -1,0 +1,140 @@
+/* Общие стили примитивов визуализации (шкалы, кольцо, сетка, легенда). */
+
+/* --- ScoreBar --- */
+
+.bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.barHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.barLabel {
+  font: 500 13px/1.4 var(--font-body);
+  color: var(--ink);
+}
+
+.barValue {
+  font: 600 13px var(--font-body);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.barTrack {
+  position: relative;
+  height: 8px;
+  border-radius: 99px;
+  background: #f3edf1;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.barCaption {
+  font: 400 12.5px/1.5 var(--font-body);
+  color: var(--ink-soft);
+}
+
+/* Деления-ориентиры на шкале (традиционные пороги Джйотиш и т.п.) */
+.barTick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* --- ScoreRing --- */
+
+.ring {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.ringSvg {
+  flex-shrink: 0;
+  transform: rotate(-90deg);
+}
+
+.ringTrack {
+  fill: none;
+  stroke: #f3edf1;
+}
+
+.ringProgress {
+  fill: none;
+  stroke-linecap: round;
+  transition: stroke-dasharray 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ringCenter {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ringValue {
+  font: italic 400 38px/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.ringLabel {
+  font: 600 11px var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.ringCaption {
+  font: 400 13px/1.6 var(--font-body);
+  color: var(--ink-soft);
+  max-width: 34ch;
+}
+
+/* --- Легенда --- */
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin-top: 4px;
+}
+
+.legendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 400 12px var(--font-body);
+  color: var(--ink-soft);
+}
+
+.legendSwatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+/* --- Чип-бейдж (полоса/статус) --- */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  font: 600 11px var(--font-body);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
