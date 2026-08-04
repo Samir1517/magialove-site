@@ -9,6 +9,12 @@ import { calcNumerologyCompatibility } from "@/lib/engines/numerology";
 import { calcHumanDesignCompatibility } from "@/lib/engines/human_design";
 import { calcJyotishCompatibility, calcNavagraha } from "@/lib/engines/jyotish";
 import { calcWeightedScore, calcCrossSystemThemes, getVerdict } from "@/lib/engines/synthesis";
+import {
+  collectPairFactors,
+  calcPairHighlights,
+  calcPairArchetype,
+  calcPairRoles,
+} from "@/lib/engines/highlights";
 import { makePerson, safely } from "@/lib/engines/person";
 import { DEFAULT_TZ } from "@/lib/data/timezones";
 
@@ -20,7 +26,9 @@ import { DailySection } from "@/components/systems/DailySection";
 import { SynthesisPanel } from "@/components/systems/SynthesisPanel";
 import { FullReportForm } from "@/components/result/FullReportForm";
 import { ShareActions } from "@/components/result/ShareActions";
+import { PairSummary } from "@/components/result/PairSummary";
 import { Biwheel } from "@/components/viz/Biwheel";
+import { ScoreRing } from "@/components/viz/ScoreRing";
 import { bandStyle, formatScore } from "@/components/viz/scale";
 import styles from "@/components/result/result.module.css";
 import systemStyles from "@/components/systems/systems.module.css";
@@ -84,6 +92,9 @@ export function ResultView() {
   const verdict = getVerdict(overall);
   const overallBand = bandStyle(overall);
   const crossThemes = calcCrossSystemThemes(matrix, numerology, humanDesign, jyotish);
+  const archetype = calcPairArchetype(overall, crossThemes, matrix, numerology);
+  const highlights = calcPairHighlights(collectPairFactors(matrix, numerology, humanDesign, jyotish));
+  const roles = calcPairRoles(matrix, numerology, humanDesign);
 
   const qs = params.toString();
   const matrixHref = `/po-date-rozhdeniya/matrica-sudby-sovmestimost/rezultat?${qs}`;
@@ -114,6 +125,22 @@ export function ResultView() {
       </p>
 
       <div className={styles.overallCard}>
+        <div className={styles.archetypeRow}>
+          <ScoreRing percent={overall} gradientId="overall-ring" size={158} stroke={11} />
+          <div className={styles.archetypeMeta}>
+            <div className={styles.eyebrow}>Тип вашей пары</div>
+            <div className={styles.archetypeName}>«{archetype.name}»</div>
+            <p className={styles.archetypeMotto}>{archetype.motto}</p>
+            <div className={styles.archetypeLS}>
+              <p className={styles.archetypeLSLine}>
+                <strong>Свет:</strong> {archetype.light}
+              </p>
+              <p className={styles.archetypeLSLine}>
+                <strong>Тень:</strong> {archetype.shadow}
+              </p>
+            </div>
+          </div>
+        </div>
         <div className={styles.systemScores}>
           {systems.map((s) => (
             <div key={s.name} className={styles.systemScore}>
@@ -136,6 +163,12 @@ export function ResultView() {
           .
         </p>
       </div>
+
+      <p className={styles.positioning}>
+        Это не «процент из воздуха» — это карта того, где вам легко, а где вы растёте.
+      </p>
+
+      <PairSummary highlights={highlights} roles={roles} nameA={nameA} nameB={nameB} />
 
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}

@@ -162,7 +162,7 @@ export function zoneWeight(zoneKey: string, arcanum: number): number {
 // Чакры (проекция на вертикаль — см. интерпретационное примечание в шапке файла)
 // ---------------------------------------------------------------------------
 
-const CHAKRA_PROJECTION: { key: string; position: PositionKey }[] = [
+export const CHAKRA_PROJECTION: { key: string; position: PositionKey }[] = [
   { key: "sahasrara", position: "month" }, // верх
   { key: "ajna", position: "dm" },
   { key: "vishuddha", position: "my" },

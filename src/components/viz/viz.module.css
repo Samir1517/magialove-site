@@ -126,6 +126,201 @@
   flex-shrink: 0;
 }
 
+/* --- Октаграмма пары (Матрица судьбы) --- */
+
+.octagramWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+}
+
+.octagramSvg {
+  width: 100%;
+  max-width: 460px;
+  height: auto;
+}
+
+.octagramZoneLabel {
+  font: 600 12px var(--font-body);
+  fill: var(--ink-faint);
+  letter-spacing: 0.04em;
+}
+
+.octagramCard {
+  width: 100%;
+  background: #fff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.octagramCardEyebrow {
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.octagramCardTitle {
+  font: 600 14px/1.4 var(--font-body);
+  color: var(--ink);
+}
+
+.octagramCardText {
+  font: 400 13px/1.65 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.octagramCardNote {
+  font: 400 12.5px/1.6 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+  font-style: italic;
+}
+
+.octagramHint {
+  font: 400 11.5px var(--font-body);
+  color: var(--ink-faint);
+  margin: 2px 0 0;
+}
+
+/* --- Лунный круг накшатр --- */
+
+.wheelWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.wheelSvg {
+  width: 100%;
+  max-width: 430px;
+  height: auto;
+}
+
+.wheelLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  justify-content: center;
+}
+
+.wheelLegendItem {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 400 12.5px var(--font-body);
+  color: var(--ink-soft);
+}
+
+.wheelDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  flex-shrink: 0;
+}
+
+/* --- Чакровая таблица пары --- */
+
+.chakraTable {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.chakraRow {
+  display: grid;
+  grid-template-columns: 14px 1fr 64px 64px 84px;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 12px;
+}
+
+.chakraRow:nth-child(even) {
+  background: #faf6f9;
+}
+
+.chakraHeadRow {
+  background: transparent !important;
+  padding-bottom: 2px;
+}
+
+.chakraHead,
+.chakraHeadNum {
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.chakraHeadNum {
+  text-align: center;
+}
+
+.chakraCapsule {
+  width: 14px;
+  height: 26px;
+  border-radius: 8px;
+}
+
+.chakraName {
+  display: flex;
+  flex-direction: column;
+}
+
+.chakraName strong {
+  font: 600 13px var(--font-body);
+  color: var(--ink);
+}
+
+.chakraName em {
+  font: 400 11px var(--font-body);
+  color: var(--ink-faint);
+  font-style: normal;
+}
+
+.chakraNum {
+  font: italic 400 19px var(--font-display);
+  color: var(--ink-soft);
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.chakraNumPair {
+  color: var(--accent);
+  font-size: 22px;
+  position: relative;
+}
+
+.chakraResonance {
+  font-size: 12px;
+  color: #b99d74;
+  margin-left: 4px;
+  vertical-align: super;
+}
+
+.chakraLegend {
+  font: 400 11.5px/1.6 var(--font-body);
+  color: var(--ink-faint);
+  margin: 8px 0 0;
+  padding: 0 10px;
+}
+
+@media (max-width: 560px) {
+  .chakraRow {
+    grid-template-columns: 10px 1fr 44px 44px 60px;
+    gap: 8px;
+  }
+}
+
 /* --- Чип-бейдж (полоса/статус) --- */
 
 .chip {

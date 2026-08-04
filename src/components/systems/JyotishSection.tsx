@@ -10,6 +10,7 @@ import {
 } from "@/lib/content/jyotish";
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { ScoreBar } from "@/components/viz/ScoreBar";
+import { NakshatraWheel } from "@/components/viz/NakshatraWheel";
 import { Chip } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getJyotishDoshaArticle, getJyotishKutaArticle, getJyotishNakshatraArticle } from "@/lib/content/articles";
@@ -38,6 +39,7 @@ export function JyotishSection({
 }) {
   const f = report.rawFeatures;
   const total = f.gunaMilan.total;
+  const detailed = !standaloneHref;
 
   return (
     <section className={styles.section} aria-labelledby="jyotish-title">
@@ -69,6 +71,18 @@ export function JyotishSection({
 
       <div>
         <h3 className={styles.blockTitle}>Накшатры Луны</h3>
+        {detailed && (
+          <div style={{ marginBottom: 16 }}>
+            <NakshatraWheel
+              aIndex={f.a.moonNakshatraIndex}
+              bIndex={f.b.moonNakshatraIndex}
+              aName={nameA}
+              bName={nameB}
+              aNakshatra={f.a.moonNakshatra}
+              bNakshatra={f.b.moonNakshatra}
+            />
+          </div>
+        )}
         <div className={styles.bars}>
           {[
             { name: nameA, idx: f.a.moonNakshatraIndex, nakshatra: f.a.moonNakshatra },
@@ -114,8 +128,22 @@ export function JyotishSection({
             const reading = KUTA_READINGS[kuta.key];
             const high = isHigh(result.score, result.max);
             const article = getJyotishKutaArticle(kuta.key);
+            // Светофор трёх состояний (паттерн тамильских порутамов
+            // Uthamam/Madhyamam/Adhamam) — но без пугающего «плохо»:
+            // полный балл, больше половины, половина и меньше.
+            const state =
+              result.score === result.max
+                ? { label: "сильная сторона", band: BANDS.high }
+                : high
+                  ? { label: "рабочая зона", band: BANDS.mid }
+                  : { label: "зона роста", band: BANDS.low };
             return (
               <div key={kuta.key} style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+                  <Chip color={state.band.ink} background={state.band.wash}>
+                    {state.label}
+                  </Chip>
+                </div>
                 <ScoreBar
                   label={`${kuta.title} — ${reading.about}`}
                   score={result.score}

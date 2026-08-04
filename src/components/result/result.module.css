@@ -179,6 +179,228 @@
   font-size: 13.5px;
 }
 
+/* --- Архетип пары + сводка (пирамида подачи) --- */
+
+.archetypeRow {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+}
+
+.archetypeMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.archetypeName {
+  font: italic 400 30px/1.15 var(--font-display);
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.archetypeMotto {
+  font: 400 14px/1.65 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 46ch;
+}
+
+.archetypeLS {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.archetypeLSLine {
+  font: 400 12.5px/1.6 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.archetypeLSLine strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.positioning {
+  font: italic 400 14px/1.6 var(--font-display);
+  color: var(--ink-softer);
+  margin: 0;
+  text-align: center;
+}
+
+.threadCard {
+  background: linear-gradient(135deg, #faf5f7, #f4eefa);
+  border-radius: 22px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.threadLabel {
+  font: 600 11px var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.threadRow {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.threadScore {
+  font: italic 400 46px/1 var(--font-display);
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+
+.threadMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.threadTitle {
+  font: 600 15px var(--font-body);
+  color: var(--ink);
+}
+
+.threadSystem {
+  font-weight: 400;
+  color: var(--ink-faint);
+}
+
+.threadNote {
+  font: 400 13px/1.65 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.hlGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.hlLight,
+.hlShadow {
+  border-radius: 18px;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hlLight {
+  background: #f6efe2;
+}
+
+.hlShadow {
+  background: #f2ecf8;
+}
+
+.hlLabel {
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.hlList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.hlItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hlItem strong {
+  font: 600 13.5px var(--font-body);
+  color: var(--ink);
+}
+
+.hlItemSystem {
+  font: 400 11px var(--font-body);
+  color: var(--ink-faint);
+}
+
+.hlItemNote {
+  font: 400 12.5px/1.55 var(--font-body);
+  color: var(--ink-soft);
+}
+
+.hlEmpty {
+  font: 400 13px/1.65 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.rolesBlock {
+  background: #fff;
+  border-radius: 22px;
+  padding: 24px 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: var(--card-shadow);
+}
+
+.rolesNote {
+  font: 400 12.5px/1.6 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.rolesGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.roleCard {
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: var(--accent-lilac);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.roleCardGap {
+  background: transparent;
+  border: 1px dashed #d8c7d8;
+}
+
+.roleWho {
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.roleTitle {
+  font: 600 14px var(--font-body);
+  color: var(--ink);
+}
+
+.roleAbout {
+  font: 400 12.5px/1.55 var(--font-body);
+  color: var(--ink-soft);
+}
+
 /* --- Шеринг результата --- */
 
 .shareBlock {
@@ -320,5 +542,16 @@
   .unlockCard {
     padding: 24px 20px;
     border-radius: 20px;
+  }
+  .archetypeRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .hlGrid {
+    grid-template-columns: 1fr;
+  }
+  .threadRow {
+    align-items: flex-start;
   }
 }

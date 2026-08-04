@@ -22,6 +22,7 @@ import { Legend } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getLifePathArticle, getPsychomatrixArticle } from "@/lib/content/articles";
 import { BANDS } from "@/components/viz/scale";
+import { reduceLifePath } from "@/lib/engines/utils";
 import styles from "./systems.module.css";
 
 /** Классическая раскладка Квадрата Пифагора: столбцы 1-2-3 / 4-5-6 / 7-8-9. */
@@ -65,6 +66,70 @@ function PythagorasSquare({ name, digits }: { name: string; digits: DigitCounts 
   );
 }
 
+/**
+ * Третий квадрат — «квадрат пары»: не сумма, а сравнение заполненности ячеек.
+ * Логика ниши (numeroscop и др. дают её только текстом): оба сильны — резонанс,
+ * один даёт качество за двоих — дополнение, пусто у обоих — зона выращивания.
+ */
+function PairSquare({
+  aDigits,
+  bDigits,
+  nameA,
+  nameB,
+}: {
+  aDigits: DigitCounts;
+  bDigits: DigitCounts;
+  nameA: string;
+  nameB: string;
+}) {
+  const stateOf = (digit: number): "resonance" | "complement" | "empty" => {
+    const a = aDigits[digit] ?? 0;
+    const b = bDigits[digit] ?? 0;
+    if (a > 0 && b > 0) return "resonance";
+    if (a > 0 || b > 0) return "complement";
+    return "empty";
+  };
+
+  const STATE_STYLE = {
+    resonance: { background: "#f7dbe3", color: "#a2698a" },
+    complement: { background: "#e7ddf3", color: "#7a5f9e" },
+    empty: { background: "transparent", color: "var(--ink-faint)", border: "1px dashed #d8c7d8" },
+  } as const;
+
+  const STATE_LABEL = {
+    resonance: "резонанс — сильно у обоих",
+    complement: "дополнение — один даёт качество за двоих",
+    empty: "у обоих пусто — качество выращивается вдвоём",
+  } as const;
+
+  return (
+    <div className={styles.squareWrap}>
+      <span className={styles.squareName}>Вместе</span>
+      <div className={styles.square}>
+        {SQUARE_ROWS.flat().map((digit) => {
+          const state = stateOf(digit);
+          const meaning = DIGIT_MEANINGS[digit];
+          const who =
+            state === "complement" ? ((aDigits[digit] ?? 0) > 0 ? nameA : nameB) : null;
+          return (
+            <div
+              key={digit}
+              className={styles.cell}
+              style={STATE_STYLE[state]}
+              title={`${meaning.title}: ${STATE_LABEL[state]}${who ? ` (даёт ${who})` : ""}`}
+            >
+              <span className={styles.cellDigits}>
+                {state === "resonance" ? "✦✦" : state === "complement" ? "✦" : "—"}
+              </span>
+              <span className={styles.cellLabel}>{meaning.title}</span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function NumerologySection({
   report,
   nameA = "Партнёр А",
@@ -80,6 +145,12 @@ export function NumerologySection({
   const aInfo = getLifePathInfo(f.aLifePath);
   const bInfo = getLifePathInfo(f.bLifePath);
   const lineKeys = Object.keys(LINE_TITLES) as PsychomatrixLineKey[];
+  const detailed = !standaloneHref;
+
+  // Число пары: свод суммы двух ЧЖП — приём ниши (общее число союза).
+  const pairNumber = reduceLifePath(f.aLifePath + f.bLifePath);
+  const pairInfo = getLifePathInfo(pairNumber);
+  const unisonCount = lineKeys.filter((k) => f.lineDiffs[k] <= 1).length;
 
   return (
     <section className={styles.section} aria-labelledby="numerology-title">
@@ -124,6 +195,16 @@ export function NumerologySection({
             <span className={styles.pathLove}>{bInfo.love}</span>
           </span>
         </div>
+        <span className={styles.pathJoin}>=</span>
+        <div className={`${styles.pathCard} ${styles.pathCardPair}`}>
+          <span className={styles.pathNumber}>{pairNumber}</span>
+          <span className={styles.pathMeta}>
+            <span className={styles.pathName}>Число вашей пары · {pairInfo.name}</span>
+            <span className={styles.pathLove}>
+              Свод двух чисел жизненного пути — общий характер союза.
+            </span>
+          </span>
+        </div>
       </div>
 
       <div className={styles.bars}>
@@ -151,13 +232,26 @@ export function NumerologySection({
         <div className={styles.squares}>
           <PythagorasSquare name={nameA} digits={f.aDigits} />
           <PythagorasSquare name={nameB} digits={f.bDigits} />
+          {detailed && (
+            <PairSquare aDigits={f.aDigits} bDigits={f.bDigits} nameA={nameA} nameB={nameB} />
+          )}
         </div>
         <Legend
-          entries={[
-            { color: BANDS.low.wash, text: "не заполнено — качество выращивается сознательно" },
-            { color: BANDS.mid.wash, text: "норма — работает без перекоса" },
-            { color: BANDS.high.wash, text: "избыток — сила, которая легко перехлёстывает" },
-          ]}
+          entries={
+            detailed
+              ? [
+                  { color: BANDS.low.wash, text: "не заполнено — качество выращивается сознательно" },
+                  { color: BANDS.mid.wash, text: "норма — работает без перекоса" },
+                  { color: BANDS.high.wash, text: "избыток — сила, которая легко перехлёстывает" },
+                  { color: "#f7dbe3", text: "✦✦ резонанс — сильно у обоих" },
+                  { color: "#e7ddf3", text: "✦ дополнение — один даёт качество за двоих" },
+                ]
+              : [
+                  { color: BANDS.low.wash, text: "не заполнено — качество выращивается сознательно" },
+                  { color: BANDS.mid.wash, text: "норма — работает без перекоса" },
+                  { color: BANDS.high.wash, text: "избыток — сила, которая легко перехлёстывает" },
+                ]
+          }
         />
         <p className={styles.note}>
           Избыток здесь не «лучше», а недостаток не «хуже»: пустая ячейка означает, что
@@ -170,6 +264,9 @@ export function NumerologySection({
 
       <div>
         <h3 className={styles.blockTitle}>8 линий: где вы с партнёром совпадаете, а где дополняете</h3>
+        <p className={styles.note} style={{ marginBottom: 12 }}>
+          {unisonCount} из 8 линий — в унисон (разница силы не больше единицы).
+        </p>
         <div className={styles.bars}>
           {lineKeys.map((key) => {
             const diff = f.lineDiffs[key];

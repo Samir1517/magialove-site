@@ -10,6 +10,8 @@ import {
 } from "@/lib/engines/matrix";
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { ScoreBar } from "@/components/viz/ScoreBar";
+import { MatrixOctagram } from "@/components/viz/MatrixOctagram";
+import { ChakraTable } from "@/components/viz/ChakraTable";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getMatrixArticle } from "@/lib/content/articles";
 import styles from "./systems.module.css";
@@ -28,13 +30,20 @@ const CHARACTER_NOTE: Record<"harmonic" | "tense" | "other", string> = {
 export function MatrixSection({
   report,
   standaloneHref,
+  nameA = "Она",
+  nameB = "Он",
 }: {
   report: SystemReport<MatrixRawFeatures>;
   /** Если задано — ссылка «только эта система» на отдельный калькулятор (показывается на общем /rezultat/). */
   standaloneHref?: string;
+  nameA?: string;
+  nameB?: string;
 }) {
   const f = report.rawFeatures;
   const zoneKeys = Object.keys(ZONE_TITLES) as ZoneKey[];
+  // На отдельной странице системы показываем углублённые схемы; на общем
+  // результате 4 систем они были бы перегрузом (октаграмма + таблица чакр).
+  const detailed = !standaloneHref;
 
   return (
     <section className={styles.section} aria-labelledby="matrix-title">
@@ -62,6 +71,17 @@ export function MatrixSection({
         label="Совместимость по Матрице судьбы"
         caption="Балл собран по пяти зонам общей матрицы: любовь, деньги, дети, предназначение и точка комфорта."
       />
+
+      {detailed && (
+        <div>
+          <h3 className={styles.blockTitle}>Октаграмма вашей общей матрицы</h3>
+          <p className={styles.note} style={{ marginBottom: 12 }}>
+            Ромб — личные точки пары (день, месяц, год, кармический свод), прямой квадрат —
+            родовые диагонали. В центре — сердцевина союза.
+          </p>
+          <MatrixOctagram pair={f.pairMatrix} />
+        </div>
+      )}
 
       <div>
         <h3 className={styles.blockTitle}>Зоны пары</h3>
@@ -98,6 +118,17 @@ export function MatrixSection({
 
       <div>
         <h3 className={styles.blockTitle}>Баланс по чакрам</h3>
+        {detailed && (
+          <div style={{ marginBottom: 16 }}>
+            <ChakraTable
+              balance={f.chakraBalance}
+              aMatrix={f.aMatrix}
+              bMatrix={f.bMatrix}
+              nameA={nameA}
+              nameB={nameB}
+            />
+          </div>
+        )}
         <ul className={styles.openList}>
           {f.chakraBalance.map((c) => {
             const info = getArcanumInfo(c.arcanum);

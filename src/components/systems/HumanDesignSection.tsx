@@ -37,6 +37,7 @@ export function HumanDesignSection({
   const f = report.rawFeatures;
   const theme = themeContent(f.connectionTheme.defined);
   const composite = f.composite;
+  const detailed = !standaloneHref;
 
   const counts = SOURCE_ORDER.map((source) => ({
     source,
@@ -85,6 +86,28 @@ export function HumanDesignSection({
           <p className={styles.lsText}>{theme.shadow}</p>
         </div>
       </div>
+
+      {detailed && (
+        <div className={styles.lightShadow}>
+          {[
+            { name: nameA, person: f.a, color: CHANNEL_SOURCE_COLOR.a },
+            { name: nameB, person: f.b, color: CHANNEL_SOURCE_COLOR.b },
+          ].map(({ name, person, color }) => (
+            <div key={name} className={styles.partnerCard} style={{ borderColor: color }}>
+              <span className={styles.lsLabel} style={{ color }}>
+                {name}
+              </span>
+              <p className={styles.lsText}>
+                <strong>{person.type}</strong> · профиль {person.profile}
+                <br />
+                Авторитет: {person.authority}
+                <br />
+                Определено центров: {person.definedCenters.length} из 9
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
 
       <p className={styles.note}>
         Само по себе число темы — не оценка. В Дизайне человека решает не тема, а вход:

@@ -96,13 +96,44 @@ export function CompositeBodygraph({
 
     group.forEach((ch, i) => {
       const offset = (i - (group.length - 1) / 2) * 7;
+      const lx1 = r2(x1 + nx * offset);
+      const ly1 = r2(y1 + ny * offset);
+      const lx2 = r2(x2 + nx * offset);
+      const ly2 = r2(y2 + ny * offset);
+
+      if (ch.source === "electromagnetic") {
+        // Конвенция ниши: электромагнитный канал — две половинки цветов
+        // партнёров, встречающиеся в середине, + «искра» в точке стыка:
+        // видно, как двое буквально достраивают друг друга.
+        const gradId = `em-${ch.key}`;
+        const mx = r2((lx1 + lx2) / 2);
+        const my = r2((ly1 + ly2) / 2);
+        lines.push(
+          <g key={ch.key}>
+            <defs>
+              <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1={lx1} y1={ly1} x2={lx2} y2={ly2}>
+                <stop offset="0%" stopColor={CHANNEL_SOURCE_COLOR.a} />
+                <stop offset="48%" stopColor={CHANNEL_SOURCE_COLOR.a} />
+                <stop offset="52%" stopColor={CHANNEL_SOURCE_COLOR.b} />
+                <stop offset="100%" stopColor={CHANNEL_SOURCE_COLOR.b} />
+              </linearGradient>
+            </defs>
+            <line x1={lx1} y1={ly1} x2={lx2} y2={ly2} stroke={`url(#${gradId})`} strokeWidth={5} strokeLinecap="round">
+              <title>{`${ch.name} (${ch.key}) — электромагнитный: каждый даёт свою половину`}</title>
+            </line>
+            <circle cx={mx} cy={my} r={4.5} fill="#fff" stroke={CHANNEL_SOURCE_COLOR.electromagnetic} strokeWidth={2} />
+          </g>
+        );
+        return;
+      }
+
       lines.push(
         <line
           key={ch.key}
-          x1={r2(x1 + nx * offset)}
-          y1={r2(y1 + ny * offset)}
-          x2={r2(x2 + nx * offset)}
-          y2={r2(y2 + ny * offset)}
+          x1={lx1}
+          y1={ly1}
+          x2={lx2}
+          y2={ly2}
           stroke={CHANNEL_SOURCE_COLOR[ch.source]}
           strokeWidth={5}
           strokeLinecap="round"

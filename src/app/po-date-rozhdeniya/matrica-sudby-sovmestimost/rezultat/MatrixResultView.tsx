@@ -58,7 +58,11 @@ export function MatrixResultView() {
         verdictLabel={getVerdict(report.score).label}
       />
 
-      <MatrixSection report={report} />
+      <MatrixSection
+        report={report}
+        nameA={nameA !== "Первый партнёр" ? nameA : "Ты"}
+        nameB={nameB !== "Второй партнёр" ? nameB : "Он"}
+      />
 
       <UpsellToFullCta
         text="Нумерология, Дизайн человека и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."

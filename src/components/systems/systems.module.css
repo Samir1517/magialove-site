@@ -164,7 +164,7 @@
 
 .squares {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 22px;
 }
 
@@ -225,6 +225,22 @@
   background: var(--accent-lilac);
   border-radius: 14px;
   padding: 11px 15px;
+}
+
+.pathCardPair {
+  background: linear-gradient(135deg, #f7dbe3, #e7ddf3);
+}
+
+/* Карточка партнёра (ДЧ: тип/профиль/авторитет) с цветом его активаций */
+.partnerCard {
+  border-radius: 16px;
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  background: #fff;
+  border-left: 4px solid;
+  box-shadow: var(--card-shadow);
 }
 
 .pathNumber {
