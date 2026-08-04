@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { useInView } from "./useInView";
 import styles from "./viz.module.css";
 
 /**
@@ -65,6 +66,8 @@ export function NakshatraWheel({
   bNakshatra: string;
 }) {
   const [selected, setSelected] = useState<number | null>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef);
 
   const aIdx0 = aIndex - 1;
   const bIdx0 = bIndex - 1;
@@ -86,10 +89,10 @@ export function NakshatraWheel({
   const distance = ((bIdx0 - aIdx0 + 27) % 27) + 1;
 
   return (
-    <div className={styles.wheelWrap}>
+    <div className={styles.wheelWrap} ref={wrapRef}>
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
-        className={styles.wheelSvg}
+        className={inView ? `${styles.wheelSvg} ${styles.drawn}` : styles.wheelSvg}
         role="img"
         aria-label={`Лунный круг 27 накшатр: ${aName} — ${aNakshatra}, ${bName} — ${bNakshatra}`}
       >
@@ -156,8 +159,9 @@ export function NakshatraWheel({
             fill="none"
             stroke="#d48ca6"
             strokeWidth={2}
-            strokeDasharray="5 5"
             opacity={0.8}
+            pathLength={1}
+            className={styles.drawLineSlow}
           />
         )}
 

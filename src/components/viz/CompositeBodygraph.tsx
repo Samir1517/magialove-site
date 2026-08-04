@@ -1,6 +1,7 @@
 import { CENTER_NAMES, centerOfGate, type CenterKey } from "@/lib/engines/human-design-tables";
 import type { CompositeChannel } from "@/lib/engines/human_design";
 import { CHANNEL_SOURCE_COLOR } from "@/lib/content/human-design";
+import styles from "./viz.module.css";
 
 /**
  * Композитный бодиграф пары: 9 центров и определённые в композите каналы,
@@ -63,9 +64,15 @@ function r2(n: number): number {
 export function CompositeBodygraph({
   channels,
   definedCenters,
+  highlightKey = null,
+  onChannelClick,
 }: {
   channels: CompositeChannel[];
   definedCenters: CenterKey[];
+  /** Ключ канала, подсвеченного из списка карточек (hover-связка). */
+  highlightKey?: string | null;
+  /** Клик по линии канала — скролл к его карточке в списке. */
+  onChannelClick?: (key: string) => void;
 }) {
   const defined = new Set(definedCenters);
 
@@ -101,6 +108,15 @@ export function CompositeBodygraph({
       const lx2 = r2(x2 + nx * offset);
       const ly2 = r2(y2 + ny * offset);
 
+      const dimmed = highlightKey !== null && highlightKey !== ch.key;
+      const active = highlightKey === ch.key;
+      const interactive = onChannelClick
+        ? {
+            onClick: () => onChannelClick(ch.key),
+            style: { cursor: "pointer" as const },
+          }
+        : {};
+
       if (ch.source === "electromagnetic") {
         // Конвенция ниши: электромагнитный канал — две половинки цветов
         // партнёров, встречающиеся в середине, + «искра» в точке стыка:
@@ -109,7 +125,7 @@ export function CompositeBodygraph({
         const mx = r2((lx1 + lx2) / 2);
         const my = r2((ly1 + ly2) / 2);
         lines.push(
-          <g key={ch.key}>
+          <g key={ch.key} opacity={dimmed ? 0.25 : 1} {...interactive}>
             <defs>
               <linearGradient id={gradId} gradientUnits="userSpaceOnUse" x1={lx1} y1={ly1} x2={lx2} y2={ly2}>
                 <stop offset="0%" stopColor={CHANNEL_SOURCE_COLOR.a} />
@@ -118,10 +134,26 @@ export function CompositeBodygraph({
                 <stop offset="100%" stopColor={CHANNEL_SOURCE_COLOR.b} />
               </linearGradient>
             </defs>
-            <line x1={lx1} y1={ly1} x2={lx2} y2={ly2} stroke={`url(#${gradId})`} strokeWidth={5} strokeLinecap="round">
+            <line
+              x1={lx1}
+              y1={ly1}
+              x2={lx2}
+              y2={ly2}
+              stroke={`url(#${gradId})`}
+              strokeWidth={active ? 7 : 5}
+              strokeLinecap="round"
+            >
               <title>{`${ch.name} (${ch.key}) — электромагнитный: каждый даёт свою половину`}</title>
             </line>
-            <circle cx={mx} cy={my} r={4.5} fill="#fff" stroke={CHANNEL_SOURCE_COLOR.electromagnetic} strokeWidth={2} />
+            <circle
+              cx={mx}
+              cy={my}
+              r={4.5}
+              fill="#fff"
+              stroke={CHANNEL_SOURCE_COLOR.electromagnetic}
+              strokeWidth={2}
+              className={styles.pulseSpark}
+            />
           </g>
         );
         return;
@@ -135,8 +167,10 @@ export function CompositeBodygraph({
           x2={lx2}
           y2={ly2}
           stroke={CHANNEL_SOURCE_COLOR[ch.source]}
-          strokeWidth={5}
+          strokeWidth={active ? 7 : 5}
           strokeLinecap="round"
+          opacity={dimmed ? 0.25 : 1}
+          {...interactive}
         >
           <title>{`${ch.name} (${ch.key})`}</title>
         </line>

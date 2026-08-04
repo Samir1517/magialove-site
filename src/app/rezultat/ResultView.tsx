@@ -27,7 +27,9 @@ import { SynthesisPanel } from "@/components/systems/SynthesisPanel";
 import { FullReportForm } from "@/components/result/FullReportForm";
 import { ShareActions } from "@/components/result/ShareActions";
 import { PairSummary } from "@/components/result/PairSummary";
+import { ScorePetals } from "@/components/result/ScorePetals";
 import { Biwheel } from "@/components/viz/Biwheel";
+import { Reveal } from "@/components/viz/Reveal";
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { bandStyle, formatScore } from "@/components/viz/scale";
 import styles from "@/components/result/result.module.css";
@@ -125,6 +127,7 @@ export function ResultView() {
       </p>
 
       <div className={styles.overallCard}>
+        <ScorePetals show={overall >= 80} />
         <div className={styles.archetypeRow}>
           <ScoreRing percent={overall} gradientId="overall-ring" size={158} stroke={11} />
           <div className={styles.archetypeMeta}>
@@ -170,28 +173,44 @@ export function ResultView() {
 
       <PairSummary highlights={highlights} roles={roles} nameA={nameA} nameB={nameB} />
 
-      <ShareActions
-        nameA={nameA !== "Первый партнёр" ? nameA : ""}
-        nameB={nameB !== "Второй партнёр" ? nameB : ""}
-        score={overall}
-        verdictLabel={verdict.label}
-      />
+      <Reveal>
+        <ShareActions
+          nameA={nameA !== "Первый партнёр" ? nameA : ""}
+          nameB={nameB !== "Второй партнёр" ? nameB : ""}
+          score={overall}
+          verdictLabel={verdict.label}
+        />
+      </Reveal>
 
-      <DailySection a={data.a} b={data.b} />
+      <Reveal>
+        <DailySection a={data.a} b={data.b} />
+      </Reveal>
 
-      {crossThemes && <SynthesisPanel themes={crossThemes} />}
+      {crossThemes && (
+        <Reveal>
+          <SynthesisPanel themes={crossThemes} />
+        </Reveal>
+      )}
 
-      <MatrixSection report={matrix} standaloneHref={matrixHref} />
+      <Reveal>
+        <MatrixSection report={matrix} standaloneHref={matrixHref} />
+      </Reveal>
 
-      <NumerologySection report={numerology} nameA={nameA} nameB={nameB} standaloneHref={numerologyHref} />
+      <Reveal>
+        <NumerologySection report={numerology} nameA={nameA} nameB={nameB} standaloneHref={numerologyHref} />
+      </Reveal>
 
       {humanDesign ? (
-        <HumanDesignSection report={humanDesign} nameA={nameA} nameB={nameB} standaloneHref={humanDesignHref} />
+        <Reveal>
+          <HumanDesignSection report={humanDesign} nameA={nameA} nameB={nameB} standaloneHref={humanDesignHref} />
+        </Reveal>
       ) : null}
 
       {jyotish ? (
         <>
-          <JyotishSection report={jyotish} nameA={nameA} nameB={nameB} standaloneHref={jyotishHref} />
+          <Reveal>
+            <JyotishSection report={jyotish} nameA={nameA} nameB={nameB} standaloneHref={jyotishHref} />
+          </Reveal>
           {grahas && (
             <section className={systemStyles.section} aria-labelledby="biwheel-title">
               <div className={systemStyles.sectionHead}>

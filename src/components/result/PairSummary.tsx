@@ -1,6 +1,7 @@
 import type { PairHighlights, RoleAssignment } from "@/lib/engines/highlights";
 import { FACTOR_SYSTEM_NAMES } from "@/lib/engines/highlights";
 import { bandStyle, formatScore } from "@/components/viz/scale";
+import { Reveal } from "@/components/viz/Reveal";
 import styles from "./result.module.css";
 
 /**
@@ -25,6 +26,7 @@ export function PairSummary({
   return (
     <>
       {/* Самая сильная нить */}
+      <Reveal>
       <div className={styles.threadCard}>
         <div className={styles.threadLabel}>Самая сильная нить вашей пары</div>
         <div className={styles.threadRow}>
@@ -40,8 +42,10 @@ export function PairSummary({
           </div>
         </div>
       </div>
+      </Reveal>
 
       {/* Сильные стороны / зоны роста */}
+      <Reveal delay={120}>
       <div className={styles.hlGrid}>
         <div className={styles.hlLight}>
           <span className={styles.hlLabel}>Что течёт само</span>
@@ -82,9 +86,11 @@ export function PairSummary({
           )}
         </div>
       </div>
+      </Reveal>
 
       {/* Роли в паре */}
       {roles.length > 0 && (
+        <Reveal delay={200}>
         <div className={styles.rolesBlock}>
           <div className={styles.threadLabel}>Роли в вашей паре</div>
           <p className={styles.rolesNote}>
@@ -110,6 +116,7 @@ export function PairSummary({
             ))}
           </div>
         </div>
+        </Reveal>
       )}
     </>
   );

@@ -1,5 +1,10 @@
+"use client";
+
+import { useRef } from "react";
 import type { GrahaPosition } from "@/lib/engines/jyotish";
 import { RASHI_NAMES } from "@/lib/engines/jyotish-tables";
+import { useInView } from "./useInView";
+import styles from "./viz.module.css";
 
 /**
  * Биколесо пары: два концентрических круга с сидерическими положениями девяти
@@ -120,12 +125,16 @@ export function Biwheel({
   const aSpread = spread(aGrahas);
   const bSpread = spread(bGrahas);
   const aspects = findAspects(aGrahas, bGrahas);
+  const svgRef = useRef<SVGSVGElement>(null);
+  const inView = useInView(svgRef);
 
   return (
     <svg
+      ref={svgRef}
       viewBox={`0 0 ${SIZE} ${SIZE}`}
       width="100%"
       style={{ maxWidth: SIZE, height: "auto" }}
+      className={inView ? styles.drawn : undefined}
       role="img"
       aria-label={`Биколесо пары: положения девяти грах ${nameA} и ${nameB} по 12 знакам зодиака`}
     >
@@ -177,6 +186,8 @@ export function Biwheel({
               y2={y2}
               stroke={asp.def.color}
               strokeWidth={asp.def.angle === 0 ? 1.8 : 1.2}
+              pathLength={1}
+              className={styles.drawLineSlow}
             >
               <title>{`${asp.a.name} ${asp.def.name} ${asp.b.name} (орб ${asp.exactness.toFixed(1)}°)`}</title>
             </line>

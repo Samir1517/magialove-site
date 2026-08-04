@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { IndividualMatrix, PositionKey } from "@/lib/engines/matrix";
 import { getArcanumInfo, POSITION_TO_ZONE, ZONE_TITLES, zoneCharacter } from "@/lib/engines/matrix";
+import { useInView } from "./useInView";
 import styles from "./viz.module.css";
 
 /**
@@ -64,6 +65,8 @@ function pointColor(p: PointSpec): { fill: string; ring: string } {
 
 export function MatrixOctagram({ pair }: { pair: IndividualMatrix }) {
   const [selected, setSelected] = useState<PositionKey>("center");
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const inView = useInView(wrapRef);
 
   const sel = POINTS.find((p) => p.key === selected)!;
   const selArcanum = getArcanumInfo(pair[selected]);
@@ -90,22 +93,22 @@ export function MatrixOctagram({ pair }: { pair: IndividualMatrix }) {
   };
 
   return (
-    <div className={styles.octagramWrap}>
+    <div className={styles.octagramWrap} ref={wrapRef}>
       <svg
         viewBox={`0 0 ${SIZE} ${SIZE}`}
-        className={styles.octagramSvg}
+        className={inView ? `${styles.octagramSvg} ${styles.drawn}` : styles.octagramSvg}
         role="img"
         aria-label="Октаграмма общей матрицы пары: 9 позиций с арканами"
       >
         {/* Родовой (прямой) квадрат */}
-        <polygon points={square(R_DIAG * Math.SQRT2, false)} fill="none" stroke="#e5d8e5" strokeWidth={1.5} />
+        <polygon points={square(R_DIAG * Math.SQRT2, false)} fill="none" stroke="#e5d8e5" strokeWidth={1.5} pathLength={1} className={styles.drawLine} />
         {/* Личный квадрат (ромб) */}
-        <polygon points={square(R_OUTER, true)} fill="none" stroke="#dcc7d8" strokeWidth={1.5} />
+        <polygon points={square(R_OUTER, true)} fill="none" stroke="#dcc7d8" strokeWidth={1.5} pathLength={1} className={styles.drawLine} />
         {/* Диагонали через центр */}
-        <line x1={C - R_OUTER} y1={C} x2={C + R_OUTER} y2={C} stroke="#eee0ea" strokeWidth={1} />
-        <line x1={C} y1={C - R_OUTER} x2={C} y2={C + R_OUTER} stroke="#eee0ea" strokeWidth={1} />
-        <line x1={C - DIAG} y1={C - DIAG} x2={C + DIAG} y2={C + DIAG} stroke="#eee0ea" strokeWidth={1} />
-        <line x1={C + DIAG} y1={C - DIAG} x2={C - DIAG} y2={C + DIAG} stroke="#eee0ea" strokeWidth={1} />
+        <line x1={C - R_OUTER} y1={C} x2={C + R_OUTER} y2={C} stroke="#eee0ea" strokeWidth={1} pathLength={1} className={styles.drawLineSlow} />
+        <line x1={C} y1={C - R_OUTER} x2={C} y2={C + R_OUTER} stroke="#eee0ea" strokeWidth={1} pathLength={1} className={styles.drawLineSlow} />
+        <line x1={C - DIAG} y1={C - DIAG} x2={C + DIAG} y2={C + DIAG} stroke="#eee0ea" strokeWidth={1} pathLength={1} className={styles.drawLineSlow} />
+        <line x1={C + DIAG} y1={C - DIAG} x2={C - DIAG} y2={C + DIAG} stroke="#eee0ea" strokeWidth={1} pathLength={1} className={styles.drawLineSlow} />
 
         {POINTS.map((p) => {
           const { fill, ring } = pointColor(p);
@@ -119,7 +122,18 @@ export function MatrixOctagram({ pair }: { pair: IndividualMatrix }) {
               role="button"
               aria-label={`${p.meaning}: аркан ${pair[p.key]}`}
             >
-              {active && <circle cx={p.x} cy={p.y} r={r + 7} fill="none" stroke={ring} strokeWidth={1.5} opacity={0.55} />}
+              {active && (
+                <circle
+                  cx={p.x}
+                  cy={p.y}
+                  r={r + 7}
+                  fill="none"
+                  stroke={ring}
+                  strokeWidth={1.5}
+                  opacity={0.55}
+                  className={styles.pulsePoint}
+                />
+              )}
               <circle cx={p.x} cy={p.y} r={r} fill={fill} stroke={ring} strokeWidth={active ? 2.5 : 1.5} />
               <text
                 x={p.x}

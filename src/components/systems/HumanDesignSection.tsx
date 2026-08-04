@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import type { SystemReport } from "@/lib/engines/types";
 import type { HumanDesignRawFeatures } from "@/lib/engines/human_design";
@@ -38,6 +41,15 @@ export function HumanDesignSection({
   const theme = themeContent(f.connectionTheme.defined);
   const composite = f.composite;
   const detailed = !standaloneHref;
+
+  // Связка «карточка канала ↔ линия на бодиграфе»: наведение на карточку
+  // подсвечивает линию, клик по линии скроллит к карточке.
+  const [hoverChannel, setHoverChannel] = useState<string | null>(null);
+  const scrollToChannel = (key: string) => {
+    document.getElementById(`hd-channel-${key}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
+    setHoverChannel(key);
+    setTimeout(() => setHoverChannel(null), 2000);
+  };
 
   const counts = SOURCE_ORDER.map((source) => ({
     source,
@@ -121,7 +133,12 @@ export function HumanDesignSection({
       <div className={styles.graphLayout}>
         <div>
           <h3 className={styles.blockTitle}>Композитный бодиграф</h3>
-          <CompositeBodygraph channels={composite.channels} definedCenters={composite.definedCenters} />
+          <CompositeBodygraph
+            channels={composite.channels}
+            definedCenters={composite.definedCenters}
+            highlightKey={hoverChannel}
+            onChannelClick={scrollToChannel}
+          />
           <Legend
             entries={SOURCE_ORDER.map((s) => ({
               color: CHANNEL_SOURCE_COLOR[s],
@@ -177,18 +194,31 @@ export function HumanDesignSection({
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {group.items.map((c) => {
                   const article = getHDChannelArticle(c.key);
-                  return article ? (
-                    <ArticleDisclosure
+                  return (
+                    <div
                       key={c.key}
-                      article={article}
-                      eyebrow={`${c.name} (${c.key})`}
-                      moreHref={`/dizajn-cheloveka-sovmestimost/kanaly/${c.key}/`}
-                      moreLabel={`Канал ${c.name} (${c.key}): разбор для пары →`}
-                    />
-                  ) : (
-                    <p key={c.key} className={styles.channelList}>
-                      {c.name} ({c.key})
-                    </p>
+                      id={`hd-channel-${c.key}`}
+                      onMouseEnter={() => setHoverChannel(c.key)}
+                      onMouseLeave={() => setHoverChannel(null)}
+                      style={
+                        hoverChannel === c.key
+                          ? { outline: "2px solid var(--accent-pink)", outlineOffset: 4, borderRadius: 14, transition: "outline-color 0.2s ease" }
+                          : undefined
+                      }
+                    >
+                      {article ? (
+                        <ArticleDisclosure
+                          article={article}
+                          eyebrow={`${c.name} (${c.key})`}
+                          moreHref={`/dizajn-cheloveka-sovmestimost/kanaly/${c.key}/`}
+                          moreLabel={`Канал ${c.name} (${c.key}): разбор для пары →`}
+                        />
+                      ) : (
+                        <p className={styles.channelList}>
+                          {c.name} ({c.key})
+                        </p>
+                      )}
+                    </div>
                   );
                 })}
               </div>
