@@ -1,8 +1,22 @@
-# Принудительный HTTPS: сертификат на Беггете подключён и работает.
+# Канонизация URL: один адрес — одна страница (SEO, против дублей в индексе).
 RewriteEngine On
-RewriteCond %{HTTPS} off
-RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
 
-# 301: /index.html -> / (канонический URL без index.html, чтобы Яндекс и Google
-# не индексировали два разных адреса одной и той же главной страницы).
-RewriteRule ^index\.html$ / [R=301,L]
+# 1. Канонический хост: https:// без www — одним 301-редиректом без цепочек.
+#    Ловит все три неканонических варианта: http://www, https://www, http://.
+#    $1 в per-directory контексте уже без ведущего слэша и со схлопнутыми
+#    повторными слэшами — заодно чинит и их за один переход.
+RewriteCond %{HTTP_HOST} ^www\.magialove\.ru$ [NC,OR]
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://magialove.ru/$1 [R=301,L,NE]
+
+# 2. /index.html в любом каталоге -> URL без index.html.
+#    Условие по THE_REQUEST: срабатывает только на явный запрос клиента,
+#    а не на внутренний DirectoryIndex-подзапрос (иначе была бы петля).
+RewriteCond %{THE_REQUEST} ^[A-Z]+\s/(.*/)?index\.html[?\s] [NC]
+RewriteRule ^(.*/)?index\.html$ https://magialove.ru/$1 [R=301,L,NE]
+
+# 3. Повторяющиеся слэши (//razdel//, /razdel//page/) -> одинарные.
+#    THE_REQUEST хранит сырой запрос со слэшами, а путь в RewriteRule
+#    Apache уже схлопнул — подставляем его как канонический.
+RewriteCond %{THE_REQUEST} \s[^?\s]*//
+RewriteRule ^(.*)$ https://magialove.ru/$1 [R=301,L,NE]
