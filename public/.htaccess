@@ -1,6 +1,26 @@
 # Канонизация URL: один адрес — одна страница (SEO, против дублей в индексе).
 RewriteEngine On
 
+# Служебные файлы наружу не отдаём. FTP-Deploy-Action кладёт в корень сайта
+# .ftp-deploy-sync-state.json — полный перечень всех файлов сайта с хешами,
+# 660+ КБ. Удалять нельзя (без него следующий деплой сделает полную пересинхру),
+# но и отдавать краулерам незачем: это и лишний вес в обходе, и опись
+# внутренней структуры. Правило закрывает заодно все точечные файлы (.git,
+# .env), если они когда-нибудь окажутся в корне.
+#
+# Обе ветки обязательны: Require — синтаксис Apache 2.4, Order/Deny — 2.2.
+# Незнакомая директива без обёртки IfModule роняет весь сайт в 500, поэтому
+# каждая закрыта проверкой наличия модуля.
+<FilesMatch "^\.">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
 # 0. Перенос двух калькуляторов с 3-го уровня на 2-й (август 2026).
 #    Было:  /po-date-rozhdeniya/matrica-sudby-sovmestimost/...
 #           /po-date-rozhdeniya/numerologiya-sovmestimost/...
