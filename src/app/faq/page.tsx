@@ -3,6 +3,7 @@ import { ContentShell } from "@/components/content/ContentShell";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/faq/" },
   title: "Вопросы и ответы о сервисе",
   description: "Частые вопросы о расчёте совместимости: точность, приватность данных, что делать при низком балле, нужно ли точное время рождения.",
 };

@@ -5,6 +5,7 @@ import { ZODIAC_SIGNS, ELEMENT_LABEL, MODALITY_LABEL } from "@/lib/data/zodiac";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/znaki-zodiaka/" },
   title: "Совместимость знаков зодиака: таблица и разбор пар",
   description:
     "Классическая совместимость 12 знаков зодиака по стихиям и крестам — светлые и теневые стороны каждой пары. Справочный раздел, в конце — ссылка на реальный расчёт по 4 системам.",

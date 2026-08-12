@@ -8,6 +8,7 @@ import nakshatraData from "@/lib/data/jyotish/nakshatra.json";
 const NAKSHATRAS = (nakshatraData as { nakshatras: { i: number; name: string }[] }).nakshatras;
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dzhyotish-sovmestimost/nakshatry/" },
   title: "27 накшатр Луны: значение для совместимости пары",
   description:
     "Управляющее божество, символ и гана каждой из 27 накшатр — лунных домов Джйотиш. Светлые и теневые качества, тема отношений. По Брихат Парашара Хора Шастре.",

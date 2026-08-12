@@ -3,6 +3,7 @@ import { ContentShell } from "@/components/content/ContentShell";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/kontakty/" },
   title: "Контакты",
   description: "Как связаться с сервисом «Совместимость».",
 };

@@ -7,6 +7,7 @@ import styles from "@/components/content/content.module.css";
 const ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/numerologiya-sovmestimost/karta/" },
   title: "Карта Нумерологии: все страницы совместимости по системе",
   description:
     "Полный список страниц раздела «Нумерология» — калькулятор, 12 чисел жизненного пути, психоматрица и число имени.",

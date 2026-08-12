@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import styles from "./page.module.css";
 import { MainNav } from "@/components/nav/MainNav";
@@ -5,6 +6,14 @@ import { HubFaq } from "@/components/content/HubDepth";
 import { HeroForm } from "@/components/landing/HeroForm";
 import { HeroIllustration } from "@/components/landing/HeroIllustration";
 import { SITE_URL } from "@/lib/site-config";
+
+// Только canonical: title, description и og берутся из layout.tsx — metadata
+// в Next.js сливается по полям, а не заменяется целиком. В layout canonical
+// класть нельзя: его унаследовали бы страницы результатов, а canonical на
+// noindex-странице — противоречивый сигнал для поисковика.
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const HOME_SCHEMA = {
   "@context": "https://schema.org",

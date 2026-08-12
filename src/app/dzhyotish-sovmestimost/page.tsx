@@ -6,6 +6,7 @@ import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dzhyotish-sovmestimost/" },
   title: "Совместимость по Джйотиш (ведическая астрология): расчёт Гуна-милан",
   description:
     "Ведическая астрология считает совместимость пары по Аштакуте Гуна-милан (36 баллов, 8 кут) и трём дошам — Нади, Бхакут, Мангал. По Брихат Парашара Хора Шастре.",

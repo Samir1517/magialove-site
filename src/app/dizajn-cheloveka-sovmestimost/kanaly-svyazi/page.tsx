@@ -7,6 +7,7 @@ import styles from "@/components/content/content.module.css";
 const CONN_ORDER = ["electromagnetic", "companionship", "dominance", "compromise"];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dizajn-cheloveka-sovmestimost/kanaly-svyazi/" },
   title: "Каналы связи в композите: что соединяет пару в Дизайне человека",
   description:
     "4 типа связи каналов в композите пары — электромагнитная, компаньонство, доминирование, компромисс. Что каждый тип означает для отношений, свет и тень каждой связи.",

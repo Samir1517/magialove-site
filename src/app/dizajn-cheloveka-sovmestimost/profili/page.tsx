@@ -5,6 +5,7 @@ import { getHDProfileArticle, profileSlug } from "@/lib/content/articles";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dizajn-cheloveka-sovmestimost/profili/" },
   title: "12 профилей Дизайна человека: значение профиля в совместимости пары",
   description:
     "Все 12 профилей Дизайна человека и их роль в паре: что означает каждая из шести линий, чем сознательная линия отличается от бессознательной и как профиль партнёра проявляется в отношениях.",

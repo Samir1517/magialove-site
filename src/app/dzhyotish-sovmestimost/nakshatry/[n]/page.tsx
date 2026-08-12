@@ -25,6 +25,7 @@ export async function generateMetadata({
   const data = getData(n);
   if (!data) return {};
   return {
+    alternates: { canonical: `/dzhyotish-sovmestimost/nakshatry/${n}/` },
     title: `${data.article.title} — значение для совместимости`,
     description: data.article.capsule.slice(0, 155),
   };

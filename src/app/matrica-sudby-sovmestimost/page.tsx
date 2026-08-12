@@ -7,6 +7,7 @@ import { allMatrixArticles } from "@/lib/content/articles";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/matrica-sudby-sovmestimost/" },
   title: "Совместимость по матрице судьбы: расчёт и расшифровка",
   description:
     "Матрица судьбы пары строится наложением дат рождения на октаграмму — 22 аркана, 5 зон союза (любовь, деньги, дети, предназначение, точка комфорта). Свет и тень каждого аркана.",

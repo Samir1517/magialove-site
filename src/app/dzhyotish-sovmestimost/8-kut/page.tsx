@@ -7,6 +7,7 @@ import styles from "@/components/content/content.module.css";
 const KUTA_ORDER = ["varna", "vashya", "tara", "yoni", "graha_maitri", "gana", "bhakoot", "nadi"];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dzhyotish-sovmestimost/8-kut/" },
   title: "8 кут Ашткута (Гуна-милан): как считаются 36 баллов совместимости",
   description:
     "Варна, Вашья, Тара, Йони, Граха Майтри, Гана, Бхакут, Нади — восемь кут классической Аштакуты Джйотиш, дающих до 36 баллов совместимости. По Брихат Парашара Хора Шастре.",

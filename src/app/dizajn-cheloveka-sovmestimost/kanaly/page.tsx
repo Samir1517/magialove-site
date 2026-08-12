@@ -6,6 +6,7 @@ import { getHDChannelArticle } from "@/lib/content/articles";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dizajn-cheloveka-sovmestimost/kanaly/" },
   title: "36 каналов Дизайна человека: значение каждого канала в композите",
   description:
     "Полный список 36 каналов Rave-мандалы — что означает каждый канал, если он определён в композите твоей пары, целиком у одного партнёра или электромагнитно (по половине у каждого).",

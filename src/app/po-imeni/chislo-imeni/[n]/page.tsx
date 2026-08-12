@@ -27,6 +27,7 @@ export async function generateMetadata({
   const data = getData(n);
   if (!data) return {};
   return {
+    alternates: { canonical: `/po-imeni/chislo-imeni/${n}/` },
     title: `${data.article.title} — значение в отношениях`,
     description: data.article.capsule.slice(0, 155),
   };

@@ -6,6 +6,7 @@ import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dizajn-cheloveka-sovmestimost/" },
   title: "Совместимость по Дизайну человека: расчёт композита",
   description:
     "Композит пары в Дизайне человека — объединение каналов двух людей, включая электромагнитные. Connection Theme, типы, авторитеты и каналы связи. По Ра Уру Ху и Линде Баннелл.",

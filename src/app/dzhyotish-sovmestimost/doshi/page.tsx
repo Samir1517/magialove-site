@@ -7,6 +7,7 @@ import styles from "@/components/content/content.module.css";
 const DOSHA_ORDER = ["nadi", "bhakoot", "mangal"];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dzhyotish-sovmestimost/doshi/" },
   title: "Доши в Джйотиш: Нади, Бхакут, Мангал доша (манглик) — без фатализма",
   description:
     "Что означают традиционные отягощения совместимости Джйотиш — Нади доша, Бхакут доша, Мангал доша (манглик). Честно о культурном статусе традиции, без страха и приговоров.",

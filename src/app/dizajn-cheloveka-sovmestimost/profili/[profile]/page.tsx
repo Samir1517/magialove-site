@@ -24,6 +24,7 @@ export async function generateMetadata({
   const article = getHDProfileArticle(profileFromSlug(profile));
   if (!article) return {};
   return {
+    alternates: { canonical: `/dizajn-cheloveka-sovmestimost/profili/${profile}/` },
     title: `${article.title.replace(" в совместимости пары по Дизайну человека", "")} — значение в паре`,
     description: article.capsule.slice(0, 155),
   };

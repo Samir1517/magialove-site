@@ -7,6 +7,7 @@ import styles from "@/components/content/content.module.css";
 const TYPE_ORDER = ["Генератор", "Манифестирующий генератор", "Проектор", "Манифестор", "Рефлектор"];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dizajn-cheloveka-sovmestimost/tipy/" },
   title: "5 типов Дизайна человека в паре: кто с кем совместим",
   description:
     "Генератор, Манифестирующий генератор, Проектор, Манифестор, Рефлектор — что каждый тип означает для пары через Стратегию и Сигнатуру/Тему не-self. По Ра Уру Ху и Линде Баннелл.",

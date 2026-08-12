@@ -26,6 +26,7 @@ export async function generateMetadata({
   const data = getData(n);
   if (!data) return {};
   return {
+    alternates: { canonical: `/matrica-sudby-sovmestimost/arkany/${n}/` },
     title: `${data.article.title} — значение и совместимость`,
     description: data.article.capsule.slice(0, 155),
   };

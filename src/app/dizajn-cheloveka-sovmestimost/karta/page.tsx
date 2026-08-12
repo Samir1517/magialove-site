@@ -5,6 +5,7 @@ import { CHANNELS } from "@/lib/engines/human-design-tables";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dizajn-cheloveka-sovmestimost/karta/" },
   title: "Карта Дизайна человека: все страницы совместимости по системе",
   description:
     "Полный список страниц раздела «Дизайн человека» — калькулятор композита, 5 типов, 7 авторитетов, каналы связи и все 36 каналов.",

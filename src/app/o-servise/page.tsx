@@ -3,6 +3,7 @@ import { ContentShell } from "@/components/content/ContentShell";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/o-servise/" },
   title: "О сервисе: методология расчёта по 4 системам",
   description:
     "Как «Совместимость» считает пару: Матрица судьбы, Нумерология, Дизайн человека, Джйотиш — источники методики, честные ограничения и принцип «свет и тень» в каждом качестве.",

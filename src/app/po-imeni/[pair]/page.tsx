@@ -53,6 +53,7 @@ export async function generateMetadata({
   const data = getData(pair);
   if (!data) return {};
   return {
+    alternates: { canonical: `/po-imeni/${pair}/` },
     title: `${data.m} и ${data.f}: совместимость имён`,
     description: `Совместимость имён ${data.m} и ${data.f} по нумерологии — Число Имени, Число Души, Число Личности каждого и общий балл пары.`,
   };

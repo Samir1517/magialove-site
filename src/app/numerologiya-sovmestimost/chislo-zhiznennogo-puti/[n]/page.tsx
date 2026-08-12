@@ -27,6 +27,7 @@ export async function generateMetadata({
   const data = getData(n);
   if (!data) return {};
   return {
+    alternates: { canonical: `/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/` },
     title: `${data.article.title} — характеристика и совместимость`,
     description: data.article.capsule.slice(0, 155),
   };

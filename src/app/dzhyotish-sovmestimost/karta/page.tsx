@@ -5,6 +5,7 @@ import { allJyotishNakshatraArticles } from "@/lib/content/articles";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dzhyotish-sovmestimost/karta/" },
   title: "Карта Джйотиш: все страницы совместимости по системе",
   description:
     "Полный список страниц раздела «Джйотиш» — калькулятор Аштакута, 8 кут, 3 доши и разбор всех 27 накшатр пары.",

@@ -6,6 +6,7 @@ import { HubCalculator } from "./HubCalculator";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/po-date-rozhdeniya/" },
   title: "Совместимость мужчины и женщины по дате рождения",
   description:
     "Совместимость по дате рождения: Матрица судьбы и Нумерология считаются сразу по двум датам. Знаешь время рождения — добавятся Дизайн человека и Джйотиш. Бесплатно.",

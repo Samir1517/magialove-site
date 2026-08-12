@@ -10,6 +10,7 @@ const AUTH_ORDER = [
 ];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/dizajn-cheloveka-sovmestimost/avtoritety/" },
   title: "7 авторитетов Дизайна человека в паре: ритм принятия решений",
   description:
     "Эмоциональный, Сакральный, Селезёночный, Эго, Самопроекционный, Ментальный, Лунный авторитет — как каждый определяет темп решений в паре и что означает несовпадение авторитетов.",

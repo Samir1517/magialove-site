@@ -18,6 +18,7 @@ export async function generateMetadata({
   const article = getHDChannelArticle(key);
   if (!article) return {};
   return {
+    alternates: { canonical: `/dizajn-cheloveka-sovmestimost/kanaly/${key}/` },
     title: `${article.title} — значение в композите пары`,
     description: article.capsule.slice(0, 155),
   };

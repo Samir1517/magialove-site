@@ -7,6 +7,7 @@ import styles from "@/components/content/content.module.css";
 const LINE_ORDER = ["will", "family", "stability", "talent", "selfworth", "goal", "temperament", "spirit"];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/numerologiya-sovmestimost/psihomatritsa/" },
   title: "Психоматрица (квадрат Пифагора) пары: как считать совместимость",
   description:
     "8 линий Квадрата Пифагора в паре: что измеряет каждая линия, что означает совпадение партнёров, а что — расхождение. Современная символическая техника, честно о её происхождении.",

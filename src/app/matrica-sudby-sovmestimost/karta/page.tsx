@@ -5,6 +5,7 @@ import { allMatrixArticles } from "@/lib/content/articles";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/matrica-sudby-sovmestimost/karta/" },
   title: "Карта Матрицы судьбы: все страницы совместимости по системе",
   description:
     "Полный список страниц раздела «Матрица судьбы» — калькулятор совместимости и разбор всех 22 арканов пары в одном месте.",

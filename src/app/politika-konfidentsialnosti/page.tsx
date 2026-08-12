@@ -3,6 +3,7 @@ import { ContentShell } from "@/components/content/ContentShell";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/politika-konfidentsialnosti/" },
   title: "Политика обработки персональных данных",
   description: "Как сервис «Совместимость» обращается с датами рождения и другими данными пользователей.",
 };

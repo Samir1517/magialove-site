@@ -69,6 +69,7 @@ export async function generateMetadata({
       ? `Совместимость ${a.name} и ${a.name}: два представителя одного знака`
       : `Совместимость ${a.name} и ${b.genitive}: любовь, брак, дружба`;
   return {
+    alternates: { canonical: `/znaki-zodiaka/${pair}/` },
     title,
     description: `Классическая астрологическая совместимость ${a.genitive} и ${b.genitive} — стихии, кресты, светлые и теневые стороны союза.`,
   };

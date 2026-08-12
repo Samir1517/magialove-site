@@ -9,6 +9,7 @@ import styles from "@/components/content/content.module.css";
 const ORDER = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22, 33];
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/numerologiya-sovmestimost/" },
   title: "Совместимость по нумерологии: расчёт по числам партнёров",
   description:
     "Число жизненного пути каждого партнёра плюс Квадрат Пифагора (психоматрица) — 12 чисел и 8 линий совместимости пары. По Cheiro's Book of Numbers и современной психоматрице.",
