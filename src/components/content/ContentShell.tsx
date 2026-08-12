@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Breadcrumbs, type Crumb } from "./Breadcrumbs";
+import { MainNav } from "@/components/nav/MainNav";
 import styles from "./content.module.css";
 
 /** Общий каркас для всех справочных/SEO-страниц: шапка, крошки, подвал. */
@@ -16,6 +17,7 @@ export function ContentShell({
         <Link href="/" className={styles.logo}>
           СОВМЕСТИМОСТЬ
         </Link>
+        <MainNav />
         <Link href="/" className="btn" style={{ padding: "10px 20px", fontSize: 13 }}>
           Рассчитать бесплатно
         </Link>

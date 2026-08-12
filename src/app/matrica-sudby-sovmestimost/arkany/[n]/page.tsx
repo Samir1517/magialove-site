@@ -44,8 +44,7 @@ export default async function ArcanumPage({ params }: { params: Promise<{ n: str
     <ContentShell
       breadcrumbs={[
         { label: "Главная", href: "/" },
-        { label: "По дате рождения", href: "/po-date-rozhdeniya/" },
-        { label: "Матрица судьбы", href: "/po-date-rozhdeniya/matrica-sudby-sovmestimost/" },
+        { label: "Матрица судьбы", href: "/matrica-sudby-sovmestimost/" },
         { label: `Аркан ${num}` },
       ]}
     >
@@ -57,17 +56,17 @@ export default async function ArcanumPage({ params }: { params: Promise<{ n: str
       <CalcCta
         title="Узнай свой аркан пары"
         text="Этот разбор — часть общей матрицы совместимости. Введи обе даты рождения, чтобы увидеть, какие 5 арканов сложились именно в твоей паре."
-        href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/"
+        href="/matrica-sudby-sovmestimost/"
       />
 
       <div className={styles.pairNav}>
         {prev ? (
-          <Link href={`/po-date-rozhdeniya/matrica-sudby-sovmestimost/arkany/${num - 1}/`} className={styles.pairNavLink}>
+          <Link href={`/matrica-sudby-sovmestimost/arkany/${num - 1}/`} className={styles.pairNavLink}>
             ← {prev.title.replace(/^Аркан \d+ /, "Аркан ")}
           </Link>
         ) : <span />}
         {next ? (
-          <Link href={`/po-date-rozhdeniya/matrica-sudby-sovmestimost/arkany/${num + 1}/`} className={styles.pairNavLink}>
+          <Link href={`/matrica-sudby-sovmestimost/arkany/${num + 1}/`} className={styles.pairNavLink}>
             {next.title.replace(/^Аркан \d+ /, "Аркан ")} →
           </Link>
         ) : <span />}

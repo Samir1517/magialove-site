@@ -29,7 +29,7 @@ export function MatrixResultView() {
       <div className={resultStyles.wrap}>
         <p className={resultStyles.missing}>
           Не хватает данных для расчёта.{" "}
-          <Link href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/">Вернитесь назад и укажите обе даты рождения</Link>.
+          <Link href="/matrica-sudby-sovmestimost/">Вернитесь назад и укажите обе даты рождения</Link>.
         </p>
       </div>
     );
@@ -69,7 +69,7 @@ export function MatrixResultView() {
         params={new URLSearchParams(params.toString())}
       />
 
-      <Link href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
+      <Link href="/matrica-sudby-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару
       </Link>
     </div>

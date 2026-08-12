@@ -1,5 +1,6 @@
 import Link from "next/link";
 import styles from "./page.module.css";
+import { MainNav } from "@/components/nav/MainNav";
 import { HeroForm } from "@/components/landing/HeroForm";
 import { HeroIllustration } from "@/components/landing/HeroIllustration";
 import { SITE_URL } from "@/lib/site-config";
@@ -41,7 +42,7 @@ const METHODS = [
     n: "01",
     title: "Нумерология",
     text: "Числа даты рождения раскрывают характер и сценарии отношений двоих.",
-    href: "/po-date-rozhdeniya/numerologiya-sovmestimost/",
+    href: "/numerologiya-sovmestimost/",
   },
   {
     n: "02",
@@ -59,7 +60,7 @@ const METHODS = [
     n: "04",
     title: "Матрица судьбы",
     text: "Архетипы на карте судьбы показывают точки притяжения и уроки друг для друга.",
-    href: "/po-date-rozhdeniya/matrica-sudby-sovmestimost/",
+    href: "/matrica-sudby-sovmestimost/",
   },
 ];
 
@@ -118,13 +119,7 @@ export default function Home() {
       />
       <header className={styles.header}>
         <div className={styles.logo}>СОВМЕСТИМОСТЬ</div>
-        <nav className={styles.nav} aria-label="Основная навигация">
-          <Link href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/">Матрица судьбы</Link>
-          <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/">Нумерология</Link>
-          <Link href="/dizajn-cheloveka-sovmestimost/">Дизайн человека</Link>
-          <Link href="/dzhyotish-sovmestimost/">Джйотиш</Link>
-          <a href="#how">Как это работает</a>
-        </nav>
+        <MainNav />
         <a href="#top" className={`btn ${styles.headerCta}`}>
           Рассчитать бесплатно
         </a>

@@ -58,6 +58,44 @@ export function calcWeightedScore(scores: SystemScores, context?: string): numbe
   return Math.round((weighted / totalWeight) * 10) / 10;
 }
 
+export interface EffectiveWeight {
+  system: keyof SystemScores;
+  title: string;
+  /** Доля в итоговом балле, 0..1, уже нормированная на доступные системы. */
+  share: number;
+}
+
+const SYSTEM_TITLES: Record<keyof SystemScores, string> = {
+  matrix: "Матрица судьбы",
+  numerology: "Нумерология",
+  human_design: "Дизайн человека",
+  jyotish: "Джйотиш",
+};
+
+/**
+ * Те же веса, по которым реально считается СИС в calcWeightedScore, но
+ * приведённые к долям от 100% — чтобы показать пользователю честную
+ * раскладку «из чего сложился балл», а не цифры из конфига, которые при
+ * недостающих системах всё равно перенормируются.
+ */
+export function getEffectiveWeights(scores: SystemScores, context?: string): EffectiveWeight[] {
+  const hasFullSet = scores.human_design !== null && scores.jyotish !== null;
+  const profileKey = hasFullSet ? context ?? "default" : "no_birth_time";
+  const profile = PROFILES[profileKey] ?? PROFILES.default;
+
+  const entries: [keyof SystemScores, number][] = [
+    ["matrix", profile.matrix],
+    ["numerology", profile.numerology],
+  ];
+  if (scores.human_design !== null) entries.push(["human_design", profile.human_design]);
+  if (scores.jyotish !== null) entries.push(["jyotish", profile.jyotish]);
+
+  const totalWeight = entries.reduce((s, [, w]) => s + w, 0);
+  return entries
+    .map(([system, w]) => ({ system, title: SYSTEM_TITLES[system], share: w / totalWeight }))
+    .sort((x, y) => y.share - x.share);
+}
+
 export interface Verdict {
   label: string;
   hook: string;

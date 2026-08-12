@@ -104,7 +104,7 @@ export function MatrixSection({
                   <ArticleDisclosure
                     article={article}
                     eyebrow={`Аркан ${info.number} «${info.name}» в зоне «${ZONE_TITLES[zone]}»`}
-                    moreHref={`/po-date-rozhdeniya/matrica-sudby-sovmestimost/arkany/${info.number}/`}
+                    moreHref={`/matrica-sudby-sovmestimost/arkany/${info.number}/`}
                     moreLabel={`Аркан ${info.number} «${info.name}»: значение и совместимость →`}
                   />
                 )}

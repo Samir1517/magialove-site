@@ -19,8 +19,7 @@ export default function PsychomatrixHubPage() {
     <ContentShell
       breadcrumbs={[
         { label: "Главная", href: "/" },
-        { label: "По дате рождения", href: "/po-date-rozhdeniya/" },
-        { label: "Нумерология", href: "/po-date-rozhdeniya/numerologiya-sovmestimost/" },
+        { label: "Нумерология", href: "/numerologiya-sovmestimost/" },
         { label: "Психоматрица" },
       ]}
     >
@@ -37,7 +36,7 @@ export default function PsychomatrixHubPage() {
       <CalcCta
         title="Построй квадрат для твоей пары"
         text="Здесь — общий смысл каждой линии. Чтобы увидеть свои реальные цифры и совпадения с партнёром, введи обе даты рождения."
-        href="/po-date-rozhdeniya/numerologiya-sovmestimost/"
+        href="/numerologiya-sovmestimost/"
       />
 
       {LINE_ORDER.map((key) => {

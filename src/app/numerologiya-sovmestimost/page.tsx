@@ -20,11 +20,12 @@ export default function NumerologyHubPage() {
     <ContentShell
       breadcrumbs={[
         { label: "Главная", href: "/" },
-        { label: "По дате рождения", href: "/po-date-rozhdeniya/" },
         { label: "Нумерология" },
       ]}
     >
-      <div className={styles.eyebrow}>По дате рождения</div>
+      <Link href="/po-date-rozhdeniya/" className={styles.eyebrow}>
+        По дате рождения
+      </Link>
       <h1 className={styles.h1}>Совместимость по нумерологии</h1>
       <p className={styles.lede}>
         Число жизненного пути — западная пифагорейско-халдейская традиция, кодифицированная
@@ -35,7 +36,7 @@ export default function NumerologyHubPage() {
       </p>
 
       <div className={styles.card}>
-        <HeroForm targetPath="/po-date-rozhdeniya/numerologiya-sovmestimost/rezultat" />
+        <HeroForm targetPath="/numerologiya-sovmestimost/rezultat" />
       </div>
 
       <h2 style={{ font: "600 15px var(--font-body)", color: "var(--ink)", margin: 0 }}>
@@ -49,7 +50,7 @@ export default function NumerologyHubPage() {
           return (
             <Link
               key={n}
-              href={`/po-date-rozhdeniya/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`}
+              href={`/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`}
               className={styles.gridLink}
             >
               <span className={styles.gridLinkNum}>{n}</span>
@@ -61,7 +62,7 @@ export default function NumerologyHubPage() {
       </div>
 
       <div className={styles.grid}>
-        <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/psihomatritsa/" className={styles.gridLink}>
+        <Link href="/numerologiya-sovmestimost/psihomatritsa/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Психоматрица (Квадрат Пифагора) →</span>
           <span className={styles.gridLinkText}>8 линий совпадений и различий партнёров по цифрам даты рождения</span>
         </Link>
@@ -69,9 +70,16 @@ export default function NumerologyHubPage() {
           <span className={styles.gridLinkTitle}>Число Имени →</span>
           <span className={styles.gridLinkText}>Та же нумерология, но по имени партнёров, а не по дате рождения</span>
         </Link>
-        <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/karta/" className={styles.gridLink}>
+        <Link href="/numerologiya-sovmestimost/karta/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Карта раздела →</span>
           <span className={styles.gridLinkText}>Все страницы Нумерологии на сервисе в одном месте</span>
+        </Link>
+        <Link href="/po-date-rozhdeniya/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Расчёт по дате рождения →</span>
+          <span className={styles.gridLinkText}>
+            Две даты — и сразу Нумерология с Матрицей судьбы, а со временем рождения ещё
+            Дизайн человека и Джйотиш
+          </span>
         </Link>
       </div>
     </ContentShell>

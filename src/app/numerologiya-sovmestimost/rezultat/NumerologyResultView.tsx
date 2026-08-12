@@ -29,7 +29,7 @@ export function NumerologyResultView() {
       <div className={resultStyles.wrap}>
         <p className={resultStyles.missing}>
           Не хватает данных для расчёта.{" "}
-          <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/">Вернитесь назад и укажите обе даты рождения</Link>.
+          <Link href="/numerologiya-sovmestimost/">Вернитесь назад и укажите обе даты рождения</Link>.
         </p>
       </div>
     );
@@ -65,7 +65,7 @@ export function NumerologyResultView() {
         params={new URLSearchParams(params.toString())}
       />
 
-      <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
+      <Link href="/numerologiya-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару
       </Link>
     </div>

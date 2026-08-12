@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ContentShell } from "@/components/content/ContentShell";
-import { HeroForm } from "@/components/landing/HeroForm";
+import { HubCalculator } from "./HubCalculator";
 import styles from "@/components/content/content.module.css";
 
 export const metadata: Metadata = {
   title: "Совместимость мужчины и женщины по дате рождения",
   description:
-    "Расчёт совместимости по дате рождения сразу по двум системам — Матрице судьбы и Нумерологии. Бесплатно, без регистрации, без ввода имени.",
+    "Совместимость по дате рождения: Матрица судьбы и Нумерология считаются сразу по двум датам. Знаешь время рождения — добавятся Дизайн человека и Джйотиш. Бесплатно.",
 };
 
 export default function ByDateHubPage() {
@@ -16,24 +16,26 @@ export default function ByDateHubPage() {
       <div className={styles.eyebrow}>Калькулятор</div>
       <h1 className={styles.h1}>Совместимость мужчины и женщины по дате рождения</h1>
       <p className={styles.lede}>
-        Введи обе даты рождения — и сразу получи расчёт по двум системам, которым для
-        точного результата не нужны ни время, ни место рождения: Матрице судьбы и Нумерологии.
-        Если позже добавишь точное время — откроются ещё Дизайн человека и Джйотиш.
+        Введи две даты рождения — свою и его. Матрица судьбы и Нумерология посчитаются сразу:
+        этим системам время не нужно. Знаешь ещё и время с городом рождения обоих — впиши здесь
+        же, и к разбору добавятся Дизайн человека и Джйотиш. Не знаешь время — просто поставь
+        галочку, расчёт всё равно будет.
       </p>
 
-      <div className={styles.card}>
-        <HeroForm />
-      </div>
+      <HubCalculator />
 
-      <div className={styles.grid}>
-        <Link href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/" className={styles.gridLink}>
-          <span className={styles.gridLinkTitle}>Матрица судьбы →</span>
-          <span className={styles.gridLinkText}>22 аркана, 5 зон союза, свет и тень каждого качества</span>
+      <div className={styles.sourceNote}>
+        Почему двум системам хватает даты, а двум — нет. Матрица судьбы и Нумерология работают
+        с цифрами дня, месяца и года: они одинаковы в любой час суток. Дизайн человека и
+        Джйотиш считают положение Луны и планет на момент рождения, а Луна проходит около 13°
+        в сутки при ширине накшатры 13°20′ — без времени её знак может оказаться соседним, и
+        тип в Дизайне человека тоже. Поэтому мы честно не показываем эти две системы, пока
+        времени нет, вместо того чтобы выдавать приблизительный результат за точный. Разбор
+        пары сразу по всем четырём системам — на{" "}
+        <Link href="/" style={{ color: "var(--accent)" }}>
+          главной странице
         </Link>
-        <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/" className={styles.gridLink}>
-          <span className={styles.gridLinkTitle}>Нумерология →</span>
-          <span className={styles.gridLinkText}>Число жизненного пути и Квадрат Пифагора твоей пары</span>
-        </Link>
+        .
       </div>
     </ContentShell>
   );

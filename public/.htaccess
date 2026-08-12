@@ -1,6 +1,27 @@
 # Канонизация URL: один адрес — одна страница (SEO, против дублей в индексе).
 RewriteEngine On
 
+# 0. Перенос двух калькуляторов с 3-го уровня на 2-й (август 2026).
+#    Было:  /po-date-rozhdeniya/matrica-sudby-sovmestimost/...
+#           /po-date-rozhdeniya/numerologiya-sovmestimost/...
+#    Стало: /matrica-sudby-sovmestimost/...  /numerologiya-sovmestimost/...
+#
+#    Блок стоит ПЕРВЫМ, до канонизации хоста: подстановка здесь — абсолютный
+#    канонический URL (https, без www), поэтому старый путь, запрошенный с www
+#    или по http, чинится ОДНИМ 301, а не цепочкой «сначала хост, потом путь».
+#    [L] обрывает обработку. Петли нет: новые пути не начинаются с
+#    po-date-rozhdeniya/, поэтому правило не может сработать на свой результат.
+#    Хаб /po-date-rozhdeniya/ не затрагивается — оба шаблона требуют после него
+#    подкаталог с конкретным именем. Query string сохраняется автоматически.
+
+#    0.1. Раздел БЕЗ завершающего слэша — сразу на новый URL СО слэшем,
+#         иначе mod_dir добавил бы слэш вторым редиректом (цепочка из двух).
+RewriteRule ^po-date-rozhdeniya/(matrica-sudby-sovmestimost|numerologiya-sovmestimost)$ https://magialove.ru/$1/ [R=301,L,NE]
+
+#    0.2. Раздел со слэшем и всё вложенное одним правилом: /arkany/7/, /karta/,
+#         /rezultat/, /psihomatritsa/, /chislo-zhiznennogo-puti/11/.
+RewriteRule ^po-date-rozhdeniya/(matrica-sudby-sovmestimost|numerologiya-sovmestimost)/(.*)$ https://magialove.ru/$1/$2 [R=301,L,NE]
+
 # 1. Канонический хост: https:// без www — одним 301-редиректом без цепочек.
 #    Ловит все три неканонических варианта: http://www, https://www, http://.
 #    $1 в per-directory контексте уже без ведущего слэша и со схлопнутыми

@@ -45,6 +45,15 @@ export default function JyotishHubPage() {
           <span className={styles.gridLinkText}>Все страницы Джйотиш на сервисе в одном месте</span>
         </Link>
       </div>
+
+      <div className={styles.sourceNote}>
+        Не знаешь точное время рождения? Аштакуту без него не посчитать — Луна проходит
+        накшатру примерно за сутки. Но{" "}
+        <Link href="/po-date-rozhdeniya/" style={{ color: "var(--accent)" }}>
+          расчёт по дате рождения
+        </Link>{" "}
+        — Матрица судьбы и Нумерология — работает от одних дат, без времени и места.
+      </div>
     </ContentShell>
   );
 }

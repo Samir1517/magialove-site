@@ -1,0 +1,35 @@
+.nav {
+  display: flex;
+  gap: 26px;
+  font: 500 13.5px var(--font-body);
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+
+.nav a {
+  color: var(--ink-soft);
+  transition: color 0.15s ease;
+}
+.nav a:hover {
+  color: var(--accent);
+}
+
+/* Ниже 1000px пять пунктов уже не помещаются в строку рядом с логотипом
+   и кнопкой, поэтому меню переезжает под них и прокручивается вбок.
+   Так навигация остаётся доступной на телефоне, а не исчезает — и ссылки
+   остаются в разметке на всех устройствах. */
+@media (max-width: 1000px) {
+  .nav {
+    order: 3;
+    width: 100%;
+    margin-top: 14px;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+    /* Прячем полосу прокрутки, но саму прокрутку оставляем. */
+    scrollbar-width: none;
+  }
+  .nav::-webkit-scrollbar {
+    display: none;
+  }
+}

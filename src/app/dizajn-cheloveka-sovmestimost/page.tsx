@@ -44,6 +44,15 @@ export default function HumanDesignHubPage() {
           <span className={styles.gridLinkText}>Все страницы Дизайна человека на сервисе в одном месте</span>
         </Link>
       </div>
+
+      <div className={styles.sourceNote}>
+        Не знаешь точное время рождения? Дизайн человека без него посчитать нельзя — тип может
+        смениться за несколько минут. Но{" "}
+        <Link href="/po-date-rozhdeniya/" style={{ color: "var(--accent)" }}>
+          расчёт по дате рождения
+        </Link>{" "}
+        — Матрица судьбы и Нумерология — работает от одних дат, без времени и места.
+      </div>
     </ContentShell>
   );
 }

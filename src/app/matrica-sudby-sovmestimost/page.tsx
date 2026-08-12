@@ -18,11 +18,12 @@ export default function MatrixHubPage() {
     <ContentShell
       breadcrumbs={[
         { label: "Главная", href: "/" },
-        { label: "По дате рождения", href: "/po-date-rozhdeniya/" },
         { label: "Матрица судьбы" },
       ]}
     >
-      <div className={styles.eyebrow}>По дате рождения</div>
+      <Link href="/po-date-rozhdeniya/" className={styles.eyebrow}>
+        По дате рождения
+      </Link>
       <h1 className={styles.h1}>Совместимость по матрице судьбы</h1>
       <p className={styles.lede}>
         Матрица судьбы строится из цифр дня, месяца и года рождения — сначала индивидуальная
@@ -33,7 +34,7 @@ export default function MatrixHubPage() {
       </p>
 
       <div className={styles.card}>
-        <HeroForm targetPath="/po-date-rozhdeniya/matrica-sudby-sovmestimost/rezultat" />
+        <HeroForm targetPath="/matrica-sudby-sovmestimost/rezultat" />
       </div>
 
       <h2 style={{ font: "600 15px var(--font-body)", color: "var(--ink)", margin: 0 }}>
@@ -45,7 +46,7 @@ export default function MatrixHubPage() {
           if (!article) return null;
           const name = article.title.match(/«([^»]+)»/)?.[1] ?? article.title;
           return (
-            <Link key={n} href={`/po-date-rozhdeniya/matrica-sudby-sovmestimost/arkany/${n}/`} className={styles.gridLink}>
+            <Link key={n} href={`/matrica-sudby-sovmestimost/arkany/${n}/`} className={styles.gridLink}>
               <span className={styles.gridLinkNum}>{n}</span>
               <span className={styles.gridLinkTitle}>{name}</span>
               <span className={styles.gridLinkText}>{article.capsule.slice(0, 70)}…</span>
@@ -55,9 +56,16 @@ export default function MatrixHubPage() {
       </div>
 
       <div className={styles.grid}>
-        <Link href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/karta/" className={styles.gridLink}>
+        <Link href="/matrica-sudby-sovmestimost/karta/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Карта раздела →</span>
           <span className={styles.gridLinkText}>Все страницы Матрицы судьбы на сервисе в одном месте</span>
+        </Link>
+        <Link href="/po-date-rozhdeniya/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Расчёт по дате рождения →</span>
+          <span className={styles.gridLinkText}>
+            Две даты — и сразу Матрица судьбы с Нумерологией, а со временем рождения ещё
+            Дизайн человека и Джйотиш
+          </span>
         </Link>
       </div>
     </ContentShell>

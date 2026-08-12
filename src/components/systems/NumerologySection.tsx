@@ -218,7 +218,7 @@ export function NumerologySection({
               key={n}
               article={article}
               eyebrow={`Число ${n} — ${name}`}
-              moreHref={`/po-date-rozhdeniya/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`}
+              moreHref={`/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`}
               moreLabel={`Число жизненного пути ${n}: характеристика и совместимость →`}
             />
           ) : null;
@@ -285,7 +285,7 @@ export function NumerologySection({
                   <ArticleDisclosure
                     article={article}
                     eyebrow={LINE_TITLES[key]}
-                    moreHref="/po-date-rozhdeniya/numerologiya-sovmestimost/psihomatritsa/"
+                    moreHref="/numerologiya-sovmestimost/psihomatritsa/"
                     moreLabel={`Психоматрица: линия «${LINE_TITLES[key]}» подробно →`}
                   />
                 )}

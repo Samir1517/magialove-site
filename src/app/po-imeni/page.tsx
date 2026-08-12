@@ -53,7 +53,7 @@ export default function ByNameHubPage() {
 
       <div className={styles.sourceNote}>
         Число Имени — не замена{" "}
-        <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/" style={{ color: "var(--accent)" }}>
+        <Link href="/numerologiya-sovmestimost/" style={{ color: "var(--accent)" }}>
           Числу жизненного пути и психоматрице
         </Link>
         , а дополнение к ним внутри той же нумерологии. Полный разбор пары по всем 4 системам

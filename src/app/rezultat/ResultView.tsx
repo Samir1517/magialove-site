@@ -8,7 +8,12 @@ import { calcMatrixCompatibility } from "@/lib/engines/matrix";
 import { calcNumerologyCompatibility } from "@/lib/engines/numerology";
 import { calcHumanDesignCompatibility } from "@/lib/engines/human_design";
 import { calcJyotishCompatibility, calcNavagraha } from "@/lib/engines/jyotish";
-import { calcWeightedScore, calcCrossSystemThemes, getVerdict } from "@/lib/engines/synthesis";
+import {
+  calcWeightedScore,
+  calcCrossSystemThemes,
+  getVerdict,
+  getEffectiveWeights,
+} from "@/lib/engines/synthesis";
 import {
   collectPairFactors,
   calcPairHighlights,
@@ -27,6 +32,8 @@ import { SynthesisPanel } from "@/components/systems/SynthesisPanel";
 import { FullReportForm } from "@/components/result/FullReportForm";
 import { ShareActions } from "@/components/result/ShareActions";
 import { PairSummary } from "@/components/result/PairSummary";
+import { ScoreBreakdown } from "@/components/result/ScoreBreakdown";
+import { SystemNav } from "@/components/result/SystemNav";
 import { ScorePetals } from "@/components/result/ScorePetals";
 import { Biwheel } from "@/components/viz/Biwheel";
 import { Reveal } from "@/components/viz/Reveal";
@@ -85,12 +92,14 @@ export function ResultView() {
     { name: "Джйотиш", score: jyotish?.score ?? null },
   ];
   const known = systems.filter((s) => s.score !== null) as { name: string; score: number }[];
-  const overall = calcWeightedScore({
+  const systemScores = {
     matrix: matrix.score,
     numerology: numerology.score,
     human_design: humanDesign?.score ?? null,
     jyotish: jyotish?.score ?? null,
-  });
+  };
+  const overall = calcWeightedScore(systemScores);
+  const weights = getEffectiveWeights(systemScores);
   const verdict = getVerdict(overall);
   const overallBand = bandStyle(overall);
   const crossThemes = calcCrossSystemThemes(matrix, numerology, humanDesign, jyotish);
@@ -99,8 +108,8 @@ export function ResultView() {
   const roles = calcPairRoles(matrix, numerology, humanDesign);
 
   const qs = params.toString();
-  const matrixHref = `/po-date-rozhdeniya/matrica-sudby-sovmestimost/rezultat?${qs}`;
-  const numerologyHref = `/po-date-rozhdeniya/numerologiya-sovmestimost/rezultat?${qs}`;
+  const matrixHref = `/matrica-sudby-sovmestimost/rezultat?${qs}`;
+  const numerologyHref = `/numerologiya-sovmestimost/rezultat?${qs}`;
   const humanDesignHref = `/dizajn-cheloveka-sovmestimost/rezultat?${qs}`;
   const jyotishHref = `/dzhyotish-sovmestimost/rezultat?${qs}`;
 
@@ -171,6 +180,13 @@ export function ResultView() {
         Это не «процент из воздуха» — это карта того, где вам легко, а где вы растёте.
       </p>
 
+      <ScoreBreakdown
+        weights={weights}
+        scores={systemScores}
+        overall={overall}
+        hasTimes={data.hasTimes}
+      />
+
       <PairSummary highlights={highlights} roles={roles} nameA={nameA} nameB={nameB} />
 
       <Reveal>
@@ -182,15 +198,13 @@ export function ResultView() {
         />
       </Reveal>
 
-      <Reveal>
-        <DailySection a={data.a} b={data.b} />
-      </Reveal>
-
       {crossThemes && (
         <Reveal>
           <SynthesisPanel themes={crossThemes} />
         </Reveal>
       )}
+
+      <SystemNav hasTimes={data.hasTimes} />
 
       <Reveal>
         <MatrixSection report={matrix} standaloneHref={matrixHref} />
@@ -235,6 +249,13 @@ export function ResultView() {
           )}
         </>
       ) : null}
+
+      {/* «Аркан дня» — после разбора пары, а не до него: человек пришёл за
+          совместимостью, и обновляемый блок работает как повод вернуться
+          завтра, а не как отвлечение от главного. */}
+      <Reveal>
+        <DailySection a={data.a} b={data.b} />
+      </Reveal>
 
       {!data.hasTimes && <FullReportForm />}
 

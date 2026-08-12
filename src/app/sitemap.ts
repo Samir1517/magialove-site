@@ -24,11 +24,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "/", changeFrequency: "weekly", priority: 1 },
 
     { url: "/po-date-rozhdeniya/", changeFrequency: "monthly", priority: 0.9 },
-    { url: "/po-date-rozhdeniya/matrica-sudby-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
-    { url: "/po-date-rozhdeniya/matrica-sudby-sovmestimost/karta/", changeFrequency: "monthly", priority: 0.5 },
-    { url: "/po-date-rozhdeniya/numerologiya-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
-    { url: "/po-date-rozhdeniya/numerologiya-sovmestimost/psihomatritsa/", changeFrequency: "monthly", priority: 0.7 },
-    { url: "/po-date-rozhdeniya/numerologiya-sovmestimost/karta/", changeFrequency: "monthly", priority: 0.5 },
+    { url: "/matrica-sudby-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
+    { url: "/matrica-sudby-sovmestimost/karta/", changeFrequency: "monthly", priority: 0.5 },
+    { url: "/numerologiya-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
+    { url: "/numerologiya-sovmestimost/psihomatritsa/", changeFrequency: "monthly", priority: 0.7 },
+    { url: "/numerologiya-sovmestimost/karta/", changeFrequency: "monthly", priority: 0.5 },
     { url: "/dizajn-cheloveka-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
     { url: "/dizajn-cheloveka-sovmestimost/tipy/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/avtoritety/", changeFrequency: "monthly", priority: 0.7 },
@@ -51,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const n of Object.keys(allMatrixArticles())) {
     entries.push({
-      url: `/po-date-rozhdeniya/matrica-sudby-sovmestimost/arkany/${n}/`,
+      url: `/matrica-sudby-sovmestimost/arkany/${n}/`,
       changeFrequency: "monthly",
       priority: 0.6,
     });
@@ -59,7 +59,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   for (const n of Object.keys(allLifePathArticles())) {
     entries.push({
-      url: `/po-date-rozhdeniya/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`,
+      url: `/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`,
       changeFrequency: "monthly",
       priority: 0.6,
     });

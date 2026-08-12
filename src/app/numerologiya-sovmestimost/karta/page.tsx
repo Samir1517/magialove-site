@@ -19,8 +19,7 @@ export default function NumerologyKartaPage() {
     <ContentShell
       breadcrumbs={[
         { label: "Главная", href: "/" },
-        { label: "По дате рождения", href: "/po-date-rozhdeniya/" },
-        { label: "Нумерология", href: "/po-date-rozhdeniya/numerologiya-sovmestimost/" },
+        { label: "Нумерология", href: "/numerologiya-sovmestimost/" },
         { label: "Карта раздела" },
       ]}
     >
@@ -35,13 +34,20 @@ export default function NumerologyKartaPage() {
         Основные страницы
       </h2>
       <div className={styles.grid}>
-        <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/" className={styles.gridLink}>
+        <Link href="/numerologiya-sovmestimost/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Совместимость по Нумерологии →</span>
           <span className={styles.gridLinkText}>Калькулятор: число жизненного пути + психоматрица</span>
         </Link>
-        <Link href="/po-date-rozhdeniya/numerologiya-sovmestimost/psihomatritsa/" className={styles.gridLink}>
+        <Link href="/numerologiya-sovmestimost/psihomatritsa/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Психоматрица (Квадрат Пифагора) →</span>
           <span className={styles.gridLinkText}>8 линий совпадений и различий партнёров</span>
+        </Link>
+        <Link href="/po-date-rozhdeniya/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Расчёт по дате рождения →</span>
+          <span className={styles.gridLinkText}>
+            Общий калькулятор: Нумерология вместе с Матрицей судьбы, а со временем рождения —
+            все четыре системы
+          </span>
         </Link>
       </div>
 
@@ -56,7 +62,7 @@ export default function NumerologyKartaPage() {
           return (
             <Link
               key={n}
-              href={`/po-date-rozhdeniya/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`}
+              href={`/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${n}/`}
               className={styles.gridLink}
             >
               <span className={styles.gridLinkNum}>{n}</span>

@@ -17,8 +17,7 @@ export default function MatrixKartaPage() {
     <ContentShell
       breadcrumbs={[
         { label: "Главная", href: "/" },
-        { label: "По дате рождения", href: "/po-date-rozhdeniya/" },
-        { label: "Матрица судьбы", href: "/po-date-rozhdeniya/matrica-sudby-sovmestimost/" },
+        { label: "Матрица судьбы", href: "/matrica-sudby-sovmestimost/" },
         { label: "Карта раздела" },
       ]}
     >
@@ -33,9 +32,16 @@ export default function MatrixKartaPage() {
         Основные страницы
       </h2>
       <div className={styles.grid}>
-        <Link href="/po-date-rozhdeniya/matrica-sudby-sovmestimost/" className={styles.gridLink}>
+        <Link href="/matrica-sudby-sovmestimost/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Совместимость по Матрице судьбы →</span>
           <span className={styles.gridLinkText}>Калькулятор: расчёт и расшифровка по датам рождения</span>
+        </Link>
+        <Link href="/po-date-rozhdeniya/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Расчёт по дате рождения →</span>
+          <span className={styles.gridLinkText}>
+            Общий калькулятор: Матрица судьбы вместе с Нумерологией, а со временем рождения —
+            все четыре системы
+          </span>
         </Link>
       </div>
 
@@ -48,7 +54,7 @@ export default function MatrixKartaPage() {
           if (!article) return null;
           const name = article.title.match(/«([^»]+)»/)?.[1] ?? article.title;
           return (
-            <Link key={n} href={`/po-date-rozhdeniya/matrica-sudby-sovmestimost/arkany/${n}/`} className={styles.gridLink}>
+            <Link key={n} href={`/matrica-sudby-sovmestimost/arkany/${n}/`} className={styles.gridLink}>
               <span className={styles.gridLinkNum}>{n}</span>
               <span className={styles.gridLinkTitle}>{name}</span>
               <span className={styles.gridLinkText}>{article.capsule.slice(0, 70)}…</span>

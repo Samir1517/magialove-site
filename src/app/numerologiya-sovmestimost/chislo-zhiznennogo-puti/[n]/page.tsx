@@ -48,8 +48,7 @@ export default async function LifePathPage({ params }: { params: Promise<{ n: st
     <ContentShell
       breadcrumbs={[
         { label: "Главная", href: "/" },
-        { label: "По дате рождения", href: "/po-date-rozhdeniya/" },
-        { label: "Нумерология", href: "/po-date-rozhdeniya/numerologiya-sovmestimost/" },
+        { label: "Нумерология", href: "/numerologiya-sovmestimost/" },
         { label: `Число ${num}` },
       ]}
     >
@@ -61,17 +60,17 @@ export default async function LifePathPage({ params }: { params: Promise<{ n: st
       <CalcCta
         title="Узнай оба числа жизненного пути"
         text="Это число раскрывает суть только одного человека. Введи обе даты рождения, чтобы увидеть динамику именно твоей пары и совпадения по 8 линиям психоматрицы."
-        href="/po-date-rozhdeniya/numerologiya-sovmestimost/"
+        href="/numerologiya-sovmestimost/"
       />
 
       <div className={styles.pairNav}>
         {prev ? (
-          <Link href={`/po-date-rozhdeniya/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${prevNum}/`} className={styles.pairNavLink}>
+          <Link href={`/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${prevNum}/`} className={styles.pairNavLink}>
             ← {prev.title.replace(/^Число жизненного пути \d+ /, "Число ")}
           </Link>
         ) : <span />}
         {next ? (
-          <Link href={`/po-date-rozhdeniya/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${nextNum}/`} className={styles.pairNavLink}>
+          <Link href={`/numerologiya-sovmestimost/chislo-zhiznennogo-puti/${nextNum}/`} className={styles.pairNavLink}>
             {next.title.replace(/^Число жизненного пути \d+ /, "Число ")} →
           </Link>
         ) : <span />}

@@ -1,10 +1,13 @@
 .header {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 26px 24px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 20px;
+  /* Ниже 1000px меню (order: 3) переносится на вторую строку — см. MainNav.module.css */
+  flex-wrap: wrap;
 }
 
 .logo {
@@ -49,6 +52,17 @@
   color: var(--accent);
 }
 
+/* Надзаголовок-ссылка на родительский хаб: выглядит так же, но кликается. */
+a.eyebrow {
+  display: inline-block;
+  width: fit-content;
+  transition: color 0.15s ease;
+}
+a.eyebrow:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
 .h1 {
   font: italic 400 36px/1.25 var(--font-display);
   color: var(--ink);
@@ -84,12 +98,48 @@
   border-radius: 16px;
   padding: 16px 18px;
   box-shadow: var(--card-shadow);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  /* Прозрачная рамка заранее: иначе карточка дёргалась бы на 1px в момент,
+     когда переходит в заблокированное состояние. */
+  border: 1px solid transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 .gridLink:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 28px rgba(180, 140, 160, 0.16);
   color: var(--ink);
+}
+
+/* --- Заблокированная карточка: раздел требует времени рождения ---
+   Ссылка в DOM остаётся настоящей ради перелинковки, переход отменяется
+   в onClick. Здесь — только внешний вид и курсор. */
+.gridLinkLocked {
+  background: linear-gradient(170deg, #fff 35%, var(--accent-lilac) 130%);
+  border-color: var(--accent-pink);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+.gridLinkLocked .gridLinkTitle {
+  color: var(--ink-soft);
+}
+.gridLinkLocked .gridLinkText {
+  color: var(--ink-faint);
+}
+/* Приподнимания при наведении быть не должно — карточка не кликабельна.
+   Вместо него мягкое розовое свечение: «вижу тебя, но пока нельзя». */
+.gridLinkLocked:hover,
+.gridLinkLocked:focus-visible {
+  transform: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(237, 196, 205, 0.45);
+}
+
+/* Пояснение видно всегда, а не только по наведению: на телефонах hover нет. */
+.gridLinkLockNote {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--accent-pink);
+  font: 500 11.5px/1.45 var(--font-body);
+  color: var(--accent);
 }
 
 .gridLinkNum {

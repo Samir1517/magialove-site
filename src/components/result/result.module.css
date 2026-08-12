@@ -530,6 +530,128 @@
   color: var(--ink-soft);
 }
 
+/* --- Оглавление по системам --- */
+
+.systemNav {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.systemNavTitle {
+  font: 600 11px var(--font-body);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+
+.systemNavList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.systemNavItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 15px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #f0e4ee;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.systemNavItem:hover {
+  border-color: var(--accent-pink);
+  transform: translateY(-2px);
+}
+
+.systemNavLabel {
+  font: 600 13px var(--font-body);
+  color: var(--ink);
+}
+
+.systemNavNote {
+  font: 400 11.5px/1.4 var(--font-body);
+  color: var(--ink-faint);
+}
+
+/* Чтобы после перехода по якорю заголовок не прилипал к верхнему краю. */
+:global(section[aria-labelledby]) {
+  scroll-margin-top: 24px;
+}
+
+/* --- «Как посчитан балл»: прозрачность арифметики --- */
+
+.breakdown {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px 22px;
+  box-shadow: var(--card-shadow);
+}
+
+.breakdownSummary {
+  font: 600 13.5px var(--font-body);
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+}
+.breakdownSummary::-webkit-details-marker {
+  display: none;
+}
+.breakdownSummary::before {
+  content: "+ ";
+  font-weight: 700;
+}
+.breakdown[open] .breakdownSummary::before {
+  content: "− ";
+}
+
+.breakdownIntro {
+  font: 400 13px/1.65 var(--font-body);
+  color: var(--ink-soft);
+  margin: 14px 0 12px;
+}
+
+.breakdownTable {
+  width: 100%;
+  border-collapse: collapse;
+  font: 400 13px var(--font-body);
+}
+
+.breakdownTable th {
+  text-align: left;
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 0 0 8px;
+}
+
+.breakdownTable td {
+  padding: 8px 0;
+  border-top: 1px solid #f3edf1;
+  color: var(--ink-soft);
+}
+
+.breakdownNum {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.breakdownTotal td {
+  font-weight: 600;
+  color: var(--ink);
+  border-top: 1px solid #e5d8e5;
+}
+
+.breakdownNote {
+  font: 400 11.5px/1.6 var(--font-body);
+  color: var(--ink-faint);
+  margin: 12px 0 0;
+}
+
 /* --- Лепестки при высоком балле --- */
 
 .petals {
