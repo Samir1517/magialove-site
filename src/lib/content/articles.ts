@@ -13,6 +13,7 @@ import hdTypesData from "../content-data/hd-types.json";
 import hdAuthoritiesData from "../content-data/hd-authorities.json";
 import hdConnectionsData from "../content-data/hd-connections.json";
 import hdChannelsData from "../content-data/hd-channels.json";
+import hdProfilesData from "../content-data/hd-profiles.json";
 import jyotishKutasData from "../content-data/jyotish-kutas.json";
 import jyotishDoshasData from "../content-data/jyotish-doshas.json";
 import jyotishNakshatrasData from "../content-data/jyotish-nakshatras.json";
@@ -35,6 +36,7 @@ const HD_TYPES = hdTypesData as ArticleMap;
 const HD_AUTHORITIES = hdAuthoritiesData as ArticleMap;
 const HD_CONNECTIONS = hdConnectionsData as ArticleMap;
 const HD_CHANNELS = hdChannelsData as ArticleMap;
+const HD_PROFILES = hdProfilesData as ArticleMap;
 const JYOTISH_KUTAS = jyotishKutasData as ArticleMap;
 const JYOTISH_DOSHAS = jyotishDoshasData as ArticleMap;
 const JYOTISH_NAKSHATRAS = jyotishNakshatrasData as ArticleMap;
@@ -72,6 +74,21 @@ export function getHDChannelArticle(channelKey: string): Article | null {
   return HD_CHANNELS[channelKey] ?? null;
 }
 
+/** Ключ вида "1/3" — ровно то, что отдаёт движок в `person.profile`. */
+export function getHDProfileArticle(profile: string): Article | null {
+  return HD_PROFILES[profile] ?? null;
+}
+
+/** "1/3" → "1-3": слэш в сегменте URL недопустим. */
+export function profileSlug(profile: string): string {
+  return profile.replace("/", "-");
+}
+
+/** "1-3" → "1/3": обратное преобразование для страницы [profile]. */
+export function profileFromSlug(slug: string): string {
+  return slug.replace("-", "/");
+}
+
 export function getJyotishKutaArticle(key: string): Article | null {
   return JYOTISH_KUTAS[key] ?? null;
 }
@@ -107,6 +124,9 @@ export function allHDConnectionArticles(): ArticleMap {
 }
 export function allHDChannelArticles(): ArticleMap {
   return HD_CHANNELS;
+}
+export function allHDProfileArticles(): ArticleMap {
+  return HD_PROFILES;
 }
 export function allJyotishKutaArticles(): ArticleMap {
   return JYOTISH_KUTAS;

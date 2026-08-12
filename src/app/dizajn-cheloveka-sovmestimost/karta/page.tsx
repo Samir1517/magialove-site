@@ -42,6 +42,10 @@ export default function HumanDesignKartaPage() {
           <span className={styles.gridLinkTitle}>7 авторитетов →</span>
           <span className={styles.gridLinkText}>Ритм принятия решений каждого партнёра</span>
         </Link>
+        <Link href="/dizajn-cheloveka-sovmestimost/profili/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>12 профилей →</span>
+          <span className={styles.gridLinkText}>Сознательная и бессознательная линия каждого партнёра</span>
+        </Link>
         <Link href="/dizajn-cheloveka-sovmestimost/kanaly-svyazi/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Каналы связи →</span>
           <span className={styles.gridLinkText}>Электромагнитная, компаньонство, доминирование, компромисс</span>

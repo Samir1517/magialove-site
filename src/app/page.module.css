@@ -160,6 +160,48 @@
   box-shadow: 0 8px 20px rgba(180, 140, 160, 0.15);
 }
 
+/* ---------- Что будет в разборе ----------
+   Главная обещала расчёт, но нигде не показывала, как выглядит результат.
+   Человек нажимал «рассчитать» вслепую — либо не нажимал вовсе. Этот блок
+   закрывает разрыв между обещанием и тем, что реально получаешь. */
+.preview {
+  padding: 70px 40px 10px;
+}
+.previewGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 26px 36px;
+}
+.previewItem {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(180, 140, 160, 0.25);
+}
+.previewLabel {
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* ---------- Вопросы и ответы на главной ---------- */
+.faqSection {
+  padding: 10px 40px 70px;
+}
+.faqInner {
+  max-width: 780px;
+  margin: 0 auto;
+}
+.faqMore {
+  font: 500 13.5px var(--font-body);
+  color: var(--accent);
+}
+.faqMore:hover {
+  color: var(--accent-hover);
+}
+
 /* ---------- Advantages ---------- */
 .advantages {
   padding: 70px 40px;

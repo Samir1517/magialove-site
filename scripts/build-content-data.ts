@@ -190,6 +190,16 @@ const channels: Record<string, ParsedArticle> = {};
 for (const slug of Object.keys(channelRaw)) channels[slug] = channelRaw[slug];
 write("hd-channels", channels);
 
+// --- Дизайн человека: профили (файл "1-3" -> ключ движка "1/3") ----------
+// Движок отдаёт профиль строкой вида "1/3" (линия Солнца в Личности /
+// линия Солнца в Дизайне), а в имени файла слэш недопустим — поэтому дефис.
+const profileRaw = loadDir("human_design/content/profili");
+const profiles: Record<string, ParsedArticle> = {};
+for (const slug of Object.keys(profileRaw)) {
+  profiles[slug.replace("-", "/")] = profileRaw[slug];
+}
+write("hd-profiles", profiles);
+
 // --- Джйотиш: куты (ключ = имя движка, graha-maitri -> graha_maitri) -----
 const kutaRaw = loadDir("jyotish/content/8-kut");
 const kutas: Record<string, ParsedArticle> = {};

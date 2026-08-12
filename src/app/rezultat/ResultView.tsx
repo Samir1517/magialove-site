@@ -259,6 +259,33 @@ export function ResultView() {
 
       {!data.hasTimes && <FullReportForm />}
 
+      <div className={styles.nextSteps}>
+        <h2 className={styles.nextStepsTitle}>Что с этим делать дальше</h2>
+        <div className={styles.nextStepsList}>
+          <Link href={matrixHref} className={styles.nextStep}>
+            <span className={styles.nextStepTitle}>Углубиться в одну систему →</span>
+            <span className={styles.nextStepText}>
+              Тот же расчёт, но развёрнутый: по Матрице судьбы — все зоны союза и разбор
+              каждого аркана отдельно.
+            </span>
+          </Link>
+          <Link href="/po-imeni/" className={styles.nextStep}>
+            <span className={styles.nextStepTitle}>Посчитать по именам →</span>
+            <span className={styles.nextStepText}>
+              Другой срез той же нумерологии: не дата рождения, а имя — то, чем вы друг
+              друга зовёте каждый день.
+            </span>
+          </Link>
+          <Link href="/o-servise/" className={styles.nextStep}>
+            <span className={styles.nextStepTitle}>Как мы считаем →</span>
+            <span className={styles.nextStepText}>
+              Методика, первоисточники по каждой из четырёх систем и то, чего этот расчёт
+              намеренно не делает.
+            </span>
+          </Link>
+        </div>
+      </div>
+
       <Link href="/" className={`btn ${styles.backLink}`}>
         Рассчитать другую пару
       </Link>

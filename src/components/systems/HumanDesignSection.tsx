@@ -20,7 +20,9 @@ import {
   getHDAuthorityArticle,
   getHDChannelArticle,
   getHDConnectionArticle,
+  getHDProfileArticle,
   getHDTypeArticle,
+  profileSlug,
 } from "@/lib/content/articles";
 import styles from "./systems.module.css";
 
@@ -110,7 +112,16 @@ export function HumanDesignSection({
                 {name}
               </span>
               <p className={styles.lsText}>
-                <strong>{person.type}</strong> · профиль {person.profile}
+                <strong>{person.type}</strong> ·{" "}
+                {getHDProfileArticle(person.profile) ? (
+                  <Link
+                    href={`/dizajn-cheloveka-sovmestimost/profili/${profileSlug(person.profile)}/`}
+                  >
+                    профиль {person.profile}
+                  </Link>
+                ) : (
+                  <>профиль {person.profile}</>
+                )}
                 <br />
                 Авторитет: {person.authority}
                 <br />

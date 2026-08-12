@@ -1,6 +1,7 @@
 import Link from "next/link";
 import styles from "./page.module.css";
 import { MainNav } from "@/components/nav/MainNav";
+import { HubFaq } from "@/components/content/HubDepth";
 import { HeroForm } from "@/components/landing/HeroForm";
 import { HeroIllustration } from "@/components/landing/HeroIllustration";
 import { SITE_URL } from "@/lib/site-config";
@@ -82,6 +83,40 @@ const STEPS = [
   },
 ];
 
+/** Что реально показывает страница результата — по порядку, как она читается. */
+const PREVIEW = [
+  {
+    label: "Общий балл",
+    title: "Процент — и как он получен",
+    text: "Не «число из воздуха»: под баллом раскрывается таблица с реальными весами систем и вкладом каждой. Видно, что именно его вытянуло, а что опустило.",
+  },
+  {
+    label: "Тип пары",
+    title: "Как называется ваш союз",
+    text: "Один из двенадцати архетипов с девизом, светлой и теневой стороной. Это то, что запоминается и пересказывается подруге, — и то, с чего начинается узнавание себя.",
+  },
+  {
+    label: "Главное",
+    title: "Сильная нить и зона роста",
+    text: "Из десятков посчитанных факторов выбираются те, что действительно выделяются: за что ваша пара держится и где чаще всего спотыкается.",
+  },
+  {
+    label: "Роли",
+    title: "Кто что несёт в паре",
+    text: "Кто задаёт темп, кто удерживает тепло, что вы оба делаете одинаково хорошо. Без «главного» и «ведомого» — просто распределение.",
+  },
+  {
+    label: "Разбор",
+    title: "Четыре системы по отдельности",
+    text: "Октаграмма Матрицы, Квадрат Пифагора, композитный бодиграф, колесо накшатр — всё интерактивное, с расшифровкой каждого элемента при клике.",
+  },
+  {
+    label: "Завтра",
+    title: "Аркан дня для вашей пары",
+    text: "Короткий срез на сегодня — то, ради чего к разбору возвращаются не один раз.",
+  },
+];
+
 const ADVANTAGES = [
   {
     title: "Полная картина, а не один срез",
@@ -106,6 +141,25 @@ const ADVANTAGES = [
   {
     title: "2 минуты — и готово",
     text: "Достаточно двух дат рождения. Никаких долгих анкет и лишних вопросов.",
+  },
+];
+
+const HOME_FAQ = [
+  {
+    q: "Это серьёзный расчёт или развлечение?",
+    a: "Расчётная часть — настоящая: положения планет считаются по эфемеридам с точностью до минут, арифметика Матрицы и Нумерологии воспроизводима по первоисточникам, веса систем зафиксированы и показаны прямо в результате. Но ни одна из четырёх систем не является наукой, и мы этого не скрываем. Считай разбор хорошим поводом посмотреть на свою пару со стороны и назвать вслух то, что обычно остаётся непроговорённым, — а не прогнозом будущего.",
+  },
+  {
+    q: "А если результат окажется низким?",
+    a: "Низкий балл не означает, что вам не быть вместе. Он означает, что там, где другим парам легко по умолчанию, вам придётся договариваться словами. Мы намеренно не пользуемся словом «несовместимы»: у каждой пары в разборе есть и то, на чём она держится, и то, что её изматывает, — и второе почти всегда поддаётся изменению, если его назвать.",
+  },
+  {
+    q: "Зачем вам время и город рождения?",
+    a: "Только для расчёта. Дизайн человека и Джйотиш считают положение планет на момент рождения, а не на дату: Луна проходит около 13° в сутки, поэтому ошибка в несколько часов меняет результат. Город нужен ради часового пояса. Всё считается прямо в твоём браузере — данные не уходят на сервер и нигде не сохраняются. Если времени не знаешь, расчёт всё равно будет: две системы из четырёх работают от одних дат.",
+  },
+  {
+    q: "Нужно ли знать имя и согласие партнёра?",
+    a: "Нет. Достаточно даты рождения; имена — только чтобы разбор читался по-человечески, и их можно не вводить. Расчёт анонимный и бесплатный, регистрации нет.",
   },
 ];
 
@@ -236,6 +290,24 @@ export default function Home() {
         </div>
       </section>
 
+      <section className={styles.preview} aria-labelledby="preview-title">
+        <div className={styles.sectionHead}>
+          <div className={styles.sectionEyebrow}>ЧТО ТЫ ПОЛУЧИШЬ</div>
+          <h2 id="preview-title" className={styles.sectionTitle}>
+            Из чего состоит разбор вашей пары
+          </h2>
+        </div>
+        <div className={styles.previewGrid}>
+          {PREVIEW.map((p) => (
+            <div key={p.label} className={styles.previewItem}>
+              <span className={styles.previewLabel}>{p.label}</span>
+              <h3 className={styles.cardTitle}>{p.title}</h3>
+              <div className={styles.cardText}>{p.text}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section id="advantages" className={styles.advantages} aria-labelledby="advantages-title">
         <div className={styles.sectionHead}>
           <div className={styles.sectionEyebrow}>ПОЧЕМУ ТАК ТОЧНЕЕ</div>
@@ -251,6 +323,23 @@ export default function Home() {
               <div className={styles.cardText}>{a.text}</div>
             </div>
           ))}
+        </div>
+      </section>
+
+      <section className={styles.faqSection} aria-labelledby="home-faq-title">
+        <div className={styles.sectionHead}>
+          <div className={styles.sectionEyebrow}>ЧЕСТНЫЕ ОТВЕТЫ</div>
+          <h2 id="home-faq-title" className={styles.sectionTitle}>
+            То, что обычно спрашивают до расчёта
+          </h2>
+        </div>
+        <div className={styles.faqInner}>
+          <HubFaq title="" items={HOME_FAQ} />
+        </div>
+        <div className={styles.sectionHead} style={{ marginTop: 26 }}>
+          <Link href="/faq/" className={styles.faqMore}>
+            Все вопросы и ответы о сервисе →
+          </Link>
         </div>
       </section>
 

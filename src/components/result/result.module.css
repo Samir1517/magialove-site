@@ -181,6 +181,57 @@
   font-size: 13.5px;
 }
 
+/* --- Финал страницы: куда идти дальше ---
+   Раньше длинный разбор обрывался кнопкой «рассчитать другую пару»: человек
+   дочитывал до конца и упирался в тупик. Здесь три конкретных продолжения —
+   углубиться в отдельную систему, посчитать по-другому, вернуться завтра. */
+.nextSteps {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  background: linear-gradient(135deg, #faf5f7, #f4eefa);
+  border-radius: 22px;
+  padding: 26px 24px;
+}
+
+.nextStepsTitle {
+  font: italic 400 21px/1.3 var(--font-display);
+  color: var(--ink);
+  margin: 0;
+}
+
+.nextStepsList {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 14px;
+}
+
+.nextStep {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 15px 17px;
+  box-shadow: var(--card-shadow);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.nextStep:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(180, 140, 160, 0.16);
+  color: var(--ink);
+}
+
+.nextStepTitle {
+  font: 600 13px var(--font-body);
+  color: var(--ink);
+}
+
+.nextStepText {
+  font: 400 12px/1.55 var(--font-body);
+  color: var(--ink-faint);
+}
+
 /* --- Архетип пары + сводка (пирамида подачи) --- */
 
 .archetypeRow {

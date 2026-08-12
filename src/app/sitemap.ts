@@ -5,7 +5,9 @@ import {
   allLifePathArticles,
   allNameNumberArticles,
   allHDChannelArticles,
+  allHDProfileArticles,
   allJyotishNakshatraArticles,
+  profileSlug,
 } from "@/lib/content/articles";
 import { PILOT_MALE_NAMES, PILOT_FEMALE_NAMES, nameSlug } from "@/lib/data/name-popularity";
 import { allZodiacPairSlugs } from "@/app/znaki-zodiaka/[pair]/page";
@@ -34,6 +36,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "/dizajn-cheloveka-sovmestimost/avtoritety/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/kanaly-svyazi/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/kanaly/", changeFrequency: "monthly", priority: 0.7 },
+    { url: "/dizajn-cheloveka-sovmestimost/profili/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/karta/", changeFrequency: "monthly", priority: 0.5 },
     { url: "/dzhyotish-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
     { url: "/dzhyotish-sovmestimost/8-kut/", changeFrequency: "monthly", priority: 0.7 },
@@ -70,6 +73,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `/dizajn-cheloveka-sovmestimost/kanaly/${key}/`,
       changeFrequency: "monthly",
       priority: 0.5,
+    });
+  }
+
+  for (const key of Object.keys(allHDProfileArticles())) {
+    entries.push({
+      url: `/dizajn-cheloveka-sovmestimost/profili/${profileSlug(key)}/`,
+      changeFrequency: "monthly",
+      priority: 0.6,
     });
   }
 
