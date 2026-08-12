@@ -44,6 +44,25 @@
   flex-shrink: 0;
 }
 
+/* Одна строка — один человек: имя и его дата рядом. Имя уже, чем дата:
+   поле «по желанию» не должно весить столько же, сколько обязательное. */
+.personRow {
+  flex-basis: 100%;
+  display: flex;
+  gap: 14px;
+}
+.personRow .field:first-child {
+  flex: 0 1 38%;
+}
+@media (max-width: 480px) {
+  .personRow {
+    flex-direction: column;
+  }
+  .personRow .field:first-child {
+    flex: 1;
+  }
+}
+
 .error {
   position: absolute;
   bottom: -26px;

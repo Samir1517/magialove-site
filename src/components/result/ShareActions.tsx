@@ -37,11 +37,17 @@ export function ShareActions({
   nameB,
   score,
   verdictLabel,
+  caption,
+  shareText = "Наша совместимость по 4 системам — посчитай свою на magialove.ru",
 }: {
   nameA: string;
   nameB: string;
   score: number;
   verdictLabel: string;
+  /** Чем посчитан балл именно на этой странице — до двух строк на карточке. */
+  caption?: string[];
+  /** Текст, который уходит вместе с картинкой в мессенджер. */
+  shareText?: string;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [copied, setCopied] = useState(false);
@@ -72,7 +78,7 @@ export function ShareActions({
       const shareData = {
         files: [file],
         title: "Совместимость",
-        text: "Наша совместимость по 4 системам — посчитай свою на magialove.ru",
+        text: shareText,
       };
       if (navigator.canShare?.(shareData)) {
         await navigator.share(shareData);
@@ -101,7 +107,14 @@ export function ShareActions({
         свою совместимость.
       </p>
       <div className={styles.shareCardPreview}>
-        <ShareCard ref={svgRef} nameA={nameA} nameB={nameB} score={score} verdictLabel={verdictLabel} />
+        <ShareCard
+          ref={svgRef}
+          nameA={nameA}
+          nameB={nameB}
+          score={score}
+          verdictLabel={verdictLabel}
+          caption={caption}
+        />
       </div>
       <div className={styles.shareButtons}>
         <button

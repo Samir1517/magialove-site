@@ -241,7 +241,21 @@ function themeSignals(
   return signals;
 }
 
-export type ThemeVerdict = "agreement-high" | "agreement-low" | "contradiction" | "mixed";
+export type ThemeVerdict =
+  | "agreement-high"
+  | "leaning-high"
+  | "agreement-low"
+  | "contradiction"
+  | "mixed";
+
+/**
+ * Границы «явно высоко» / «явно низко». Середина шкалы — 50, поэтому всё,
+ * что попадает в 41..59, считается нейтральным: такая система не подтверждает
+ * тему и не опровергает её. Значения используются и в движке (классификация),
+ * и в панели (подсчёт «сколько систем за»), поэтому живут здесь.
+ */
+export const SIGNAL_HIGH = 60;
+export const SIGNAL_LOW = 40;
 
 export interface ThemeResult {
   key: ThemeKey;
@@ -262,7 +276,14 @@ export interface ThemeResult {
  */
 function classifyTheme(avg: number, min: number, max: number): ThemeVerdict {
   if (min <= 35 && max >= 65) return "contradiction";
-  if (avg >= 65 && min >= 45) return "agreement-high";
+  // «Все системы указывают в одну сторону» имеет право быть сказанным только
+  // тогда, когда ни одна из них не осталась в нейтральной зоне. Раньше порог
+  // был min >= 45, и тема с сигналами 45/50/100/100 подписывалась как полное
+  // единогласие — а читатель видел эти самые 45 и 50 прямо под подписью.
+  if (avg >= 65 && min >= SIGNAL_HIGH) return "agreement-high";
+  // Часть систем «за», часть нейтральна, против — никто. Это честное
+  // «скорее да», и называть его надо именно так, а не единогласием.
+  if (avg >= 62 && min > SIGNAL_LOW && max >= 70) return "leaning-high";
   if (avg <= 40 && max <= 55) return "agreement-low";
   return "mixed";
 }

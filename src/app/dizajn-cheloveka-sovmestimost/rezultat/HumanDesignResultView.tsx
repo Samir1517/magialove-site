@@ -66,14 +66,19 @@ export function HumanDesignResultView() {
         Расчёт только по Дизайну человека — композит пары по точному моменту рождения обоих.
       </p>
 
+      <HumanDesignSection report={report} nameA={nameA} nameB={nameB} />
+
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}
         nameB={nameB !== "Второй партнёр" ? nameB : ""}
         score={report.score}
         verdictLabel={getVerdict(report.score).label}
+        caption={[
+          "Расчёт по Дизайну человека:",
+          "композит пары по моменту рождения",
+        ]}
+        shareText="Наша совместимость по Дизайну человека — посчитай свою на magialove.ru"
       />
-
-      <HumanDesignSection report={report} nameA={nameA} nameB={nameB} />
 
       <UpsellToFullCta
         text="Матрица судьбы, Нумерология и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."

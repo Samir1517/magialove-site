@@ -70,7 +70,14 @@ export function NameResultView() {
         caption={`Числа Имени: ${aNumbers.expression} и ${bNumbers.expression}.`}
       />
 
-      <ShareActions nameA={nameA} nameB={nameB} score={result.score} verdictLabel={getVerdict(result.score).label} />
+      <ShareActions
+        nameA={nameA}
+        nameB={nameB}
+        score={result.score}
+        verdictLabel={getVerdict(result.score).label}
+        caption={["Расчёт по именам: Число Имени,", "Число Души и Число Личности"]}
+        shareText="Наша совместимость по именам — посчитай свою на magialove.ru"
+      />
 
       <div className={contentStyles.grid} style={{ gridTemplateColumns: "1fr 1fr" }}>
         <div className={contentStyles.card}>

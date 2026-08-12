@@ -312,6 +312,12 @@
   flex-shrink: 0;
 }
 
+/* Знак процента мельче цифры: единица измерения не должна спорить со значением. */
+.threadScoreUnit {
+  font-size: 0.5em;
+  margin-left: 1px;
+}
+
 .threadMeta {
   display: flex;
   flex-direction: column;

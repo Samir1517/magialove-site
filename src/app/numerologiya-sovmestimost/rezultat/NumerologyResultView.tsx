@@ -51,14 +51,19 @@ export function NumerologyResultView() {
         Расчёт только по Нумерологии — число жизненного пути и психоматрица по датам рождения.
       </p>
 
+      <NumerologySection report={report} nameA={nameA} nameB={nameB} />
+
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}
         nameB={nameB !== "Второй партнёр" ? nameB : ""}
         score={report.score}
         verdictLabel={getVerdict(report.score).label}
+        caption={[
+          "Расчёт по нумерологии: числа пути",
+          "и Квадрат Пифагора",
+        ]}
+        shareText="Наша совместимость по нумерологии — посчитай свою на magialove.ru"
       />
-
-      <NumerologySection report={report} nameA={nameA} nameB={nameB} />
 
       <UpsellToFullCta
         text="Матрица судьбы, Дизайн человека и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."

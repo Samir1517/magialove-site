@@ -23,6 +23,8 @@ export function HubCalculator() {
   const router = useRouter();
   const uid = useId();
 
+  const [nameA, setNameA] = useState("");
+  const [nameB, setNameB] = useState("");
   const [dateA, setDateA] = useState("");
   const [dateB, setDateB] = useState("");
   const [noTime, setNoTime] = useState(false);
@@ -54,6 +56,8 @@ export function HubCalculator() {
     setError(null);
 
     const params = new URLSearchParams({ a: dateA, b: dateB });
+    if (nameA.trim()) params.set("na", nameA.trim());
+    if (nameB.trim()) params.set("nb", nameB.trim());
     if (!noTime && timeA && timeB) {
       params.set("at", timeA);
       params.set("bt", timeB);
@@ -69,6 +73,17 @@ export function HubCalculator() {
         <form className={styles.form} onSubmit={handleSubmit} noValidate>
           <div className={styles.row}>
             <label className={styles.field}>
+              <span className={styles.fieldLabel}>Твоё имя</span>
+              <input
+                type="text"
+                className={styles.input}
+                value={nameA}
+                onChange={(e) => setNameA(e.target.value)}
+                placeholder="по желанию"
+                autoComplete="off"
+              />
+            </label>
+            <label className={styles.field}>
               <span className={styles.fieldLabel}>Твоя дата рождения</span>
               <input
                 type="date"
@@ -76,6 +91,17 @@ export function HubCalculator() {
                 value={dateA}
                 onChange={(e) => setDateA(e.target.value)}
                 required
+              />
+            </label>
+            <label className={styles.field}>
+              <span className={styles.fieldLabel}>Имя партнёра</span>
+              <input
+                type="text"
+                className={styles.input}
+                value={nameB}
+                onChange={(e) => setNameB(e.target.value)}
+                placeholder="по желанию"
+                autoComplete="off"
               />
             </label>
             <label className={styles.field}>

@@ -201,7 +201,23 @@
 .cellDigits {
   font: 600 15px/1.1 var(--font-body);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
+  display: flex;
+  gap: 3px;
+  justify-content: center;
+}
+
+/* Зазор между повторами: «999» должно читаться тремя девятками, а не числом. */
+.cellDigit {
+  display: inline-block;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 .cellLabel {

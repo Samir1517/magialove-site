@@ -18,6 +18,7 @@ import type { MatrixRawFeatures, ZoneKey } from "./matrix";
 import { zoneWeight, ZONE_TITLES, getArcanumInfo } from "./matrix";
 import type { NumerologyRawFeatures, PsychomatrixLineKey } from "./numerology";
 import { LINE_TITLES } from "./numerology";
+import { LINE_READINGS, diffBand } from "@/lib/content/numerology";
 import type { HumanDesignRawFeatures } from "./human_design";
 import type { JyotishRawFeatures } from "./jyotish";
 import type { SystemReport } from "./types";
@@ -57,6 +58,21 @@ const KUTA_TITLES: Record<string, string> = {
   nadi: "Нади — здоровье и потомство",
 };
 
+/** Русское склонение числительных: «1 канал», «2 канала», «5 каналов». */
+function plural(n: number, one: string, few: string, many: string): string {
+  const mod10 = n % 10;
+  const mod100 = n % 100;
+  if (mod10 === 1 && mod100 !== 11) return one;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return few;
+  return many;
+}
+
+/** Первое предложение разбора: в сводку нужна суть, а не весь абзац. */
+function firstSentence(text: string): string {
+  const end = text.search(/[.!?](\s|$)/);
+  return end === -1 ? text : text.slice(0, end + 1);
+}
+
 export function collectPairFactors(
   matrix: SystemReport<MatrixRawFeatures>,
   numerology: SystemReport<NumerologyRawFeatures>,
@@ -86,12 +102,11 @@ export function collectPairFactors(
       system: "numerology",
       label: LINE_TITLES[line],
       score: numerology.rawFeatures.lineScores[line],
-      note:
-        diff <= 1
-          ? "почти одинаковая заполненность у обоих — созвучие"
-          : diff <= 3
-            ? "умеренная разница — рабочая зона взаимной настройки"
-            : "сильная разница — один компенсирует другого",
+      // Берём разбор конкретной линии, а не общую фразу на весь диапазон:
+      // у большинства пар пять-шесть линий из восьми попадают в один и тот же
+      // диапазон, и общая формулировка шла подряд несколькими одинаковыми
+      // строками — сводка выглядела как незаполненный шаблон.
+      note: firstSentence(LINE_READINGS[line][diffBand(diff)]),
     });
   }
 
@@ -104,7 +119,7 @@ export function collectPairFactors(
       score: em > 0 ? 85 : 40,
       note:
         em > 0
-          ? `${em} электромагнитных канал(а): качество, которое есть только у вас вдвоём`
+          ? `${em} ${plural(em, "электромагнитный канал", "электромагнитных канала", "электромагнитных каналов")}: качество, которое есть только у вас вдвоём`
           : "нет электромагнитных каналов — связь держится на другом, не на «химии»",
     });
     const sameAuthority = hd.rawFeatures.a.authority === hd.rawFeatures.b.authority;
@@ -127,7 +142,7 @@ export function collectPairFactors(
         system: "jyotish",
         label: title,
         score: (kuta.score / kuta.max) * 100,
-        note: `${kuta.score} из ${kuta.max} баллов Аштакуты`,
+        note: `${kuta.score} из ${kuta.max} ${plural(kuta.max, "балла", "баллов", "баллов")} Аштакуты`,
       });
     }
   }

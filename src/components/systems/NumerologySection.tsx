@@ -54,8 +54,21 @@ function PythagorasSquare({ name, digits }: { name: string; digits: DigitCounts 
               style={CELL_STYLE[band]}
               title={`${meaning.title} — ${COUNT_BAND_LABEL[band]}. ${digitReading(digit, count)}`}
             >
-              <span className={styles.cellDigits}>
-                {count > 0 ? String(digit).repeat(count) : "—"}
+              {/* Классическая запись психоматрицы — повтор цифры («999» = три
+                  девятки). Слитно она читается как число: «99» выглядело как
+                  девяносто девять. Поэтому каждая цифра — отдельный глиф с
+                  зазором, а для скринридера рядом лежит словесная расшифровка. */}
+              <span className={styles.cellDigits} aria-hidden="true">
+                {count > 0
+                  ? Array.from({ length: count }, (_, i) => (
+                      <span key={i} className={styles.cellDigit}>
+                        {digit}
+                      </span>
+                    ))
+                  : "—"}
+              </span>
+              <span className={styles.srOnly}>
+                {count > 0 ? `цифра ${digit}, ${count} шт.` : `цифры ${digit} нет`}
               </span>
               <span className={styles.cellLabel}>{meaning.title}</span>
             </div>

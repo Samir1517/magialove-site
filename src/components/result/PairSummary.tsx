@@ -30,8 +30,12 @@ export function PairSummary({
       <div className={styles.threadCard}>
         <div className={styles.threadLabel}>Самая сильная нить вашей пары</div>
         <div className={styles.threadRow}>
+          {/* Без «%» число читалось как «100» неизвестно чего: из скольки и в
+              каких единицах. Проценты — та же шкала, что у всех остальных
+              баллов на странице, и к этому месту она читателю уже знакома. */}
           <span className={styles.threadScore} style={{ color: strongestBand.ink }}>
             {formatScore(strongest.score)}
+            <span className={styles.threadScoreUnit}>%</span>
           </span>
           <div className={styles.threadMeta}>
             <div className={styles.threadTitle}>

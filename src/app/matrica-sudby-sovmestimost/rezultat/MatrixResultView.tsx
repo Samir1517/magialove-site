@@ -51,17 +51,22 @@ export function MatrixResultView() {
         Расчёт только по Матрице судьбы — по датам рождения, без времени и места.
       </p>
 
+      <MatrixSection
+        report={report}
+        nameA={nameA !== "Первый партнёр" ? nameA : "Ты"}
+        nameB={nameB !== "Второй партнёр" ? nameB : "Он"}
+      />
+
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}
         nameB={nameB !== "Второй партнёр" ? nameB : ""}
         score={report.score}
         verdictLabel={getVerdict(report.score).label}
-      />
-
-      <MatrixSection
-        report={report}
-        nameA={nameA !== "Первый партнёр" ? nameA : "Ты"}
-        nameB={nameB !== "Второй партнёр" ? nameB : "Он"}
+        caption={[
+          "Расчёт по матрице судьбы:",
+          "пять зон союза и 22 аркана",
+        ]}
+        shareText="Наша совместимость по матрице судьбы — посчитай свою на magialove.ru"
       />
 
       <UpsellToFullCta

@@ -73,14 +73,19 @@ export function JyotishResultView() {
         Расчёт только по Джйотиш — Гуна-милан и доши по точному моменту рождения обоих.
       </p>
 
+      <JyotishSection report={report} nameA={nameA} nameB={nameB} />
+
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}
         nameB={nameB !== "Второй партнёр" ? nameB : ""}
         score={report.score}
         verdictLabel={getVerdict(report.score).label}
+        caption={[
+          "Расчёт по Джйотиш: Аштакута Гуна-милан,",
+          "36 баллов и три доши",
+        ]}
+        shareText="Наша совместимость по Джйотиш — посчитай свою на magialove.ru"
       />
-
-      <JyotishSection report={report} nameA={nameA} nameB={nameB} />
 
       {grahas && (
         <section className={systemStyles.section} aria-labelledby="biwheel-title">

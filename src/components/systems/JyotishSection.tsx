@@ -14,7 +14,7 @@ import { NakshatraWheel } from "@/components/viz/NakshatraWheel";
 import { Chip } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getJyotishDoshaArticle, getJyotishKutaArticle, getJyotishNakshatraArticle } from "@/lib/content/articles";
-import { BANDS, toPercent } from "@/components/viz/scale";
+import { BANDS, formatScore, toPercent } from "@/components/viz/scale";
 import styles from "./systems.module.css";
 
 import kutasData from "@/lib/data/jyotish/kutas.json";
@@ -66,7 +66,10 @@ export function JyotishSection({
         percent={report.score}
         gradientId="jyotish-ring"
         label="Совместимость по Джйотиш"
-        caption={`Гуна-милан: ${total} из 36 — ${gunaBandLabel(total)}. Луна ${nameA} в накшатре ${f.a.moonNakshatra} (${f.a.moonRashi}), Луна ${nameB} — ${f.b.moonNakshatra} (${f.b.moonRashi}).`}
+        /* Имя ставим перед двоеточием, а не в родительном падеже: склонять
+           произвольное имя («Луна Анны», но «Луна Игоря») надёжно нельзя, а
+           «Луна Первый партнёр» — то, что получалось раньше без имён. */
+        caption={`Гуна-милан: ${formatScore(total)} из 36 — ${gunaBandLabel(total)}. Луна, ${nameA}: накшатра ${f.a.moonNakshatra} (${f.a.moonRashi}). Луна, ${nameB}: ${f.b.moonNakshatra} (${f.b.moonRashi}).`}
       />
 
       <div>

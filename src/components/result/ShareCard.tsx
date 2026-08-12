@@ -9,10 +9,25 @@ const H = 1350;
  * Чистый SVG, а не скриншот страницы — так можно растрировать в PNG на лету
  * (canvas) без сторонних библиотек. forwardRef отдаёт узел наружу для этого.
  */
+/**
+ * Подпись под баллом. Карточка стоит на шести страницах результата, и балл на
+ * каждой посчитан по-разному: на четырёх — одной системой, на «по имени» —
+ * вовсе без дат рождения. Одна зашитая строка «расчёт по 4 системам» делала
+ * из карточки, которую человек отправляет подруге, прямую неправду.
+ */
+const DEFAULT_CAPTION = ["Расчёт по 4 системам: Матрица судьбы, Нумерология,", "Дизайн человека, Джйотиш"];
+
 export const ShareCard = forwardRef<
   SVGSVGElement,
-  { nameA: string; nameB: string; score: number; verdictLabel: string }
->(function ShareCard({ nameA, nameB, score, verdictLabel }, ref) {
+  {
+    nameA: string;
+    nameB: string;
+    score: number;
+    verdictLabel: string;
+    /** До двух строк: чем именно посчитан балл на этой странице. */
+    caption?: string[];
+  }
+>(function ShareCard({ nameA, nameB, score, verdictLabel, caption = DEFAULT_CAPTION }, ref) {
   const band = bandStyle(score);
   const pct = formatScore(score);
   const title = nameA && nameB ? `${nameA} и ${nameB}` : "Твоя пара";
@@ -124,26 +139,19 @@ export const ShareCard = forwardRef<
       >
         {verdictLabel}
       </text>
-      <text
-        x={W / 2}
-        y={1130}
-        textAnchor="middle"
-        fontFamily="Manrope, sans-serif"
-        fontSize={26}
-        fill="#8a7a8d"
-      >
-        Расчёт по 4 системам: Матрица судьбы, Нумерология,
-      </text>
-      <text
-        x={W / 2}
-        y={1166}
-        textAnchor="middle"
-        fontFamily="Manrope, sans-serif"
-        fontSize={26}
-        fill="#8a7a8d"
-      >
-        Дизайн человека, Джйотиш
-      </text>
+      {caption.slice(0, 2).map((line, i) => (
+        <text
+          key={line}
+          x={W / 2}
+          y={1130 + i * 36}
+          textAnchor="middle"
+          fontFamily="Manrope, sans-serif"
+          fontSize={26}
+          fill="#8a7a8d"
+        >
+          {line}
+        </text>
+      ))}
 
       {/* подвал-водяной знак */}
       <rect x={0} y={H - 90} width={W} height={90} fill="#3a2c3d" />
