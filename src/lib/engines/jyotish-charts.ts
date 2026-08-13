@@ -49,7 +49,11 @@ export function rashiChart(grahas: GrahaPosition[]): ChartGraha[] {
     short: SHORT[g.key] ?? g.key,
     name: g.name,
     symbol: g.symbol,
-    rashiIndex: g.rashiIndex,
+    // GrahaPosition.rashiIndex приходит 1-based (Овен=1), а ChartGraha всюду
+    // 0-based: так его читают CELL, RASHI_GLYPH и navamsaChart. Без вычитания
+    // D-1 рисовала планеты на знак вперёд, а Рыбы (12) не находили клетки в
+    // сетке 0..11 и пропадали с карты совсем.
+    rashiIndex: g.rashiIndex - 1,
     degreeInRashi: g.degreeInRashi,
     // Раху и Кету ретроградны всегда, поэтому их помечать не принято.
     retro: false,
@@ -80,7 +84,9 @@ export function navamsaChart(grahas: GrahaPosition[]): ChartGraha[] {
 export function vargottama(grahas: GrahaPosition[]): Set<string> {
   const out = new Set<string>();
   for (const g of grahas) {
-    if (navamsaRashi(g.siderealLon) === g.rashiIndex) out.add(g.key);
+    // navamsaRashi 0-based, g.rashiIndex 1-based — сравнивать напрямую нельзя:
+    // так варготтама помечалась у планет, чей знак в D-9 на один вперёд.
+    if (navamsaRashi(g.siderealLon) === g.rashiIndex - 1) out.add(g.key);
   }
   return out;
 }
