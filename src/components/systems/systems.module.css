@@ -624,3 +624,14 @@
   background: var(--accent);
   color: #fff;
 }
+
+/* Разбор Мангал доши: заметнее обычной сноски — это то, ради чего смотрят. */
+.mangalNote {
+  font: 400 13px/1.7 var(--font-body);
+  color: var(--ink);
+  margin: 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #fbeef1, #f4eefa);
+  max-width: 66ch;
+}
