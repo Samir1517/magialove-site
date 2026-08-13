@@ -625,3 +625,64 @@
   font: 400 11.5px/1.5 var(--font-body);
   color: var(--ink-soft);
 }
+
+/* Разворот карты: единственный способ прочитать 64 номера на телефоне. */
+.bodygraphExpand {
+  border: 1px solid #e6d9e2;
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 15px;
+  font: 600 11.5px var(--font-body);
+  color: var(--accent);
+  cursor: pointer;
+}
+.bodygraphExpand:hover {
+  border-color: var(--accent);
+  background: #fdf4f7;
+}
+
+.bodygraphModal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+.bodygraphModalHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1e7ee;
+  font: 600 14px var(--font-body);
+  color: var(--ink);
+  flex-shrink: 0;
+}
+.bodygraphClose {
+  border: 1px solid #e6d9e2;
+  background: #fff;
+  border-radius: 999px;
+  padding: 7px 16px;
+  font: 600 12px var(--font-body);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.bodygraphModalBody {
+  flex: 1;
+  overflow: auto;
+  padding: 14px;
+  display: flex;
+  justify-content: center;
+}
+/* Внутри разворота повторная кнопка «развернуть» не нужна. */
+.bodygraphModalBody .bodygraphExpand {
+  display: none;
+}
+
+/* В развороте карта НЕ ужимается под экран: 64 номера ворот на 375px читаются
+   только если карта крупнее вьюпорта, а сам разворот прокручивается. */
+.bodygraphModalBody .bodygraphSvg {
+  max-width: none;
+}

@@ -76,6 +76,8 @@ export interface BodygraphProps {
   hint?: string;
   /** Приглушить всё, кроме электромагнитных каналов — «только вдвоём». */
   focusElectromagnetic?: boolean;
+  /** Подпись карты в развороте на весь экран. */
+  fullscreenTitle?: string;
 }
 
 export function Bodygraph({
@@ -92,7 +94,12 @@ export function Bodygraph({
   size = 320,
   hint = "Наведи курсор или коснись канала — расскажем, что это.",
   focusElectromagnetic = false,
+  fullscreenTitle,
 }: BodygraphProps) {
+  // На телефоне 64 номера ворот в карте шириной 270px рендерятся мельче 5px —
+  // прочитать нельзя. Разворот на весь экран решает это, не раздувая карту в
+  // потоке страницы.
+  const [full, setFull] = useState(false);
   const [selected, setSelected] = useState<
     { kind: "channel"; key: string } | { kind: "gate"; gate: number } | null
   >(null);
@@ -376,6 +383,38 @@ export function Bodygraph({
           {selectedInfo ? selectedInfo.title : hint}
         </span>
       </div>
+
+      <button type="button" className={styles.bodygraphExpand} onClick={() => setFull(true)}>
+        Развернуть карту
+      </button>
+
+      {full && (
+        <div className={styles.bodygraphModal} role="dialog" aria-modal="true">
+          <div className={styles.bodygraphModalHead}>
+            <strong>{fullscreenTitle ?? "Бодиграф"}</strong>
+            <button type="button" onClick={() => setFull(false)} className={styles.bodygraphClose}>
+              Закрыть
+            </button>
+          </div>
+          <div className={styles.bodygraphModalBody}>
+            <Bodygraph
+              person={person}
+              composite={composite}
+              a={a}
+              b={b}
+              nameA={nameA}
+              nameB={nameB}
+              extraGates={extraGates}
+              extraChannels={extraChannels}
+              extraLinesA={extraLinesA}
+              extraLinesB={extraLinesB}
+              focusElectromagnetic={focusElectromagnetic}
+              size={560}
+              hint={hint}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
