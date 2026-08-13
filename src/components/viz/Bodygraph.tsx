@@ -130,6 +130,17 @@ export function Bodygraph({
     return person.definedChannels.includes(key) || person.definedChannels.includes(`${g2}-${g1}`);
   }
 
+  /** Точка, у которой всплывает подсказка: сами ворота либо середина канала. */
+  const anchor: Point | null = (() => {
+    if (!selected) return null;
+    if (selected.kind === "gate") return GATE_POS[selected.gate];
+    const ch = CHANNELS.find((c) => c.key === selected.key);
+    if (!ch) return null;
+    const { first, second } = channelHalves(ch.key, ch.gates[0], ch.gates[1]);
+    const pts = [...first, ...second.slice(1)];
+    return pts[Math.floor(pts.length / 2)];
+  })();
+
   const selectedInfo = (() => {
     if (!selected) return null;
     if (selected.kind === "channel") {
@@ -181,6 +192,9 @@ export function Bodygraph({
 
   return (
     <div className={styles.bodygraphWrap}>
+      {/* Сцена шириной ровно с карту: подсказка зажимается по её границам,
+          а не по всей ширине блока — иначе у краёв она вылезала. */}
+      <div className={styles.bodygraphStage}>
       <svg
         viewBox={`0 0 ${VIEWBOX.width} ${VIEWBOX.height}`}
         width={size}
@@ -307,19 +321,37 @@ export function Bodygraph({
         })}
       </svg>
 
+      {/* Подсказка всплывает у самого элемента, а не внизу: иначе на каждый
+          клик приходится переводить взгляд через всю карту и обратно. Позиция
+          в процентах от viewBox, поэтому не съезжает при любом масштабе.
+          Уходит влево у правого края и вниз у верхнего, чтобы не обрезалась. */}
+      {selectedInfo && anchor && (
+        <div
+          className={styles.bodygraphTip}
+          style={{
+            // Подсказка центрируется на элементе и зажимается в границы карты:
+            // сама карта узкая, и без ограничения подсказка вылезала за край.
+            left: `clamp(4px, calc(${(anchor[0] / VIEWBOX.width) * 100}% - 105px), calc(100% - 214px))`,
+            top: `${(anchor[1] / VIEWBOX.height) * 100}%`,
+            transform:
+              anchor[1] < VIEWBOX.height * 0.25 ? "translateY(14px)" : "translateY(calc(-100% - 14px))",
+          }}
+          role="status"
+        >
+          <strong className={styles.bodygraphInfoTitle}>{selectedInfo.title}</strong>
+          {selectedInfo.lines.map((l) => (
+            <span key={l} className={styles.bodygraphInfoLine}>
+              {l}
+            </span>
+          ))}
+        </div>
+      )}
+      </div>
+
       <div className={styles.bodygraphInfo} aria-live="polite">
-        {selectedInfo ? (
-          <>
-            <strong className={styles.bodygraphInfoTitle}>{selectedInfo.title}</strong>
-            {selectedInfo.lines.map((l) => (
-              <span key={l} className={styles.bodygraphInfoLine}>
-                {l}
-              </span>
-            ))}
-          </>
-        ) : (
-          <span className={styles.bodygraphInfoLine}>{hint}</span>
-        )}
+        <span className={styles.bodygraphInfoLine}>
+          {selectedInfo ? selectedInfo.title : hint}
+        </span>
       </div>
     </div>
   );

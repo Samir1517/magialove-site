@@ -93,7 +93,7 @@ export function PairBodygraphs({
               extraGates={extra?.gates ?? []}
               extraChannels={extra?.channels ?? []}
               extraLinesA={extra?.lines}
-              size={300}
+              size={270}
               hint="Тёмное — Личность, красное — Дизайн. Коснись ворот или канала."
             />
           </div>

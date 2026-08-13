@@ -459,7 +459,7 @@
   display: flex;
   flex-direction: column;
   gap: 3px;
-  min-height: 54px;
+  min-height: 34px;
   width: 100%;
   padding: 10px 14px;
   border-radius: 12px;
@@ -474,4 +474,29 @@
 .bodygraphInfoLine {
   font: 400 11.5px/1.5 var(--font-body);
   color: var(--ink-soft);
+}
+
+/* Всплывающая подсказка у самого элемента карты. Позиционируется в процентах
+   от viewBox, поэтому держится на месте при любом масштабе SVG.
+   pointer-events: none — чтобы не перехватывать наведение на соседние ворота. */
+.bodygraphTip {
+  position: absolute;
+  z-index: 3;
+  width: 210px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(90, 60, 80, 0.22);
+  border: 1px solid #eee0e8;
+  pointer-events: none;
+}
+
+/* Контейнер ровно по размеру карты — точка отсчёта для всплывающей подсказки. */
+.bodygraphStage {
+  position: relative;
+  display: flex;
+  max-width: 100%;
 }

@@ -485,15 +485,25 @@
   flex-wrap: wrap;
 }
 
+/* Две личные карты стоят рядом — своя слева, партнёра справа: так их и
+   сравнивают. Карты масштабируются под колонку, поэтому в столбик они
+   разъезжаются только на узких телефонах, где рядом уже нечитаемо. */
 .graphsPair {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 12px;
 }
-@media (max-width: 760px) {
+@media (max-width: 480px) {
   .graphsPair {
     grid-template-columns: 1fr;
   }
+}
+
+/* В паре карточки компактнее: поля меньше, подписи плотнее — сравнивать
+   удобнее, когда обе карты помещаются на один экран. */
+.graphsPair .graphCard {
+  padding: 12px 10px;
+  gap: 7px;
 }
 
 .graphCard {
