@@ -19,6 +19,7 @@ import {
   EclipticGeoMoon,
   SunPosition,
   SearchSunLongitude,
+  SiderealTime,
   type AstroTime,
 } from "astronomy-engine";
 import { fromZonedTime } from "date-fns-tz";
@@ -173,4 +174,47 @@ export function findDesignMoment(birthUtc: Date): Date {
     throw new Error("Не удалось найти момент -88° солнечной дуги");
   }
   return found.date;
+}
+
+// ---------------------------------------------------------------------------
+// Асцендент (Лагна)
+// ---------------------------------------------------------------------------
+
+/**
+ * Наклон эклиптики на дату (формула IAU 1980, линейный член). Разница с полной
+ * формулой на исторических датах — доли угловой секунды, что для определения
+ * знака асцендента (30°) избыточно точно.
+ */
+function obliquityDeg(date: Date): number {
+  const J2000_UTC = Date.UTC(2000, 0, 1, 12, 0, 0);
+  const centuries = (date.getTime() - J2000_UTC) / (36525 * 24 * 3600 * 1000);
+  return 23.439291 - 0.0130042 * centuries;
+}
+
+/**
+ * Тропическая долгота асцендента — точки эклиптики, восходящей над горизонтом.
+ *
+ * Классическая формула: tan(Asc) = cos(RAMC) / −(sin(RAMC)·cos ε + tan φ · sin ε),
+ * где RAMC — местное звёздное время в градусах, φ — географическая широта.
+ * Без широты и долготы места асцендент посчитать нельзя в принципе: он зависит
+ * не только от момента, но и от точки на Земле.
+ */
+export function ascendantTropical(utc: Date, lat: number, lon: number): number {
+  const rad = Math.PI / 180;
+  // SiderealTime отдаёт гринвичское звёздное время в часах.
+  const lstHours = SiderealTime(utc) + lon / 15;
+  const ramc = norm360(lstHours * 15) * rad;
+  const eps = obliquityDeg(utc) * rad;
+  const phi = lat * rad;
+
+  const asc = Math.atan2(
+    Math.cos(ramc),
+    -(Math.sin(ramc) * Math.cos(eps) + Math.tan(phi) * Math.sin(eps))
+  );
+  return norm360((asc / rad + 360) % 360);
+}
+
+/** Сидерический (Лахири) асцендент — то, что в Джйотиш называют Лагной. */
+export function ascendantSidereal(utc: Date, lat: number, lon: number): number {
+  return toSidereal(ascendantTropical(utc, lat, lon), utc);
 }

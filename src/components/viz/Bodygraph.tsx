@@ -10,6 +10,7 @@ import {
 import type { CompositeChannel, PersonChart } from "@/lib/engines/human_design";
 import { CHANNEL_SOURCE_COLOR, CHANNEL_SOURCE_LABEL } from "@/lib/content/human-design";
 import {
+  CENTER_COLOR,
   CENTER_SHAPES,
   GATE_POS,
   VIEWBOX,
@@ -224,10 +225,12 @@ export function Bodygraph({
         {(Object.keys(CENTER_SHAPES) as CenterKey[]).map((key) => {
           const shape = CENTER_SHAPES[key];
           const defined = definedCenters.includes(key);
+          // Определённый центр закрашивается СВОИМ каноническим цветом:
+          // по ним карту и узнают. Неопределённый — белый с тонким контуром.
           const props = {
-            fill: defined ? "#f6eef2" : UNDEFINED_FILL,
-            stroke: defined ? "#c9a9bd" : UNDEFINED_STROKE,
-            strokeWidth: defined ? 2 : 1.2,
+            fill: defined ? CENTER_COLOR[key].fill : UNDEFINED_FILL,
+            stroke: defined ? CENTER_COLOR[key].stroke : UNDEFINED_STROKE,
+            strokeWidth: defined ? 1.8 : 1.2,
           };
           return (
             <g key={key}>
