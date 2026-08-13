@@ -92,6 +92,7 @@ export function PairBodygraphs({
               nameA={name}
               extraGates={extra?.gates ?? []}
               extraChannels={extra?.channels ?? []}
+              extraLinesA={extra?.lines}
               size={300}
               hint="Тёмное — Личность, красное — Дизайн. Коснись ворот или канала."
             />
@@ -117,6 +118,8 @@ export function PairBodygraphs({
           nameB={nameB}
           extraGates={on ? saturn!.pair.gates : []}
           extraChannels={on ? saturn!.pair.channels : []}
+          extraLinesA={on ? saturn!.a.lines : undefined}
+          extraLinesB={on ? saturn!.b.lines : undefined}
           size={320}
           hint="Коснись канала — увидишь, из каких ворот он собран и кто его приносит. Коснись ворот — какая линия у каждого из вас."
         />

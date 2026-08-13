@@ -95,6 +95,8 @@ export interface SaturnSide {
   gates: number[];
   /** Каналы, замыкающиеся только с учётом этих ворот. */
   channels: string[];
+  /** Ворота периода → линия внутри них: нужно для подсказки по воротам. */
+  lines: Record<number, number>;
   /** Временный профиль периода. Тип намеренно не считаем — он не меняется. */
   profile: string;
   /** Дата возврата (ISO, для подписи). */
@@ -129,9 +131,17 @@ function sideFor(person: Person): SaturnSide | null {
     return !wasNatal && combined.has(g1) && combined.has(g2);
   }).map((ch) => ch.key);
 
+  // Линия для каждых «сатурновых» ворот: без неё подсказка по воротам на
+  // активном канале периода сообщала бы, что ворот нет вовсе.
+  const lines: Record<number, number> = {};
+  for (const g of [...personality, ...design]) {
+    if (!natal.activatedGates.has(g.gate) && lines[g.gate] === undefined) lines[g.gate] = g.line;
+  }
+
   return {
     gates,
     channels,
+    lines,
     profile: `${personality[0].line}/${design[0].line}`,
     date: ret.toISOString().slice(0, 10),
   };

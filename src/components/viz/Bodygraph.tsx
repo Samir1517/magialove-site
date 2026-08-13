@@ -68,6 +68,9 @@ export interface BodygraphProps {
   /** Доп. активации (возврат Сатурна): ворота и замкнувшиеся ими каналы. */
   extraGates?: number[];
   extraChannels?: string[];
+  /** Ворота периода → линия, отдельно по каждому партнёру. */
+  extraLinesA?: Record<number, number>;
+  extraLinesB?: Record<number, number>;
   size?: number;
   /** Подпись под картой, когда ничего не выбрано. */
   hint?: string;
@@ -82,6 +85,8 @@ export function Bodygraph({
   nameB = "Второй партнёр",
   extraGates = [],
   extraChannels = [],
+  extraLinesA,
+  extraLinesB,
   size = 320,
   hint = "Наведи курсор или коснись канала — расскажем, что это.",
 }: BodygraphProps) {
@@ -147,21 +152,30 @@ export function Bodygraph({
     }
     const gate = selected.gate;
     const center = CENTER_NAMES[centerOfGate(gate)];
-    const describe = (chart: PersonChart | undefined, name: string) => {
+    // Ворота периода возврата Сатурна учитываем наравне с натальными: иначе
+    // на активном фиолетовом канале подсказка сообщала бы, что ворот нет.
+    const describe = (
+      chart: PersonChart | undefined,
+      name: string,
+      periodLines?: Record<number, number>
+    ) => {
       if (!chart) return null;
       const p = chart.personalityLines[gate];
       const d = chart.designLines[gate];
-      if (p === undefined && d === undefined) return `${name}: этих ворот нет.`;
+      const period = periodLines?.[gate];
       const parts: string[] = [];
       if (p !== undefined) parts.push(`Личность — линия ${p}`);
       if (d !== undefined) parts.push(`Дизайн — линия ${d}`);
+      if (period !== undefined) parts.push(`возврат Сатурна — линия ${period}`);
+      if (parts.length === 0) return `${name}: этих ворот нет.`;
       return `${name}: ${parts.join(", ")}.`;
     };
     return {
       title: `Ворота ${gate} · ${center}`,
-      lines: [describe(a ?? person, nameA), describe(b, nameB)].filter(
-        (x): x is string => Boolean(x)
-      ),
+      lines: [
+        describe(a ?? person, nameA, extraLinesA),
+        describe(b, nameB, extraLinesB),
+      ].filter((x): x is string => Boolean(x)),
     };
   })();
 
