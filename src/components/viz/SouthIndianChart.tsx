@@ -15,13 +15,15 @@ import styles from "./viz.module.css";
  * пустая под подпись. Менять раскладку нельзя — практики читают такую карту
  * с одного взгляда, а знак ищут по месту, а не по подписи.
  *
- * Дома отсчитываются от Луны (Чандра-лагна): её клетка помечается диагональю,
- * как в традиции помечают Лагну.
+ * Дома отсчитываются от Лагны, если известно место рождения, иначе от Луны
+ * (Чандра-лагна). Опорная клетка помечается диагональю — так в традиции
+ * помечают именно Лагну.
  */
 export function SouthIndianChart({
   grahas,
   partner,
   anchorRashi,
+  anchorLabel = "Луны",
   title,
   subtitle,
   vargottamaKeys,
@@ -31,8 +33,10 @@ export function SouthIndianChart({
   grahas: ChartGraha[];
   /** Второй набор планет — режим наложения двух карт. */
   partner?: ChartGraha[];
-  /** Знак, от которого считаются дома (у нас — знак Луны). */
+  /** Знак, от которого считаются дома: Лагна, а без места рождения — Луна. */
   anchorRashi: number;
+  /** Родительный падеж для подписи: «дом от лагны» / «дом от Луны». */
+  anchorLabel?: string;
   title: string;
   subtitle?: string;
   vargottamaKeys?: Set<string>;
@@ -53,7 +57,7 @@ export function SouthIndianChart({
         vargottamaKeys?.has(g.key) ? " · варготтама" : ""
       }`;
     return {
-      title: `${RASHI_NAMES[selected]} · ${house}-й дом от Луны`,
+      title: `${RASHI_NAMES[selected]} · ${house}-й дом от ${anchorLabel}`,
       lines: [
         own.length
           ? `${partner ? `${nameA}: ` : ""}${own.map(fmt).join(", ")}`
@@ -77,20 +81,20 @@ export function SouthIndianChart({
         {CELL.map(([row, col], rashi) => {
           const own = byRashi(grahas, rashi);
           const other = partner ? byRashi(partner, rashi) : [];
-          const isMoonSign = rashi === anchorRashi;
+          const isAnchorSign = rashi === anchorRashi;
           const isSel = selected === rashi;
           return (
             <button
               type="button"
               key={rashi}
-              className={`${styles.sicCell} ${isMoonSign ? styles.sicCellAnchor : ""} ${
+              className={`${styles.sicCell} ${isAnchorSign ? styles.sicCellAnchor : ""} ${
                 isSel ? styles.sicCellSel : ""
               }`}
               style={{ gridRow: row + 1, gridColumn: col + 1 }}
               onMouseEnter={() => setSelected(rashi)}
               onMouseLeave={() => setSelected(null)}
               onClick={() => setSelected(rashi)}
-              aria-label={`${RASHI_NAMES[rashi]}, ${houseFrom(anchorRashi, rashi)}-й дом от Луны`}
+              aria-label={`${RASHI_NAMES[rashi]}, ${houseFrom(anchorRashi, rashi)}-й дом от ${anchorLabel}`}
             >
               <span className={styles.sicSign}>
                 {RASHI_GLYPH[rashi]}
@@ -130,7 +134,8 @@ export function SouthIndianChart({
           </>
         ) : (
           <span className={styles.sicInfoLine}>
-            Диагональю отмечен знак Луны — от него считаются дома. Наведи на клетку.
+            Диагональю отмечен знак {anchorLabel === "лагны" ? "лагны" : "Луны"} — от него
+            считаются дома. Наведи на клетку.
           </span>
         )}
       </div>

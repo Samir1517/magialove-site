@@ -7,8 +7,14 @@ import styles from "./CityTimezoneInput.module.css";
 /**
  * Автодополнение города рождения вместо списка часовых поясов: человеку проще
  * вспомнить и набрать название города, чем искать свой пояс относительно
- * Москвы в длинном списке. Наружу отдаём тот же tz-string, что и раньше —
- * движки эфемерид как принимали только IANA-таймзону, так и принимают.
+ * Москвы в длинном списке.
+ *
+ * Наружу отдаём tz и координаты выбранного города. Координаты нужны Джйотишу
+ * для лагны: она считается от местного звёздного времени, поэтому вывести её
+ * из одного часового пояса нельзя — Europe/Moscow тянется от Калининградской
+ * границы до Урала, а десять градусов долготы сдвигают асцендент почти на
+ * целый знак. Координаты необязательны: по ссылкам без них расчёт работает
+ * как раньше, просто без лагны.
  */
 export function CityTimezoneInput({
   value,
@@ -16,7 +22,7 @@ export function CityTimezoneInput({
   label = "Город (или часовой пояс) рождения",
 }: {
   value: string;
-  onChange: (tz: string) => void;
+  onChange: (tz: string, coords?: { lat: number; lon: number }) => void;
   label?: string;
 }) {
   const listId = useId();
@@ -33,7 +39,7 @@ export function CityTimezoneInput({
     setSelected(city);
     setQuery("");
     setOpen(false);
-    onChange(city.tz);
+    onChange(city.tz, { lat: city.lat, lon: city.lon });
   }
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {

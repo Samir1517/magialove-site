@@ -3,7 +3,8 @@
 import { useMemo } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { calcJyotishCompatibility, calcNavagraha } from "@/lib/engines/jyotish";
+import { calcJyotishCompatibility, calcNavagraha, calcLagna } from "@/lib/engines/jyotish";
+import { readCoords } from "@/lib/engines/geo";
 import { makePerson, safely } from "@/lib/engines/person";
 import { getVerdict } from "@/lib/engines/synthesis";
 import { JyotishSection } from "@/components/systems/JyotishSection";
@@ -25,16 +26,25 @@ export function JyotishResultView() {
   const tzB = params.get("btz") ?? undefined;
   const nameA = params.get("na")?.trim() || "Первый партнёр";
   const nameB = params.get("nb")?.trim() || "Второй партнёр";
+  const latA = params.get("alat");
+  const lonA = params.get("alon");
+  const latB = params.get("blat");
+  const lonB = params.get("blon");
 
   const data = useMemo(() => {
     if (!dateA || !dateB || !timeA || !timeB) return null;
-    const a = makePerson(dateA, timeA, tzA);
-    const b = makePerson(dateB, timeB, tzB);
+    const geoA = readCoords((k) => params.get(k), "a");
+    const geoB = readCoords((k) => params.get(k), "b");
+    const a = makePerson(dateA, timeA, tzA, geoA);
+    const b = makePerson(dateB, timeB, tzB, geoB);
     const report = safely(() => calcJyotishCompatibility(a, b));
     if (!report) return null;
     const grahas = safely(() => ({ a: calcNavagraha(a), b: calcNavagraha(b) }));
-    return { report, grahas };
-  }, [dateA, dateB, timeA, timeB, tzA, tzB]);
+    // Лагна есть только когда в ссылке доехали координаты; без неё карты
+    // считают дома от знака Луны, как и раньше.
+    const lagna = { a: calcLagna(a)?.lon ?? null, b: calcLagna(b)?.lon ?? null };
+    return { report, grahas, lagna };
+  }, [dateA, dateB, timeA, timeB, tzA, tzB, latA, lonA, latB, lonB]);
 
   if (!dateA || !dateB || !timeA || !timeB || !data) {
     return (
@@ -73,7 +83,13 @@ export function JyotishResultView() {
         Расчёт только по Джйотиш — Гуна-милан и доши по точному моменту рождения обоих.
       </p>
 
-      <JyotishSection report={report} nameA={nameA} nameB={nameB} grahas={grahas} />
+      <JyotishSection
+        report={report}
+        nameA={nameA}
+        nameB={nameB}
+        grahas={grahas}
+        lagna={data.lagna}
+      />
 
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}

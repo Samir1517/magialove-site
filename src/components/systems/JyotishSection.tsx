@@ -33,6 +33,7 @@ export function JyotishSection({
   nameB = "Партнёр Б",
   standaloneHref,
   grahas,
+  lagna,
 }: {
   report: SystemReport<JyotishRawFeatures>;
   nameA?: string;
@@ -40,6 +41,8 @@ export function JyotishSection({
   standaloneHref?: string;
   /** Положения грах обоих — для карт D-1 и D-9 на подробной странице. */
   grahas?: { a: GrahaPosition[]; b: GrahaPosition[] } | null;
+  /** Долготы Лагны обоих; null — места рождения нет в ссылке. */
+  lagna?: { a: number | null; b: number | null };
 }) {
   const f = report.rawFeatures;
   const total = f.gunaMilan.total;
@@ -112,7 +115,14 @@ export function JyotishSection({
       {detailed && grahas && (
         <>
           <hr className={styles.divider} />
-          <JyotishCharts a={grahas.a} b={grahas.b} nameA={nameA} nameB={nameB} />
+          <JyotishCharts
+            a={grahas.a}
+            b={grahas.b}
+            nameA={nameA}
+            nameB={nameB}
+            lagnaLonA={lagna?.a ?? null}
+            lagnaLonB={lagna?.b ?? null}
+          />
         </>
       )}
 

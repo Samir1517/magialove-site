@@ -4,6 +4,7 @@ import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { DEFAULT_TZ } from "@/lib/data/timezones";
 import { CityTimezoneInput } from "./CityTimezoneInput";
+import { putCoords, coordsOfShownCity, type Coords } from "@/lib/engines/geo";
 import styles from "@/components/result/result.module.css";
 
 /**
@@ -21,6 +22,8 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
   const [timeB, setTimeB] = useState("");
   const [tzA, setTzA] = useState(DEFAULT_TZ);
   const [tzB, setTzB] = useState(DEFAULT_TZ);
+  const [geoA, setGeoA] = useState<Coords | null>(() => coordsOfShownCity(DEFAULT_TZ));
+  const [geoB, setGeoB] = useState<Coords | null>(() => coordsOfShownCity(DEFAULT_TZ));
   const [error, setError] = useState<string | null>(null);
 
   function handleSubmit(e: FormEvent) {
@@ -33,6 +36,8 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
     const params = new URLSearchParams({
       a: dateA, b: dateB, at: timeA, bt: timeB, atz: tzA, btz: tzB,
     });
+    putCoords(params, "a", geoA);
+    putCoords(params, "b", geoB);
     if (nameA.trim()) params.set("na", nameA.trim());
     if (nameB.trim()) params.set("nb", nameB.trim());
     router.push(`${targetPath}?${params.toString()}`);
@@ -73,7 +78,11 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
               required
             />
           </label>
-          <CityTimezoneInput value={tzA} onChange={setTzA} label="Город рождения" />
+          <CityTimezoneInput
+                    value={tzA}
+                    onChange={(tz, c) => { setTzA(tz); setGeoA(c ?? null); }}
+                    label="Город рождения"
+                  />
         </div>
 
         <div className={styles.formCol}>
@@ -108,7 +117,11 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
               required
             />
           </label>
-          <CityTimezoneInput value={tzB} onChange={setTzB} label="Город рождения" />
+          <CityTimezoneInput
+                    value={tzB}
+                    onChange={(tz, c) => { setTzB(tz); setGeoB(c ?? null); }}
+                    label="Город рождения"
+                  />
         </div>
       </div>
 

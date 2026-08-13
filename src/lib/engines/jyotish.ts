@@ -13,6 +13,7 @@ import {
   meanNorthNodeLongitude,
   meanSouthNodeLongitude,
   toSidereal,
+  ascendantSidereal,
 } from "./ephemeris";
 import {
   rashiIndex,
@@ -155,28 +156,57 @@ function taraScore(aIdx: number, bIdx: number): number {
 }
 
 // ---------------------------------------------------------------------------
-// Мангал доша. Классика считает дом Марса в первую очередь от Лагны, и
-// ascendantSidereal() в ephemeris.ts её умеет — но считать не из чего:
-// makePerson() заполняет birthPlace только городом и часовым поясом, широта и
-// долгота до Person не доходят (в URL расчёта передаётся лишь atz/btz).
-// Поэтому дом Марса берём от Лунного знака — Чандра-лагна, признанный подход
-// ряда школ. Чтобы перейти на строгую Лагну, надо протянуть lat/lon из CITIES
-// через форму и URL до движка; это сдвинет баллы, поэтому решается отдельно.
+// Мангал доша. Классика считает дом Марса в первую очередь от Лагны и лишь
+// затем от Чандра-лагны (знака Луны). Лагну считаем, когда в Person доехали
+// координаты города: она зависит от местного звёздного времени, поэтому без
+// широты и долготы её не получить. По ссылкам, сохранённым до появления
+// координат в адресе, остаётся прежний расчёт от Луны — он не требует места.
 // ---------------------------------------------------------------------------
 
 const MANGAL_DOSHA_HOUSES = new Set([1, 2, 4, 7, 8, 12]);
 
-function marsHouseFromMoon(moonRashiIdx: number, marsRashiIdx: number): number {
-  return ((marsRashiIdx - moonRashiIdx + 12) % 12) + 1;
+function houseBetween(anchorRashiIdx: number, targetRashiIdx: number): number {
+  return ((targetRashiIdx - anchorRashiIdx + 12) % 12) + 1;
 }
 
-export function calcMangalDosha(person: Person, moon: MoonPosition): { present: boolean; house: number } {
+/**
+ * Лагна — восходящий знак. Возвращает null, если места рождения нет: выдумывать
+ * координаты по часовому поясу нельзя, Europe/Moscow тянется на десятки
+ * градусов долготы, а это почти целый знак разницы в асценденте.
+ */
+export function calcLagna(person: Person): { rashiIndex: number; lon: number } | null {
+  const { lat, lon } = person.birthPlace;
+  if (lat === undefined || lon === undefined || !person.birthTimeKnown) return null;
+  const asc = ascendantSidereal(birthMoment(person), lat, lon);
+  return { rashiIndex: rashiIndex(asc), lon: asc };
+}
+
+export interface MangalDosha {
+  present: boolean;
+  /** Дом Марса от Луны — считается всегда, места рождения не требует. */
+  house: number;
+  /** Дом Марса от Лагны — null, когда координат нет. */
+  houseFromLagna: number | null;
+  /** От чего именно доша: пусто, если её нет. */
+  from: ("лагны" | "Луны")[];
+}
+
+export function calcMangalDosha(person: Person, moon: MoonPosition): MangalDosha {
   const utc = birthMoment(person);
-  const marsTropical = planetLongitude("mars", utc);
-  const marsSidereal = toSidereal(marsTropical, utc);
-  const marsRashiIdx = rashiIndex(marsSidereal);
-  const house = marsHouseFromMoon(moon.rashiIndex, marsRashiIdx);
-  return { present: MANGAL_DOSHA_HOUSES.has(house), house };
+  const marsRashiIdx = rashiIndex(toSidereal(planetLongitude("mars", utc), utc));
+
+  const house = houseBetween(moon.rashiIndex, marsRashiIdx);
+  const fromMoon = MANGAL_DOSHA_HOUSES.has(house);
+
+  const lagna = calcLagna(person);
+  const houseFromLagna = lagna ? houseBetween(lagna.rashiIndex, marsRashiIdx) : null;
+  const fromLagna = houseFromLagna !== null && MANGAL_DOSHA_HOUSES.has(houseFromLagna);
+
+  const from: ("лагны" | "Луны")[] = [];
+  if (fromLagna) from.push("лагны");
+  if (fromMoon) from.push("Луны");
+
+  return { present: fromLagna || fromMoon, house, houseFromLagna, from };
 }
 
 // ---------------------------------------------------------------------------

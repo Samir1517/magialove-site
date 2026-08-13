@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { DEFAULT_TZ } from "@/lib/data/timezones";
 import { CityTimezoneInput } from "@/components/system-calc/CityTimezoneInput";
+import { putCoords, coordsOfShownCity, type Coords } from "@/lib/engines/geo";
 import content from "@/components/content/content.module.css";
 import styles from "./hub.module.css";
 
@@ -32,6 +33,8 @@ export function HubCalculator() {
   const [timeB, setTimeB] = useState("");
   const [tzA, setTzA] = useState(DEFAULT_TZ);
   const [tzB, setTzB] = useState(DEFAULT_TZ);
+  const [geoA, setGeoA] = useState<Coords | null>(() => coordsOfShownCity(DEFAULT_TZ));
+  const [geoB, setGeoB] = useState<Coords | null>(() => coordsOfShownCity(DEFAULT_TZ));
   const [error, setError] = useState<string | null>(null);
 
   /**
@@ -63,6 +66,10 @@ export function HubCalculator() {
       params.set("bt", timeB);
       params.set("atz", tzA);
       params.set("btz", tzB);
+      // Координаты кладём только вместе со временем: без момента рождения
+      // лагны всё равно нет, а лишние параметры в адресе ни к чему.
+      putCoords(params, "a", geoA);
+      putCoords(params, "b", geoB);
     }
     router.push(`/rezultat?${params.toString()}`);
   }
@@ -149,7 +156,11 @@ export function HubCalculator() {
                       onChange={(e) => setTimeA(e.target.value)}
                     />
                   </label>
-                  <CityTimezoneInput value={tzA} onChange={setTzA} label="Город рождения" />
+                  <CityTimezoneInput
+                    value={tzA}
+                    onChange={(tz, c) => { setTzA(tz); setGeoA(c ?? null); }}
+                    label="Город рождения"
+                  />
                 </div>
                 <div className={styles.col}>
                   <span className={styles.colTitle}>Партнёр</span>
@@ -162,7 +173,11 @@ export function HubCalculator() {
                       onChange={(e) => setTimeB(e.target.value)}
                     />
                   </label>
-                  <CityTimezoneInput value={tzB} onChange={setTzB} label="Город рождения" />
+                  <CityTimezoneInput
+                    value={tzB}
+                    onChange={(tz, c) => { setTzB(tz); setGeoB(c ?? null); }}
+                    label="Город рождения"
+                  />
                 </div>
               </div>
 

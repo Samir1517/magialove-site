@@ -21,6 +21,7 @@ import {
   calcPairRoles,
 } from "@/lib/engines/highlights";
 import { makePerson, safely } from "@/lib/engines/person";
+import { readCoords } from "@/lib/engines/geo";
 import { DEFAULT_TZ } from "@/lib/data/timezones";
 
 import { DailySection } from "@/components/systems/DailySection";
@@ -47,11 +48,17 @@ export function ResultView() {
   const tzB = params.get("btz") ?? DEFAULT_TZ;
   const nameA = params.get("na")?.trim() || "Первый партнёр";
   const nameB = params.get("nb")?.trim() || "Второй партнёр";
+  const latA = params.get("alat");
+  const lonA = params.get("alon");
+  const latB = params.get("blat");
+  const lonB = params.get("blon");
 
   const data = useMemo(() => {
     if (!dateA || !dateB) return null;
-    const a = makePerson(dateA, timeA, tzA);
-    const b = makePerson(dateB, timeB, tzB);
+    const geoA = readCoords((k) => params.get(k), "a");
+    const geoB = readCoords((k) => params.get(k), "b");
+    const a = makePerson(dateA, timeA, tzA, geoA);
+    const b = makePerson(dateB, timeB, tzB, geoB);
 
     const matrix = safely(() => calcMatrixCompatibility(a, b));
     const numerology = safely(() => calcNumerologyCompatibility(a, b));
@@ -61,7 +68,7 @@ export function ResultView() {
     const humanDesign = hasTimes ? safely(() => calcHumanDesignCompatibility(a, b)) : null;
     const jyotish = hasTimes ? safely(() => calcJyotishCompatibility(a, b)) : null;
     return { a, b, matrix, numerology, humanDesign, jyotish, hasTimes };
-  }, [dateA, dateB, timeA, timeB, tzA, tzB]);
+  }, [dateA, dateB, timeA, timeB, tzA, tzB, latA, lonA, latB, lonB]);
 
   if (!dateA || !dateB || !data) {
     return (
