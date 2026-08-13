@@ -114,7 +114,11 @@ export function PairBodygraphs({
         ))}
       </div>
 
-      <div className={styles.graphCard} style={{ marginTop: 16 }}>
+      <div className={styles.graphsJoin} aria-hidden="true">
+        <span>вместе</span>
+      </div>
+
+      <div className={styles.graphCard} style={{ marginTop: 0 }}>
         <div className={styles.graphCardHead}>
           <span className={styles.lsLabel}>Общая карта пары</span>
           <span className={styles.graphType}>

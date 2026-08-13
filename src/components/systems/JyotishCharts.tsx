@@ -108,7 +108,11 @@ export function JyotishCharts({
         ))}
       </div>
 
-      <div className={styles.graphCard} style={{ marginTop: 16 }}>
+      <div className={styles.graphsJoin} aria-hidden="true">
+        <span>вместе</span>
+      </div>
+
+      <div className={styles.graphCard} style={{ marginTop: 0 }}>
         <div className={styles.graphCardHead}>
           <span className={styles.lsLabel}>Две карты в одной сетке</span>
           <span className={styles.graphType}>

@@ -642,3 +642,26 @@
   color: var(--ink-faint);
   margin: 0;
 }
+
+/* Пауза между двумя личными картами и общей: это разные уровни разговора,
+   и без разделителя общая карта читалась как третья в ряду. */
+.graphsJoin {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 22px 0 14px;
+  color: var(--ink-faint);
+}
+.graphsJoin::before,
+.graphsJoin::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #e6d9e2, transparent);
+}
+.graphsJoin span {
+  font: 600 10.5px var(--font-body);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
