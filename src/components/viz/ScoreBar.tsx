@@ -3,6 +3,9 @@ import styles from "./viz.module.css";
 
 export interface ScoreBarProps {
   label: string;
+  /** Вопросик после подписи. Отдельно от label: тот уходит в aria-label,
+      и компонент внутри строки его бы сломал. */
+  labelHint?: React.ReactNode;
   score: number;
   /** Максимум шкалы. Для процентных величин — 100. */
   max: number;
@@ -22,6 +25,7 @@ export interface ScoreBarProps {
  */
 export function ScoreBar({
   label,
+  labelHint,
   score,
   max,
   caption,
@@ -35,7 +39,10 @@ export function ScoreBar({
   return (
     <div className={styles.bar}>
       <div className={styles.barHead}>
-        <span className={styles.barLabel}>{label}</span>
+        <span className={styles.barLabel}>
+          {label}
+          {labelHint}
+        </span>
         <span className={styles.barValue} style={{ color: band.ink }}>
           {showAsFraction
             ? `${formatScore(score)} из ${formatScore(max)}`

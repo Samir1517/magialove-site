@@ -33,6 +33,17 @@ function isHigh(score: number, max: number): boolean {
  * иначе «nadi» ничего не говорит при чтении самого словаря. Здесь связка.
  * Незнакомый ключ даёт пустую строку, и TermHint просто не отрисуется.
  */
+const KUTA_HINT: Record<string, string> = {
+  varna: "kutaVarna",
+  vashya: "kutaVashya",
+  tara: "kutaTara",
+  yoni: "kutaYoni",
+  graha_maitri: "kutaGrahaMaitri",
+  gana: "kutaGana",
+  bhakoot: "kutaBhakoot",
+  nadi: "kutaNadi",
+};
+
 const DOSHA_HINT: Record<string, string> = {
   nadi: "nadiDosha",
   bhakoot: "bhakootDosha",
@@ -191,6 +202,7 @@ export function JyotishSection({
                 </div>
                 <ScoreBar
                   label={`${kuta.title} — ${reading.about}`}
+                  labelHint={<TermHint id={KUTA_HINT[kuta.key] ?? ""} label={kuta.title} />}
                   score={result.score}
                   max={result.max}
                   showAsFraction
