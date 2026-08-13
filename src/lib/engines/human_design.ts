@@ -290,9 +290,28 @@ export function calcConnectionTheme(composite: CompositeDefinition): ConnectionT
 // Публичный расчёт
 // ---------------------------------------------------------------------------
 
+/**
+ * Полная карта одного человека — то, что нужно, чтобы нарисовать его личный
+ * бодиграф рядом с бодиграфом партнёра: какие ворота активированы, какими
+ * именно активациями (Личность / Дизайн) и с какой линией внутри ворот.
+ */
+export interface PersonChart {
+  type: HDType;
+  authority: Authority;
+  profile: string;
+  definedCenters: string[];
+  /** Ключи центров (не названия) — для раскраски бодиграфа. */
+  definedCenterKeys: CenterKey[];
+  definedChannels: string[];
+  activatedGates: number[];
+  /** Ворота → линия внутри них. Нужны для подсказки «какая линия у кого». */
+  personalityLines: Record<number, number>;
+  designLines: Record<number, number>;
+}
+
 export interface HumanDesignRawFeatures {
-  a: { type: HDType; authority: Authority; profile: string; definedCenters: string[] };
-  b: { type: HDType; authority: Authority; profile: string; definedCenters: string[] };
+  a: PersonChart;
+  b: PersonChart;
   connections: Record<ConnectionThemeKey, string[]>;
   /** Композит пары — основа для Connection Theme и композитного бодиграфа. */
   composite: CompositeDefinition;
@@ -314,6 +333,27 @@ function typeAuthorityModifier(a: PersonalDesign, b: PersonalDesign): number {
   if (sameAuthority) modifier += 7.5;
   else modifier -= 7.5; // разный ритм решений — заявленный в pair_note главный риск
   return modifier;
+}
+
+/** Свод активаций в «ворота → линия»: одни ворота могут прийти дважды. */
+function linesByGate(gates: GateLine[]): Record<number, number> {
+  const out: Record<number, number> = {};
+  for (const g of gates) if (out[g.gate] === undefined) out[g.gate] = g.line;
+  return out;
+}
+
+function toPersonChart(d: PersonalDesign): PersonChart {
+  return {
+    type: d.type,
+    authority: d.authority,
+    profile: d.profile,
+    definedCenters: [...d.definedCenters].map((c) => CENTER_NAMES[c]),
+    definedCenterKeys: [...d.definedCenters],
+    definedChannels: d.definedChannels,
+    activatedGates: [...d.activatedGates].sort((x, y) => x - y),
+    personalityLines: linesByGate(d.personalityGates),
+    designLines: linesByGate(d.designGates),
+  };
 }
 
 export function calcHumanDesignCompatibility(a: Person, b: Person): SystemReport<HumanDesignRawFeatures> {
@@ -342,18 +382,8 @@ export function calcHumanDesignCompatibility(a: Person, b: Person): SystemReport
   return {
     score,
     rawFeatures: {
-      a: {
-        type: aDesign.type,
-        authority: aDesign.authority,
-        profile: aDesign.profile,
-        definedCenters: [...aDesign.definedCenters].map((c) => CENTER_NAMES[c]),
-      },
-      b: {
-        type: bDesign.type,
-        authority: bDesign.authority,
-        profile: bDesign.profile,
-        definedCenters: [...bDesign.definedCenters].map((c) => CENTER_NAMES[c]),
-      },
+      a: toPersonChart(aDesign),
+      b: toPersonChart(bDesign),
       connections: byTheme,
       composite,
       connectionTheme: calcConnectionTheme(composite),

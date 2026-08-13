@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { SystemReport } from "@/lib/engines/types";
 import type { HumanDesignRawFeatures } from "@/lib/engines/human_design";
+import type { SaturnAddition } from "@/lib/engines/saturn-return";
 import { CENTER_NAMES } from "@/lib/engines/human-design-tables";
 import {
   CHANNEL_SOURCE_COLOR,
@@ -15,6 +16,7 @@ import {
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { CompositeBodygraph } from "@/components/viz/CompositeBodygraph";
 import { ProfileLines } from "./ProfileLines";
+import { PairBodygraphs } from "./PairBodygraphs";
 import { Legend } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import {
@@ -34,11 +36,14 @@ export function HumanDesignSection({
   nameA = "Партнёр А",
   nameB = "Партнёр Б",
   standaloneHref,
+  saturn = null,
 }: {
   report: SystemReport<HumanDesignRawFeatures>;
   nameA?: string;
   nameB?: string;
   standaloneHref?: string;
+  /** Доп. активации периода возврата Сатурна — только на подробной странице. */
+  saturn?: SaturnAddition | null;
 }) {
   const f = report.rawFeatures;
   const theme = themeContent(f.connectionTheme.defined);
@@ -154,21 +159,39 @@ export function HumanDesignSection({
 
       <hr className={styles.divider} />
 
+      {/* На подробной странице системы — три классические карты: своя, партнёра
+          и общая. На общем результате по 4 системам столько графики было бы
+          перегрузом, там остаётся компактная схема композита. */}
+      {detailed ? (
+        <PairBodygraphs
+          a={f.a}
+          b={f.b}
+          composite={composite}
+          nameA={nameA}
+          nameB={nameB}
+          saturn={saturn}
+        />
+      ) : null}
+
       <div className={styles.graphLayout}>
         <div>
-          <h3 className={styles.blockTitle}>Композитный бодиграф</h3>
-          <CompositeBodygraph
-            channels={composite.channels}
-            definedCenters={composite.definedCenters}
-            highlightKey={hoverChannel}
-            onChannelClick={scrollToChannel}
-          />
-          <Legend
-            entries={SOURCE_ORDER.map((s) => ({
-              color: CHANNEL_SOURCE_COLOR[s],
-              text: CHANNEL_SOURCE_LABEL[s],
-            }))}
-          />
+          {!detailed && (
+            <>
+              <h3 className={styles.blockTitle}>Композитный бодиграф</h3>
+              <CompositeBodygraph
+                channels={composite.channels}
+                definedCenters={composite.definedCenters}
+                highlightKey={hoverChannel}
+                onChannelClick={scrollToChannel}
+              />
+              <Legend
+                entries={SOURCE_ORDER.map((s) => ({
+                  color: CHANNEL_SOURCE_COLOR[s],
+                  text: CHANNEL_SOURCE_LABEL[s],
+                }))}
+              />
+            </>
+          )}
         </div>
 
         <div className={styles.graphSide}>

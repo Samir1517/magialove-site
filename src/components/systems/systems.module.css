@@ -469,3 +469,111 @@
     gap: 12px;
   }
 }
+
+/* --- Три бодиграфа: свой, партнёра, общий --- */
+.graphsBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.graphsHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.graphsPair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+@media (max-width: 760px) {
+  .graphsPair {
+    grid-template-columns: 1fr;
+  }
+}
+
+.graphCard {
+  background: #fff;
+  border-radius: 18px;
+  padding: 18px 16px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.graphCardHead {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.graphType {
+  font: 600 13px var(--font-body);
+  color: var(--ink);
+}
+.graphType em {
+  font: 400 11px var(--font-body);
+  color: var(--ink-faint);
+}
+
+.graphTypeExtra {
+  font: 600 12.5px var(--font-body);
+  color: #8c7fb5;
+}
+.graphTypeExtra em {
+  font: 400 11px var(--font-body);
+  color: var(--ink-faint);
+}
+
+/* Кнопка возврата Сатурна: тихая в выключенном состоянии, явная во включённом. */
+.saturnBtn,
+.saturnBtnOn {
+  border-radius: 999px;
+  padding: 9px 16px;
+  font: 600 12px var(--font-body);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.saturnBtn {
+  border: 1px solid #d9cde8;
+  background: #fff;
+  color: #8c7fb5;
+}
+.saturnBtn:hover {
+  border-color: #8c7fb5;
+  background: #f6f2fb;
+}
+.saturnBtnOn {
+  border: 1px solid #8c7fb5;
+  background: #8c7fb5;
+  color: #fff;
+}
+
+.graphLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+}
+
+.graphLegendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 500 11.5px var(--font-body);
+  color: var(--ink-soft);
+}
+.graphLegendItem i {
+  width: 12px;
+  height: 4px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.graphLegendItem em {
+  font: 400 11px var(--font-body);
+  color: var(--ink-faint);
+}

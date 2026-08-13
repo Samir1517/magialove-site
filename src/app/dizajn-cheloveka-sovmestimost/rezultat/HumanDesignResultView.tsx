@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { calcHumanDesignCompatibility } from "@/lib/engines/human_design";
 import { makePerson, safely } from "@/lib/engines/person";
+import { calcSaturnAddition } from "@/lib/engines/saturn-return";
 import { getVerdict } from "@/lib/engines/synthesis";
 import { HumanDesignSection } from "@/components/systems/HumanDesignSection";
 import { UpsellToFullCta } from "@/components/system-calc/UpsellToFullCta";
@@ -28,6 +29,15 @@ export function HumanDesignResultView() {
     if (!dateA || !dateB || !timeA || !timeB) return null;
     return safely(() =>
       calcHumanDesignCompatibility(makePerson(dateA, timeA, tzA), makePerson(dateB, timeB, tzB))
+    );
+  }, [dateA, dateB, timeA, timeB, tzA, tzB]);
+
+  // Карта возврата Сатурна считается отдельно и лениво: это ещё два прохода по
+  // эфемеридам на человека, и общему результату по 4 системам она не нужна.
+  const saturn = useMemo(() => {
+    if (!dateA || !dateB || !timeA || !timeB) return null;
+    return safely(() =>
+      calcSaturnAddition(makePerson(dateA, timeA, tzA), makePerson(dateB, timeB, tzB))
     );
   }, [dateA, dateB, timeA, timeB, tzA, tzB]);
 
@@ -66,7 +76,7 @@ export function HumanDesignResultView() {
         Расчёт только по Дизайну человека — композит пары по точному моменту рождения обоих.
       </p>
 
-      <HumanDesignSection report={report} nameA={nameA} nameB={nameB} />
+      <HumanDesignSection report={report} nameA={nameA} nameB={nameB} saturn={saturn} />
 
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}
