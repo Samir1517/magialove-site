@@ -52,10 +52,6 @@ export function JyotishCharts({
 
   const moonA = chartA.find((g) => g.key === "moon")!.rashiIndex;
   const moonB = chartB.find((g) => g.key === "moon")!.rashiIndex;
-  const marsA = chartA.find((g) => g.key === "mars")!.rashiIndex;
-  const marsB = chartB.find((g) => g.key === "mars")!.rashiIndex;
-  const venusA = chartA.find((g) => g.key === "venus")!.rashiIndex;
-  const venusB = chartB.find((g) => g.key === "venus")!.rashiIndex;
 
   // Клетка Лагны своя в каждой варге: в D-1 это её знак, в D-9 — навамша-лагна.
   // Слой карт 0-based, а rashiIndex() отдаёт 1-based, отсюда вычитание.
@@ -69,15 +65,23 @@ export function JyotishCharts({
   const anchorB = lagnaB ?? moonB;
   const anchorLabel = lagnaA !== null && lagnaB !== null ? "лагны" : "Луны";
 
-  const mangal = (lagna: number | null, moon: number, venus: number, mars: number) =>
-    [
+  // Мангал доша — свойство натальной карты, по навамше её не читают. Считаем
+  // всегда от D-1, иначе подпись менялась бы при переключении варги: у одного
+  // партнёра доша «переезжала» с Луны на Венеру, у другого исчезала совсем.
+  const mangal = (grahas: GrahaPosition[], lagnaLon: number | null) => {
+    const d1 = rashiChart(grahas);
+    const at = (key: string) => d1.find((g) => g.key === key)!.rashiIndex;
+    const mars = at("mars");
+    const lagna = lagnaLon === null ? null : rashiIndex(lagnaLon) - 1;
+    return [
       lagna !== null && mangalFrom(lagna, mars) && "от лагны",
-      mangalFrom(moon, mars) && "от Луны",
-      mangalFrom(venus, mars) && "от Венеры",
+      mangalFrom(at("moon"), mars) && "от Луны",
+      mangalFrom(at("venus"), mars) && "от Венеры",
     ].filter(Boolean);
+  };
 
-  const mA = mangal(lagnaA, moonA, venusA, marsA);
-  const mB = mangal(lagnaB, moonB, venusB, marsB);
+  const mA = mangal(a, lagnaLonA);
+  const mB = mangal(b, lagnaLonB);
   // Классическая бханга: если Марс так стоит у обоих, традиция считает дошу
   // взаимно снятой — их Марсы резонируют, а не бьются об чужое спокойствие.
   const bothManglik = mA.length > 0 && mB.length > 0;
