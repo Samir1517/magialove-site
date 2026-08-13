@@ -74,6 +74,8 @@ export interface BodygraphProps {
   size?: number;
   /** Подпись под картой, когда ничего не выбрано. */
   hint?: string;
+  /** Приглушить всё, кроме электромагнитных каналов — «только вдвоём». */
+  focusElectromagnetic?: boolean;
 }
 
 export function Bodygraph({
@@ -89,6 +91,7 @@ export function Bodygraph({
   extraLinesB,
   size = 320,
   hint = "Наведи курсор или коснись канала — расскажем, что это.",
+  focusElectromagnetic = false,
 }: BodygraphProps) {
   const [selected, setSelected] = useState<
     { kind: "channel"; key: string } | { kind: "gate"; gate: number } | null
@@ -108,6 +111,9 @@ export function Bodygraph({
   function halfColor(gate: number, channelKey: string): string {
     if (isPair) {
       const c = compositeByKey.get(channelKey);
+      // Режим «только вдвоём»: остальное уводим в фон, чтобы главное не
+      // терялось среди всего, что и так есть у каждого по отдельности.
+      if (focusElectromagnetic && c && c.source !== "electromagnetic") return IDLE_CHANNEL;
       // Канал периода красим фиолетовым только если натально его нет вовсе:
       // иначе «погода» перекрасила бы то, что и так есть в карте.
       if (!c) return extraChannelSet.has(channelKey) || extraGateSet.has(gate) ? SATURN : IDLE_CHANNEL;
@@ -121,6 +127,13 @@ export function Bodygraph({
     const own = gateState(person ?? null, gate);
     if (own === "none" && (extraChannelSet.has(channelKey) || extraGateSet.has(gate))) return SATURN;
     return gateColor(own);
+  }
+
+  /** В режиме «только вдвоём» остальное уходит в фон и по толщине тоже. */
+  function isDimmed(key: string): boolean {
+    if (!focusElectromagnetic || !isPair) return false;
+    const c = compositeByKey.get(key);
+    return !c || c.source !== "electromagnetic";
   }
 
   function channelActive(key: string, g1: number, g2: number): boolean {
@@ -212,7 +225,8 @@ export function Bodygraph({
           const active = channelActive(ch.key, g1, g2);
           const isSel = selected?.kind === "channel" && selected.key === ch.key;
           const pts = (p: Point[]) => p.map(([x, y]) => `${r2(x)},${r2(y)}`).join(" ");
-          const width = isSel ? 6.5 : active ? 5 : 1.6;
+          const dim = isDimmed(ch.key);
+          const width = dim ? 1.6 : isSel ? 6.5 : active ? 5 : 1.6;
           return (
             <g
               key={ch.key}
@@ -288,7 +302,16 @@ export function Bodygraph({
           const shared = inPair && stateA !== "none" && stateB !== "none";
           const isSel = selected?.kind === "gate" && selected.gate === gate;
 
-          const fill = natalActive
+          // Ворота, не входящие ни в один электромагнитный канал, тоже гаснут.
+          const emGate =
+            !focusElectromagnetic ||
+            !isPair ||
+            (composite?.channels ?? []).some(
+              (c) => c.source === "electromagnetic" && c.gates.includes(gate)
+            );
+          const fill = !emGate
+            ? "#fff"
+            : natalActive
             ? shared
               ? CHANNEL_SOURCE_COLOR.both
               : inPair

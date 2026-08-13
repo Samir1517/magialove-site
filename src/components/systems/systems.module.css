@@ -635,3 +635,10 @@
   background: linear-gradient(135deg, #fbeef1, #f4eefa);
   max-width: 66ch;
 }
+
+/* Одна подпись на обе личные карты вместо повтора под каждой. */
+.graphsHint {
+  font: 400 12px/1.6 var(--font-body);
+  color: var(--ink-faint);
+  margin: 0;
+}

@@ -32,6 +32,7 @@ export function PairBodygraphs({
   saturn: SaturnAddition | null;
 }) {
   const [showSaturn, setShowSaturn] = useState(false);
+  const [onlyEm, setOnlyEm] = useState(false);
   const on = showSaturn && saturn !== null;
 
   const legend = [
@@ -73,6 +74,11 @@ export function PairBodygraphs({
         </p>
       )}
 
+      <p className={styles.graphsHint}>
+        На обеих картах тёмное — то, что человек про себя знает, красное — то, что видят
+        окружающие, а он сам почти нет.
+      </p>
+
       <div className={styles.graphsPair}>
         {[
           { name: nameA, chart: a, extra: on ? saturn!.a : null },
@@ -102,7 +108,7 @@ export function PairBodygraphs({
               extraChannels={extra?.channels ?? []}
               extraLinesA={extra?.lines}
               size={270}
-              hint="Тёмное — то, что человек про себя знает. Красное — то, что видят окружающие, а он сам почти нет."
+              hint="Коснись ворот или канала."
             />
           </div>
         ))}
@@ -115,6 +121,16 @@ export function PairBodygraphs({
             третья карта, которой нет ни у кого из вас по отдельности
           </span>
         </div>
+
+        <button
+          type="button"
+          className={onlyEm ? styles.saturnBtnOn : styles.saturnBtn}
+          onClick={() => setOnlyEm((v) => !v)}
+          aria-pressed={onlyEm}
+          style={{ alignSelf: "flex-start" }}
+        >
+          {onlyEm ? "Показать всю карту" : "Оставить только то, что рождается вдвоём"}
+        </button>
         <Bodygraph
           composite={{
             channels: composite.channels,
@@ -128,6 +144,7 @@ export function PairBodygraphs({
           extraChannels={on ? saturn!.pair.channels : []}
           extraLinesA={on ? saturn!.a.lines : undefined}
           extraLinesB={on ? saturn!.b.lines : undefined}
+          focusElectromagnetic={onlyEm}
           size={320}
           hint="Розовое и лиловое приносит каждый сам, золотое есть у обоих. Малиновое — то, что замыкается только вдвоём: в одиночку этого нет ни у кого из вас."
         />
