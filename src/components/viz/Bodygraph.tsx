@@ -14,7 +14,8 @@ import {
   CENTER_SHAPES,
   GATE_POS,
   VIEWBOX,
-  channelMid,
+  channelHalves,
+  type Point,
 } from "@/lib/data/human_design/bodygraph-layout";
 import styles from "./viz.module.css";
 
@@ -179,11 +180,11 @@ export function Bodygraph({
         {/* Каналы: сначала все неактивные подложкой, потом активные поверх */}
         {CHANNELS.map((ch) => {
           const [g1, g2] = ch.gates;
-          const p1 = GATE_POS[g1];
-          const p2 = GATE_POS[g2];
-          const mid = channelMid(ch.key, p1, p2);
+          const { first, second } = channelHalves(ch.key, g1, g2);
           const active = channelActive(ch.key, g1, g2);
           const isSel = selected?.kind === "channel" && selected.key === ch.key;
+          const pts = (p: Point[]) => p.map(([x, y]) => `${r2(x)},${r2(y)}`).join(" ");
+          const width = isSel ? 6.5 : active ? 5 : 1.6;
           return (
             <g
               key={ch.key}
@@ -192,30 +193,28 @@ export function Bodygraph({
               onClick={() => active && setSelected({ kind: "channel", key: ch.key })}
               style={{ cursor: active ? "pointer" : "default" }}
             >
-              {/* широкая прозрачная «дорожка» для попадания курсором */}
+              {/* широкая прозрачная «дорожка» — чтобы в канал было легко попасть */}
               <polyline
-                points={`${r2(p1[0])},${r2(p1[1])} ${r2(mid[0])},${r2(mid[1])} ${r2(p2[0])},${r2(p2[1])}`}
+                points={pts([...first, ...second.slice(1)])}
                 fill="none"
                 stroke="transparent"
-                strokeWidth={14}
+                strokeWidth={15}
               />
-              <line
-                x1={r2(p1[0])}
-                y1={r2(p1[1])}
-                x2={r2(mid[0])}
-                y2={r2(mid[1])}
+              <polyline
+                points={pts(first)}
+                fill="none"
                 stroke={active ? halfColor(g1, ch.key) : IDLE_CHANNEL}
-                strokeWidth={isSel ? 6 : active ? 4.5 : 1.6}
+                strokeWidth={width}
                 strokeLinecap="round"
+                strokeLinejoin="round"
               />
-              <line
-                x1={r2(mid[0])}
-                y1={r2(mid[1])}
-                x2={r2(p2[0])}
-                y2={r2(p2[1])}
+              <polyline
+                points={pts(second)}
+                fill="none"
                 stroke={active ? halfColor(g2, ch.key) : IDLE_CHANNEL}
-                strokeWidth={isSel ? 6 : active ? 4.5 : 1.6}
+                strokeWidth={width}
                 strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </g>
           );
@@ -279,7 +278,7 @@ export function Bodygraph({
               onClick={() => setSelected({ kind: "gate", gate })}
               style={{ cursor: "pointer" }}
             >
-              <circle cx={x} cy={y} r={isSel ? 8.6 : 6.9} fill={fill} stroke="#fff" strokeWidth={1.4} />
+              <circle cx={x} cy={y} r={isSel ? 8.2 : 6.4} fill={fill} stroke="#fff" strokeWidth={1.4} />
               <text
                 x={x}
                 y={y + 2.6}
