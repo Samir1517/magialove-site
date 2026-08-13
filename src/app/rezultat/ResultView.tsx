@@ -7,7 +7,7 @@ import Link from "next/link";
 import { calcMatrixCompatibility } from "@/lib/engines/matrix";
 import { calcNumerologyCompatibility } from "@/lib/engines/numerology";
 import { calcHumanDesignCompatibility } from "@/lib/engines/human_design";
-import { calcJyotishCompatibility, calcNavagraha } from "@/lib/engines/jyotish";
+import { calcJyotishCompatibility } from "@/lib/engines/jyotish";
 import {
   calcWeightedScore,
   calcCrossSystemThemes,
@@ -23,24 +23,19 @@ import {
 import { makePerson, safely } from "@/lib/engines/person";
 import { DEFAULT_TZ } from "@/lib/data/timezones";
 
-import { MatrixSection } from "@/components/systems/MatrixSection";
-import { NumerologySection } from "@/components/systems/NumerologySection";
-import { HumanDesignSection } from "@/components/systems/HumanDesignSection";
-import { JyotishSection } from "@/components/systems/JyotishSection";
 import { DailySection } from "@/components/systems/DailySection";
 import { SynthesisPanel } from "@/components/systems/SynthesisPanel";
 import { FullReportForm } from "@/components/result/FullReportForm";
 import { ShareActions } from "@/components/result/ShareActions";
 import { PairSummary } from "@/components/result/PairSummary";
 import { ScoreBreakdown } from "@/components/result/ScoreBreakdown";
-import { SystemNav } from "@/components/result/SystemNav";
+import { SystemCards } from "@/components/result/SystemCards";
+import systemStyles from "@/components/systems/systems.module.css";
 import { ScorePetals } from "@/components/result/ScorePetals";
-import { Biwheel } from "@/components/viz/Biwheel";
 import { Reveal } from "@/components/viz/Reveal";
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { bandStyle, formatScore } from "@/components/viz/scale";
 import styles from "@/components/result/result.module.css";
-import systemStyles from "@/components/systems/systems.module.css";
 
 export function ResultView() {
   const params = useSearchParams();
@@ -65,11 +60,7 @@ export function ResultView() {
     const hasTimes = Boolean(timeA && timeB);
     const humanDesign = hasTimes ? safely(() => calcHumanDesignCompatibility(a, b)) : null;
     const jyotish = hasTimes ? safely(() => calcJyotishCompatibility(a, b)) : null;
-    const grahas = hasTimes
-      ? safely(() => ({ a: calcNavagraha(a), b: calcNavagraha(b) }))
-      : null;
-
-    return { a, b, matrix, numerology, humanDesign, jyotish, grahas, hasTimes };
+    return { a, b, matrix, numerology, humanDesign, jyotish, hasTimes };
   }, [dateA, dateB, timeA, timeB, tzA, tzB]);
 
   if (!dateA || !dateB || !data) {
@@ -83,7 +74,7 @@ export function ResultView() {
     );
   }
 
-  const { matrix, numerology, humanDesign, jyotish, grahas } = data;
+  const { matrix, numerology, humanDesign, jyotish } = data;
 
   const systems = [
     { name: "Матрица судьбы", score: matrix.score },
@@ -104,7 +95,8 @@ export function ResultView() {
   const overallBand = bandStyle(overall);
   const crossThemes = calcCrossSystemThemes(matrix, numerology, humanDesign, jyotish);
   const archetype = calcPairArchetype(overall, crossThemes, matrix, numerology);
-  const highlights = calcPairHighlights(collectPairFactors(matrix, numerology, humanDesign, jyotish));
+  const factors = collectPairFactors(matrix, numerology, humanDesign, jyotish);
+  const highlights = calcPairHighlights(factors);
   const roles = calcPairRoles(matrix, numerology, humanDesign);
 
   const qs = params.toString();
@@ -206,51 +198,29 @@ export function ResultView() {
         </Reveal>
       )}
 
-      <SystemNav hasTimes={data.hasTimes} />
-
+      {/* Четыре системы — компактными карточками. Полные разделы отсюда убраны:
+          на общей странице они и так шли в урезанном виде (углублённые схемы
+          отключены), давая 47 экранов на телефоне. Всё подробное живёт на
+          отдельных страницах систем, куда ведут ссылки из карточек. */}
       <Reveal>
-        <MatrixSection report={matrix} standaloneHref={matrixHref} />
+        <div className={styles.sysCardsHead}>
+          <h2 className={styles.sysCardsTitle}>Что сказала каждая система</h2>
+          <p className={styles.sysCardsLede}>
+            Коротко по каждой: балл, самое сильное место и то, что просит внимания.
+            Подробный разбор с картами и схемами — по ссылке из карточки.
+          </p>
+        </div>
+        <SystemCards
+          factors={factors}
+          scores={systemScores}
+          hrefs={{
+            matrix: matrixHref,
+            numerology: numerologyHref,
+            human_design: humanDesignHref,
+            jyotish: jyotishHref,
+          }}
+        />
       </Reveal>
-
-      <Reveal>
-        <NumerologySection report={numerology} nameA={nameA} nameB={nameB} standaloneHref={numerologyHref} />
-      </Reveal>
-
-      {humanDesign ? (
-        <Reveal>
-          <HumanDesignSection report={humanDesign} nameA={nameA} nameB={nameB} standaloneHref={humanDesignHref} />
-        </Reveal>
-      ) : null}
-
-      {jyotish ? (
-        <>
-          <Reveal>
-            <JyotishSection report={jyotish} nameA={nameA} nameB={nameB} standaloneHref={jyotishHref} />
-          </Reveal>
-          {grahas && (
-            <section className={systemStyles.section} aria-labelledby="biwheel-title">
-              <div className={systemStyles.sectionHead}>
-                <div className={systemStyles.eyebrow}>Биколесо</div>
-                <h2 id="biwheel-title" className={systemStyles.sectionTitle}>
-                  Две карты в одном круге
-                </h2>
-                <p className={systemStyles.sectionLede}>
-                  Внутреннее кольцо — {nameA}, внешнее — {nameB}. Линии в центре
-                  показывают синастрические аспекты: золотые — соединения, розовые —
-                  гармоничные, лиловые — напряжённые. Наведи курсор на любой символ.
-                </p>
-              </div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <Biwheel aGrahas={grahas.a} bGrahas={grahas.b} nameA={nameA} nameB={nameB} />
-              </div>
-              <p className={systemStyles.note}>
-                Положения сидерические (айянамша Лахири), показаны девять грах
-                классического Джйотиша. Уран, Нептун и Плутон в традицию не входят.
-              </p>
-            </section>
-          )}
-        </>
-      ) : null}
 
       {/* «Аркан дня» — после разбора пары, а не до него: человек пришёл за
           совместимостью, и обновляемый блок работает как повод вернуться
