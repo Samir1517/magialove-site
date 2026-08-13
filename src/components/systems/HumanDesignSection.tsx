@@ -14,6 +14,7 @@ import {
 } from "@/lib/content/human-design";
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { CompositeBodygraph } from "@/components/viz/CompositeBodygraph";
+import { ProfileLines } from "./ProfileLines";
 import { Legend } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import {
@@ -138,6 +139,18 @@ export function HumanDesignSection({
         как ландшафт; отношения, в которые вошли из страха или расчёта, превращают
         напряжение этой же темы в её патологию.
       </p>
+
+      <hr className={styles.divider} />
+
+      {/* Линии профиля: где у двоих совпадают «правила жизни», а где нет.
+          Композит выше отвечает на вопрос «что мы создаём вдвоём», этот блок —
+          на вопрос «почему то, что помогает мне, ранит его». */}
+      <ProfileLines
+        profileA={f.a.profile}
+        profileB={f.b.profile}
+        nameA={nameA}
+        nameB={nameB}
+      />
 
       <hr className={styles.divider} />
 

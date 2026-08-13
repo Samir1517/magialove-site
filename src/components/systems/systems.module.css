@@ -370,6 +370,17 @@
   padding: 4px 0 4px 16px;
 }
 
+/* Ссылка на разбор профиля из карточки партнёра. */
+.profileLink {
+  font: 600 14px var(--font-body);
+  color: var(--accent);
+  width: fit-content;
+}
+.profileLink:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
 .stepText {
   font: italic 400 17px/1.5 var(--font-display);
   color: var(--ink);
