@@ -28,6 +28,17 @@ function isHigh(score: number, max: number): boolean {
   return toPercent(score, max) >= 50;
 }
 
+/**
+ * Ключи дош в движке короткие («nadi»), а в словаре статьи названы полно —
+ * иначе «nadi» ничего не говорит при чтении самого словаря. Здесь связка.
+ * Незнакомый ключ даёт пустую строку, и TermHint просто не отрисуется.
+ */
+const DOSHA_HINT: Record<string, string> = {
+  nadi: "nadiDosha",
+  bhakoot: "bhakootDosha",
+  mangal: "mangalDosha",
+};
+
 export function JyotishSection({
   report,
   nameA = "Партнёр А",
@@ -151,7 +162,10 @@ export function JyotishSection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Восемь кут по отдельности</h3>
+        <h3 className={styles.blockTitle}>
+          Восемь кут по отдельности
+          <TermHint id="kuta" label="Кута" />
+        </h3>
         <div className={styles.bars}>
           {KUTA_META.map((kuta) => {
             const result = f.gunaMilan.kutas[kuta.key];
@@ -217,7 +231,10 @@ export function JyotishSection({
             return (
               <div key={d.key} className={styles.doshaRow}>
                 <div className={styles.doshaHead}>
-                  <strong className={styles.doshaTitle}>{d.title}</strong>
+                  <strong className={styles.doshaTitle}>
+                    {d.title}
+                    <TermHint id={DOSHA_HINT[d.key] ?? ""} label={d.title} />
+                  </strong>
                   <Chip color={state.band.ink} background={state.band.wash}>
                     {state.label}
                   </Chip>
@@ -248,7 +265,8 @@ export function JyotishSection({
       <p className={styles.note}>
         Расчёт сидерический, айянамша Лахири (приближённая формула). Возможны расхождения
         в доли градуса с профессиональным астрологическим ПО; на определение накшатры и
-        раши это в подавляющем большинстве случаев не влияет.
+        раши<TermHint id="rashi" label="Раши" /> это в подавляющем большинстве случаев не
+        влияет.
       </p>
     </section>
   );
