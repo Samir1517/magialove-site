@@ -13,6 +13,7 @@ import {
 } from "@/lib/engines/jyotish-charts";
 import { rashiIndex } from "@/lib/engines/jyotish-tables";
 import { SouthIndianChart } from "@/components/viz/SouthIndianChart";
+import { TermHint } from "@/components/viz/TermHint";
 import styles from "./systems.module.css";
 
 /**
@@ -102,6 +103,9 @@ export function JyotishCharts({
               {v === "d1" ? "D-1 · где стоят планеты" : "D-9 · карта брака"}
             </button>
           ))}
+          {/* Вопросик вынесен из кнопки: кнопка внутри кнопки — невалидная
+              разметка, и клик по подсказке переключал бы варгу. */}
+          <TermHint id="navamsa" label="Навамша, карта D-9" />
         </div>
       </div>
 
@@ -120,12 +124,17 @@ export function JyotishCharts({
             <div className={styles.graphCardHead}>
               <span className={styles.lsLabel}>{name}</span>
               <span className={styles.graphType}>
-                {lagna !== null ? "Лагна" : "Знак Луны"}: {RASHI_NAMES[anchor]}{" "}
-                <em>— от него считаются дома</em>
+                {lagna !== null ? "Лагна" : "Знак Луны"}
+                <TermHint
+                  id={lagna !== null ? "lagna" : "chandraLagna"}
+                  label={lagna !== null ? "Лагна" : "Знак Луны"}
+                />
+                : {RASHI_NAMES[anchor]} <em>— от него считаются дома</em>
               </span>
               {m.length > 0 && (
                 <span className={styles.graphTypeExtra}>
-                  Марс в доме Мангал доши {m.join(" и ")}
+                  Марс в доме Мангал доши
+                  <TermHint id="mangalDosha" label="Мангал доша" /> {m.join(" и ")}
                 </span>
               )}
             </div>
@@ -172,9 +181,10 @@ export function JyotishCharts({
 
         <p className={styles.note}>
           Тёмным — {nameA}, лиловым — {nameB}. Знаки закреплены за клетками, поэтому две
-          карты ложатся одна на другую без искажения; дома отсчитаны от Луны первой карты.
-          Мангал дошу проверяем от Луны и от Венеры — проверка от Лагны требует места
-          рождения, которого мы не спрашиваем.
+          карты ложатся одна на другую без искажения; дома отсчитаны от опорного знака
+          первой карты. Мангал дошу читаем по натальной карте, а не по навамше, и
+          проверяем от Лагны, Луны и Венеры — от Лагны только когда известно место
+          рождения, без него лагну посчитать не из чего.
         </p>
       </div>
     </div>

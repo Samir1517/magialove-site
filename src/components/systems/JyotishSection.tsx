@@ -12,6 +12,7 @@ import { ScoreRing } from "@/components/viz/ScoreRing";
 import { ScoreBar } from "@/components/viz/ScoreBar";
 import { NakshatraWheel } from "@/components/viz/NakshatraWheel";
 import { JyotishCharts } from "./JyotishCharts";
+import { TermHint } from "@/components/viz/TermHint";
 import { Chip } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getJyotishDoshaArticle, getJyotishKutaArticle, getJyotishNakshatraArticle } from "@/lib/content/articles";
@@ -80,7 +81,10 @@ export function JyotishSection({
       />
 
       <div>
-        <h3 className={styles.blockTitle}>Накшатры Луны</h3>
+        <h3 className={styles.blockTitle}>
+          Накшатры Луны
+          <TermHint id="nakshatra" label="Накшатра" />
+        </h3>
         {detailed && (
           <div style={{ marginBottom: 16 }}>
             <NakshatraWheel
@@ -129,7 +133,10 @@ export function JyotishSection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Сумма Гуна-милан</h3>
+        <h3 className={styles.blockTitle}>
+          Сумма Гуна-милан
+          <TermHint id="gunaMilan" label="Гуна-милан" />
+        </h3>
         <ScoreBar
           label="Всего баллов"
           score={total}
