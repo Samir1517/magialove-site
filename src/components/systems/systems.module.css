@@ -587,3 +587,11 @@
   font: 400 11px var(--font-body);
   color: var(--ink-faint);
 }
+
+/* Лид блока карт: объясняет, зачем вообще на них смотреть. */
+.graphsLede {
+  font: 400 13.5px/1.7 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+  max-width: 66ch;
+}
