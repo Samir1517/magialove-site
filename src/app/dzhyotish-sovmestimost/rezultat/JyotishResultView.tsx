@@ -73,7 +73,7 @@ export function JyotishResultView() {
         Расчёт только по Джйотиш — Гуна-милан и доши по точному моменту рождения обоих.
       </p>
 
-      <JyotishSection report={report} nameA={nameA} nameB={nameB} />
+      <JyotishSection report={report} nameA={nameA} nameB={nameB} grahas={grahas} />
 
       <ShareActions
         nameA={nameA !== "Первый партнёр" ? nameA : ""}

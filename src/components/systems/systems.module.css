@@ -595,3 +595,32 @@
   margin: 0;
   max-width: 66ch;
 }
+
+/* Переключатель варги D-1 / D-9 */
+.vargaSwitch {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.vargaBtn,
+.vargaBtnOn {
+  border-radius: 999px;
+  padding: 8px 14px;
+  font: 600 11.5px var(--font-body);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.vargaBtn {
+  border: 1px solid #e6d9e2;
+  background: #fff;
+  color: var(--ink-faint);
+}
+.vargaBtn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.vargaBtnOn {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: #fff;
+}

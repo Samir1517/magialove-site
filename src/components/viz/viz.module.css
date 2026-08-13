@@ -500,3 +500,128 @@
   display: flex;
   max-width: 100%;
 }
+
+/* --- Южноиндийская карта Джйотиш --- */
+.sicWrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+/* Сетка 4×4 со свободной серединой 2×2 — канонический формат. */
+.sicGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  aspect-ratio: 1;
+  gap: 2px;
+  background: #e6d9e2;
+  border: 2px solid #e6d9e2;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.sicCenter {
+  grid-row: 2 / 4;
+  grid-column: 2 / 4;
+  background: #faf5f8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  text-align: center;
+  padding: 6px;
+}
+.sicCenterTitle {
+  font: 600 13px var(--font-body);
+  color: var(--ink);
+}
+.sicCenterSub {
+  font: 400 10.5px/1.35 var(--font-body);
+  color: var(--ink-faint);
+}
+
+.sicCell {
+  background: #fff;
+  border: none;
+  padding: 5px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+  position: relative;
+  min-width: 0;
+}
+.sicCell:hover,
+.sicCellSel {
+  background: #fdf4f7;
+}
+
+/* Знак Луны = 1-й дом. Диагональ через угол — традиционная пометка Лагны. */
+.sicCellAnchor::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, var(--accent) 0 1.5px, transparent 1.5px);
+  pointer-events: none;
+}
+
+.sicSign {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font: 400 13px var(--font-body);
+  color: var(--ink-soft);
+}
+.sicSign em {
+  font: 600 9.5px var(--font-body);
+  color: var(--ink-faint);
+  font-style: normal;
+}
+
+.sicPlanets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+}
+
+.sicPlanet {
+  font: 600 10.5px var(--font-body);
+  font-style: normal;
+  color: var(--ink);
+  background: #f3ecf1;
+  border-radius: 4px;
+  padding: 1px 4px;
+}
+/* Варготтама — планета в одном знаке и в D-1, и в D-9. */
+.sicPlanetStrong {
+  background: #f6e9d2;
+  color: #8a6c3e;
+}
+.sicPlanetB {
+  background: #ece5f4;
+  color: #6d5b86;
+}
+
+.sicInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #faf7f9;
+}
+.sicInfoTitle {
+  font: 600 12.5px var(--font-body);
+  color: var(--ink);
+}
+.sicInfoLine {
+  font: 400 11.5px/1.5 var(--font-body);
+  color: var(--ink-soft);
+}

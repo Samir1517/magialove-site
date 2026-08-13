@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { SystemReport } from "@/lib/engines/types";
-import type { JyotishRawFeatures } from "@/lib/engines/jyotish";
+import type { GrahaPosition, JyotishRawFeatures } from "@/lib/engines/jyotish";
 import {
   DOSHA_READINGS,
   GUNA_THRESHOLDS,
@@ -11,6 +11,7 @@ import {
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { ScoreBar } from "@/components/viz/ScoreBar";
 import { NakshatraWheel } from "@/components/viz/NakshatraWheel";
+import { JyotishCharts } from "./JyotishCharts";
 import { Chip } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getJyotishDoshaArticle, getJyotishKutaArticle, getJyotishNakshatraArticle } from "@/lib/content/articles";
@@ -31,11 +32,14 @@ export function JyotishSection({
   nameA = "Партнёр А",
   nameB = "Партнёр Б",
   standaloneHref,
+  grahas,
 }: {
   report: SystemReport<JyotishRawFeatures>;
   nameA?: string;
   nameB?: string;
   standaloneHref?: string;
+  /** Положения грах обоих — для карт D-1 и D-9 на подробной странице. */
+  grahas?: { a: GrahaPosition[]; b: GrahaPosition[] } | null;
 }) {
   const f = report.rawFeatures;
   const total = f.gunaMilan.total;
@@ -104,6 +108,13 @@ export function JyotishSection({
           })}
         </div>
       </div>
+
+      {detailed && grahas && (
+        <>
+          <hr className={styles.divider} />
+          <JyotishCharts a={grahas.a} b={grahas.b} nameA={nameA} nameB={nameB} />
+        </>
+      )}
 
       <hr className={styles.divider} />
 
