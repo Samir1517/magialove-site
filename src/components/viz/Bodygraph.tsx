@@ -17,6 +17,8 @@ import {
   channelHalves,
   type Point,
 } from "@/lib/data/human_design/bodygraph-layout";
+import { gateInfo } from "@/lib/data/human_design/gates";
+import { channelTheme } from "@/lib/data/human_design/channel-themes";
 import styles from "./viz.module.css";
 
 /** Классические цвета активаций: Личность — тёмная, Дизайн — красный. */
@@ -169,10 +171,15 @@ export function Bodygraph({
       const [g1, g2] = ch.gates;
       const c = compositeByKey.get(ch.key);
       const extra = extraChannelSet.has(ch.key);
+      const gi1 = gateInfo(g1);
+      const gi2 = gateInfo(g2);
       return {
         title: `Канал ${ch.key} «${ch.name}»`,
         lines: [
-          `Ворота ${g1} (${CENTER_NAMES[centerOfGate(g1)]}) — ворота ${g2} (${CENTER_NAMES[centerOfGate(g2)]}).`,
+          // Сначала о чём канал, потом уже из чего он собран: человек нажимает
+          // на линию, чтобы понять смысл, а не чтобы свериться с номерами.
+          channelTheme(ch.key) ?? "",
+          `${g1} ${gi1 ? `«${gi1.name}» ` : ""}(${CENTER_NAMES[centerOfGate(g1)]}) — ${g2} ${gi2 ? `«${gi2.name}» ` : ""}(${CENTER_NAMES[centerOfGate(g2)]}).`,
           c
             ? CHANNEL_SOURCE_LABEL[c.source]
             : extra
@@ -201,9 +208,13 @@ export function Bodygraph({
       if (parts.length === 0) return `${name}: этих ворот нет.`;
       return `${name}: ${parts.join(", ")}.`;
     };
+    const gi = gateInfo(gate);
     return {
-      title: `Ворота ${gate} · ${center}`,
+      title: gi ? `Ворота ${gate} «${gi.name}» · ${center}` : `Ворота ${gate} · ${center}`,
       lines: [
+        // Суть ворот идёт первой строкой: номер сам по себе человеку ничего
+        // не говорит, а именно за смыслом он на кружок и нажал.
+        gi?.essence ?? "",
         describe(a ?? person, nameA, extraLinesA),
         describe(b, nameB, extraLinesB),
       ].filter((x): x is string => Boolean(x)),
