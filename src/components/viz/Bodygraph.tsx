@@ -18,6 +18,8 @@ import {
   type Point,
 } from "@/lib/data/human_design/bodygraph-layout";
 import { gateInfo } from "@/lib/data/human_design/gates";
+import { gateLine } from "@/lib/data/human_design/gate-lines";
+import { gateLineName } from "@/lib/data/human_design/gate-line-names";
 import { channelTheme } from "@/lib/data/human_design/channel-themes";
 import styles from "./viz.module.css";
 
@@ -201,17 +203,21 @@ export function Bodygraph({
       const p = chart.personalityLines[gate];
       const d = chart.designLines[gate];
       const period = periodLines?.[gate];
-      // Линию показываем в принятой записи «ворота.линия» — 11.3. Расшифровку
-      // не даём намеренно: смысл линии свой в каждых воротах (в «Rave I Ching»
-      // это 384 отдельных текста), а имена профильных линий — «Исследователь»,
-      // «Отшельник» — относятся к профилю, а не к активации ворот. Подставить
-      // их сюда значило бы выдать одно за другое.
+      // Запись «ворота.линия», имя этой позиции и её смысл. Имя — из книги
+      // (терминология системы), фраза — наша. Профильные имена линий сюда не
+      // подставляем: они про профиль, а не про активацию ворот.
+      const say = (label: string, line: number) => {
+        const nm = gateLineName(gate, line);
+        const meaning = gateLine(gate, line);
+        const head = nm ? `${label} ${gate}.${line} «${nm}»` : `${label} ${gate}.${line}`;
+        return meaning ? `${head} — ${meaning}` : `${head}.`;
+      };
       const parts: string[] = [];
-      if (p !== undefined) parts.push(`Личность ${gate}.${p}`);
-      if (d !== undefined) parts.push(`Дизайн ${gate}.${d}`);
-      if (period !== undefined) parts.push(`возврат Сатурна ${gate}.${period}`);
+      if (p !== undefined) parts.push(say("Личность", p));
+      if (d !== undefined) parts.push(say("Дизайн", d));
+      if (period !== undefined) parts.push(say("Возврат Сатурна", period));
       if (parts.length === 0) return `${name}: этих ворот нет.`;
-      return `${name}: ${parts.join(", ")}.`;
+      return `${name}. ${parts.join(" ")}`;
     };
     const gi = gateInfo(gate);
     return {
