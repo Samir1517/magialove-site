@@ -12,7 +12,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 88px;
+  /* Ниже 1000px меню (order: 3) уходит на вторую строку — см. MainNav.module.css.
+     Без переноса order не создаёт новой строки, а меню как flex-элемент
+     сжимается до нулевой ширины: на телефоне навигации просто не было. */
+  flex-wrap: wrap;
+  min-height: 88px;
 }
 .logo {
   font: 600 15px var(--font-body);
