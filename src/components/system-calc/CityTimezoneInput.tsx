@@ -73,14 +73,38 @@ export function CityTimezoneInput({
         placeholder="Начни вводить: Моск…"
         autoComplete="off"
         onChange={(e) => {
+          const v = e.target.value;
           setSelected(null);
-          setQuery(e.target.value);
+          setQuery(v);
           setOpen(true);
           setHighlighted(0);
+          // Отдаём наверх лучшее совпадение сразу, на каждом нажатии, а не
+          // только когда человек ткнул в подсказку. Иначе в поле остаётся
+          // «Салехард», а расчёт молча идёт по Москве — человек видит свой
+          // город и получает чужую карту. Для лагны это целый знак разницы.
+          // Промежуточные значения не важны: в форму уходит последнее.
+          // Если совпадения нет, ничего не трогаем — лучше прежний известный
+          // город, чем данные, которых не существует.
+          const best = searchCities(v, 1)[0];
+          if (best) onChange(best.tz, { lat: best.lat, lon: best.lon });
         }}
         onFocus={() => setOpen(true)}
         onBlur={() => {
-          blurTimer.current = setTimeout(() => setOpen(false), 150);
+          // Уходя из поля, доводим набранное до конца. Иначе в поле остаётся
+          // «Салехард», а расчёт молча идёт по Москве: человек видит свой
+          // город и получает чужую карту. Разница в два часа — это целый знак
+          // лагны и, бывает, соседняя накшатра.
+          blurTimer.current = setTimeout(() => {
+            setOpen(false);
+            const typed = query.trim();
+            if (!typed) return;
+            const best = searchCities(typed, 1)[0];
+            // Нашли — выбираем сами. Не нашли — стираем набранное и
+            // возвращаем прежний выбор, чтобы в поле не осталось названия,
+            // за которым нет ни пояса, ни координат.
+            if (best) selectCity(best);
+            else setQuery("");
+          }, 150);
         }}
         onKeyDown={handleKeyDown}
       />
