@@ -201,10 +201,15 @@ export function Bodygraph({
       const p = chart.personalityLines[gate];
       const d = chart.designLines[gate];
       const period = periodLines?.[gate];
+      // Линию показываем в принятой записи «ворота.линия» — 11.3. Расшифровку
+      // не даём намеренно: смысл линии свой в каждых воротах (в «Rave I Ching»
+      // это 384 отдельных текста), а имена профильных линий — «Исследователь»,
+      // «Отшельник» — относятся к профилю, а не к активации ворот. Подставить
+      // их сюда значило бы выдать одно за другое.
       const parts: string[] = [];
-      if (p !== undefined) parts.push(`Личность — линия ${p}`);
-      if (d !== undefined) parts.push(`Дизайн — линия ${d}`);
-      if (period !== undefined) parts.push(`возврат Сатурна — линия ${period}`);
+      if (p !== undefined) parts.push(`Личность ${gate}.${p}`);
+      if (d !== undefined) parts.push(`Дизайн ${gate}.${d}`);
+      if (period !== undefined) parts.push(`возврат Сатурна ${gate}.${period}`);
       if (parts.length === 0) return `${name}: этих ворот нет.`;
       return `${name}: ${parts.join(", ")}.`;
     };
