@@ -33,8 +33,11 @@ const DAY_MS = 86_400_000;
 const SATURN_YEARS = 29.4571;
 
 function gatesAtMoment(utc: Date): { gate: number; line: number }[] {
+  const sun = sunLongitude(utc);
   const longitudes = [
-    sunLongitude(utc),
+    sun,
+    // Земля напротив Солнца — тот же набор тел, что и в натальной карте.
+    sun + 180,
     moonLongitude(utc),
     planetLongitude("mercury", utc),
     planetLongitude("venus", utc),
