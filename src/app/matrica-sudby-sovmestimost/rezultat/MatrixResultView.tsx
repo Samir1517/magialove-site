@@ -10,6 +10,7 @@ import { MatrixSection } from "@/components/systems/MatrixSection";
 import { UpsellToFullCta } from "@/components/system-calc/UpsellToFullCta";
 import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
+import { NextSystems } from "@/components/result/NextSystems";
 import resultStyles from "@/components/result/result.module.css";
 
 export function MatrixResultView() {
@@ -73,6 +74,8 @@ export function MatrixResultView() {
         text="Нумерология, Дизайн человека и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
       />
+
+      <NextSystems current="matrix" qs={params.toString()} hasTimes={Boolean(params.get("at") && params.get("bt"))} />
 
       <Link href="/matrica-sudby-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару

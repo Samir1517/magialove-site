@@ -10,6 +10,7 @@ import { NumerologySection } from "@/components/systems/NumerologySection";
 import { UpsellToFullCta } from "@/components/system-calc/UpsellToFullCta";
 import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
+import { NextSystems } from "@/components/result/NextSystems";
 import resultStyles from "@/components/result/result.module.css";
 
 export function NumerologyResultView() {
@@ -69,6 +70,8 @@ export function NumerologyResultView() {
         text="Матрица судьбы, Дизайн человека и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
       />
+
+      <NextSystems current="numerology" qs={params.toString()} hasTimes={Boolean(params.get("at") && params.get("bt"))} />
 
       <Link href="/numerologiya-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару

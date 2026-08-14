@@ -75,10 +75,19 @@ export function ShareActions({
     try {
       const blob = await svgToPngBlob(svgRef.current);
       const file = new File([blob], "sovmestimost.png", { type: "image/png" });
+      // url отдаём отдельным полем, а не только словами в тексте: в Telegram,
+      // WhatsApp и «Сообщениях» он становится нажимаемой ссылкой, а голый
+      // домен в тексте подхватывается не везде. Ведём на главную, а не на этот
+      // адрес: в нём даты рождения обоих, и раздавать их в общий чат нельзя —
+      // для осознанной отправки своего результата есть «Скопировать ссылку».
+      // В Stories это всё равно не попадёт: Instagram принимает из системного
+      // меню только картинку и отбрасывает текст со ссылкой. Поэтому адрес
+      // вшит в саму картинку — тёмной плашкой внизу, см. ShareCard.
       const shareData = {
         files: [file],
         title: "Совместимость",
         text: shareText,
+        url: "https://magialove.ru/",
       };
       if (navigator.canShare?.(shareData)) {
         await navigator.share(shareData);

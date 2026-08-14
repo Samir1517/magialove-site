@@ -13,6 +13,7 @@ import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
 import { ShareActions } from "@/components/result/ShareActions";
 import { Biwheel } from "@/components/viz/Biwheel";
 import { formatScore } from "@/components/viz/scale";
+import { NextSystems } from "@/components/result/NextSystems";
 import resultStyles from "@/components/result/result.module.css";
 import systemStyles from "@/components/systems/systems.module.css";
 
@@ -126,6 +127,8 @@ export function JyotishResultView() {
         text="Матрица судьбы, Нумерология и Дизайн человека смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
       />
+
+      <NextSystems current="jyotish" qs={params.toString()} hasTimes={true} />
 
       <Link href="/dzhyotish-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару

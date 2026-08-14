@@ -200,6 +200,15 @@
   margin: 0;
 }
 
+/* Подводка к блоку переходов: объясняет, зачем нажимать, — «данные уже
+   введены» снимает главное возражение против второго расчёта. */
+.nextStepsLede {
+  margin: 0;
+  max-width: 62ch;
+  font: 400 13.5px/1.7 var(--font-body);
+  color: var(--ink-soft);
+}
+
 .nextStepsList {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
