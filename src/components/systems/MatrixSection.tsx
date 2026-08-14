@@ -14,6 +14,7 @@ import { MatrixOctagram } from "@/components/viz/MatrixOctagram";
 import { ChakraTable } from "@/components/viz/ChakraTable";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getMatrixArticle } from "@/lib/content/articles";
+import { TermHint } from "@/components/viz/TermHint";
 import styles from "./systems.module.css";
 
 /**
@@ -92,7 +93,11 @@ export function MatrixSection({
 
       {detailed && (
         <div>
-          <h3 className={styles.blockTitle}>Октаграмма вашей общей матрицы</h3>
+          <h3 className={styles.blockTitle}>
+            Октаграмма вашей общей матрицы
+            <TermHint id="octagram" label="Октаграмма" />
+            <TermHint id="arcana" label="Аркан" />
+          </h3>
           <p className={styles.note} style={{ marginBottom: 12 }}>
             Ромб — то, что вы принесли сами: день, месяц, год и кармический свод. Прямой
             квадрат — родовые диагонали, то, что пришло из ваших семей раньше вас. В центре
@@ -104,7 +109,10 @@ export function MatrixSection({
       )}
 
       <div>
-        <h3 className={styles.blockTitle}>Зоны пары</h3>
+        <h3 className={styles.blockTitle}>
+          Зоны пары
+          <TermHint id="matrixZone" label="Зоны пары" />
+        </h3>
         <div className={styles.bars}>
           {zoneKeys.map((zone) => {
             const arcanum = f.pairArcana[zone];
@@ -139,7 +147,10 @@ export function MatrixSection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Баланс по чакрам</h3>
+        <h3 className={styles.blockTitle}>
+          Баланс по чакрам
+          <TermHint id="chakraBalance" label="Баланс по чакрам" />
+        </h3>
         <p className={styles.note} style={{ marginBottom: 12 }}>
           Семь уровней, на которых пара встречается: от быта и денег внизу до общего
           смысла наверху. Ссоры почти всегда идут не там, где кажется: разговор о

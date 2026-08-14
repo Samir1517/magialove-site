@@ -45,6 +45,15 @@ export function DateTimeForm({ targetPath }: { targetPath: string }) {
 
   return (
     <form className={styles.unlockCard} onSubmit={handleSubmit} noValidate>
+      {/* Точность времени тут решает больше, чем кажется: восходящий знак
+          сдвигается на градус за четыре минуты, и час ошибки уводит его в
+          соседний. Сказать об этом до полей честнее, чем показать результат,
+          построенный на приблизительной цифре. */}
+      <p className={styles.hint} style={{ margin: "0 0 14px" }}>
+        Этот расчёт строится не на дате, а на моменте: восходящий знак меняется каждые
+        четыре минуты. Если точного времени не помнишь, лучше уточнить его в свидетельстве
+        о рождении — приблизительное даст красивый, но чужой результат.
+      </p>
       <div className={styles.formGrid}>
         <div className={styles.formCol}>
           <span className={styles.formColTitle}>Первый партнёр</span>

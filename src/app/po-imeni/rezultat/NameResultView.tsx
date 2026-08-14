@@ -8,6 +8,7 @@ import { getNameNumberArticle } from "@/lib/content/articles";
 import { getVerdict } from "@/lib/engines/synthesis";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { ScoreRing } from "@/components/viz/ScoreRing";
+import { TermHint } from "@/components/viz/TermHint";
 import { ShareActions } from "@/components/result/ShareActions";
 import resultStyles from "@/components/result/result.module.css";
 import contentStyles from "@/components/content/content.module.css";
@@ -87,7 +88,9 @@ export function NameResultView() {
           понять, что из этого про него. Расшифровка идёт до карточек. */}
       <div className={contentStyles.card}>
         <p style={{ font: "400 13.5px/1.75 var(--font-body)", color: "var(--ink)", margin: 0 }}>
-          <strong>Число Имени</strong> — то, как человек звучит вовне: манера, по которой
+          <strong>Число Имени</strong>
+          <TermHint id="nameNumbers" label="Числа имени, души и личности" /> — то, как
+          человек звучит вовне: манера, по которой
           его считывают в первые минуты. <strong>Число Души</strong> собирается только из
           гласных — это то, чего человек хочет на самом деле, и вслух он об этом обычно не
           говорит. <strong>Число Личности</strong> — из согласных: маска, которую видят

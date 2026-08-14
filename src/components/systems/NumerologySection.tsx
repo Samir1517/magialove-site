@@ -23,6 +23,7 @@ import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
 import { getLifePathArticle, getPsychomatrixArticle } from "@/lib/content/articles";
 import { BANDS } from "@/components/viz/scale";
 import { reduceLifePath } from "@/lib/engines/utils";
+import { TermHint } from "@/components/viz/TermHint";
 import styles from "./systems.module.css";
 
 /** Классическая раскладка Квадрата Пифагора: столбцы 1-2-3 / 4-5-6 / 7-8-9. */
@@ -180,7 +181,9 @@ export function NumerologySection({
           Числа твоей пары
         </h2>
         <p className={styles.sectionLede}>
-          Число жизненного пути — это не характер, а сценарий: то, как человек раз за
+          Число жизненного пути
+          <TermHint id="lifePath" label="Число жизненного пути" /> — это не характер, а
+          сценарий: то, как человек раз за
           разом входит в отношения и чего в них ищет. Свой сценарий обычно не виден
           изнутри — он кажется просто «как оно бывает». А рядом с чужим числом он
           проступает. Здесь важно не «сошлись ли числа»: совпадение так же дорого
@@ -244,7 +247,10 @@ export function NumerologySection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Квадрат Пифагора: из чего вы с партнёром собраны</h3>
+        <h3 className={styles.blockTitle}>
+          Квадрат Пифагора: из чего вы с партнёром собраны
+          <TermHint id="pythagorasSquare" label="Квадрат Пифагора" />
+        </h3>
         <p className={styles.note} style={{ marginBottom: 12 }}>
           Число пути — это одна цифра на всю дату, и в неё многое не влезает. Квадрат
           показывает распределение: где густо, а где пусто. Смотри не на свою колонку и
@@ -286,7 +292,10 @@ export function NumerologySection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>8 линий: где вы с партнёром совпадаете, а где дополняете</h3>
+        <h3 className={styles.blockTitle}>
+          8 линий: где вы с партнёром совпадаете, а где дополняете
+          <TermHint id="psychomatrixLines" label="Линии психоматрицы" />
+        </h3>
         <p className={styles.note} style={{ marginBottom: 12 }}>
           Совпадение здесь не значит «хорошо», а разница не значит «плохо». Одинаковая
           линия — это понимание без слов и общая слепая зона сразу: там, где вы оба

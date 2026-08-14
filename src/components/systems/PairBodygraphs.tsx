@@ -6,6 +6,7 @@ import type { CompositeDefinition, PersonChart } from "@/lib/engines/human_desig
 import type { SaturnAddition } from "@/lib/engines/saturn-return";
 import { Bodygraph } from "@/components/viz/Bodygraph";
 import { CHANNEL_SOURCE_COLOR, CHANNEL_SOURCE_LABEL } from "@/lib/content/human-design";
+import { TermHint } from "@/components/viz/TermHint";
 import styles from "./systems.module.css";
 
 /**
@@ -45,7 +46,11 @@ export function PairBodygraphs({
   return (
     <div className={styles.graphsBlock}>
       <div className={styles.graphsHead}>
-        <h3 className={styles.blockTitle}>Ваши карты рядом</h3>
+        <h3 className={styles.blockTitle}>
+          Ваши карты рядом
+          <TermHint id="hdGate" label="Ворота" />
+          <TermHint id="hdChannel" label="Канал" />
+        </h3>
         {saturn && (
           <button
             type="button"
@@ -56,6 +61,9 @@ export function PairBodygraphs({
             {on ? "Скрыть возврат Сатурна" : "Показать возврат Сатурна"}
           </button>
         )}
+        {/* Вне кнопки: вложенная кнопка невалидна, и клик по подсказке
+            переключал бы сам режим. */}
+        {saturn && <TermHint id="hdSaturnReturn" label="Возврат Сатурна" />}
       </div>
 
       <p className={styles.graphsLede}>
@@ -120,7 +128,10 @@ export function PairBodygraphs({
 
       <div className={styles.graphCard} style={{ marginTop: 0 }}>
         <div className={styles.graphCardHead}>
-          <span className={styles.lsLabel}>Общая карта пары</span>
+          <span className={styles.lsLabel}>
+            Общая карта пары
+            <TermHint id="hdComposite" label="Композит" />
+          </span>
           <span className={styles.graphType}>
             третья карта, которой нет ни у кого из вас по отдельности
           </span>
@@ -163,7 +174,9 @@ export function PairBodygraphs({
           {on && (
             <span className={styles.graphLegendItem}>
               <i style={{ background: "#8c7fb5" }} />
-              Возврат Сатурна<em> · добавляется транзитом</em>
+              Возврат Сатурна
+              <TermHint id="hdSaturnReturn" label="Возврат Сатурна" />
+              <em> · добавляется транзитом</em>
             </span>
           )}
         </div>

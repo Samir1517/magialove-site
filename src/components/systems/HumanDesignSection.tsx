@@ -27,6 +27,7 @@ import {
   getHDTypeArticle,
   profileSlug,
 } from "@/lib/content/articles";
+import { TermHint } from "@/components/viz/TermHint";
 import styles from "./systems.module.css";
 
 const SOURCE_ORDER = ["electromagnetic", "both", "a", "b"] as const;
@@ -118,7 +119,8 @@ export function HumanDesignSection({
                 {name}
               </span>
               <p className={styles.lsText}>
-                <strong>{person.type}</strong> ·{" "}
+                <strong>{person.type}</strong>
+                <TermHint id="hdType" label="Тип" /> ·{" "}
                 {getHDProfileArticle(person.profile) ? (
                   <Link
                     href={`/dizajn-cheloveka-sovmestimost/profili/${profileSlug(person.profile)}/`}
@@ -129,9 +131,12 @@ export function HumanDesignSection({
                   <>профиль {person.profile}</>
                 )}
                 <br />
-                Авторитет: {person.authority}
+                Авторитет
+                <TermHint id="hdAuthority" label="Авторитет" />: {person.authority}
                 <br />
-                Определено центров: {person.definedCenters.length} из 9
+                Определено центров
+                <TermHint id="hdCenter" label="Определённый центр" />:{" "}
+                {person.definedCenters.length} из 9
               </p>
             </div>
           ))}
@@ -177,7 +182,10 @@ export function HumanDesignSection({
         <div>
           {!detailed && (
             <>
-              <h3 className={styles.blockTitle}>Композитный бодиграф</h3>
+              <h3 className={styles.blockTitle}>
+              Композитный бодиграф
+              <TermHint id="hdComposite" label="Композит" />
+            </h3>
               <CompositeBodygraph
                 channels={composite.channels}
                 definedCenters={composite.definedCenters}
@@ -196,7 +204,10 @@ export function HumanDesignSection({
 
         <div className={styles.graphSide}>
           <div>
-            <h3 className={styles.blockTitle}>Твои двери наружу</h3>
+            <h3 className={styles.blockTitle}>
+              Твои двери наружу
+              <TermHint id="hdCenter" label="Открытый центр" />
+            </h3>
             {composite.openCenters.length === 0 ? (
               <p className={styles.doshaText}>
                 Открытых центров нет — вся девятка определена. Внешнему миру попасть внутрь
@@ -223,7 +234,10 @@ export function HumanDesignSection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Каналы композита ({composite.channels.length})</h3>
+        <h3 className={styles.blockTitle}>
+          Каналы композита ({composite.channels.length})
+          <TermHint id="hdChannel" label="Канал" />
+        </h3>
         <div className={styles.bars}>
           {counts.map((group) => (
             <div key={group.source} className={styles.doshaRow}>
@@ -277,7 +291,10 @@ export function HumanDesignSection({
       <hr className={styles.divider} />
 
       <div>
-        <h3 className={styles.blockTitle}>Типы связи, которые сложились у вас с партнёром</h3>
+        <h3 className={styles.blockTitle}>
+          Типы связи, которые сложились у вас с партнёром
+          <TermHint id="hdElectromagnetic" label="Электромагнитная связь" />
+        </h3>
         <p className={styles.note} style={{ marginBottom: 4 }}>
           Классические 4 типа связи каналов Дизайна человека — отдельная от Connection
           Theme классификация: она смотрит не на композит целиком, а на то, как именно
@@ -310,7 +327,8 @@ export function HumanDesignSection({
             <span className={styles.squareName}>{nameA}</span>
             <span className={styles.personType}>{f.a.type}</span>
             <span className={styles.doshaText}>
-              Авторитет: {f.a.authority} · Профиль: {f.a.profile}
+              Авторитет: {f.a.authority} · Профиль
+              <TermHint id="hdProfile" label="Профиль" />: {f.a.profile}
             </span>
           </div>
           <div className={styles.personCard}>
