@@ -70,6 +70,12 @@ export interface BodygraphProps {
   nameA?: string;
   nameB?: string;
   /** Доп. активации (возврат Сатурна): ворота и замкнувшиеся ими каналы. */
+  /**
+   * Показать ТОЛЬКО ворота периода, погасив натальные. Нужно для переключателя
+   * «только новые / возврат + от рождения»: без него человек не видит, какие
+   * именно ворота принёс период, потому что натальные закрашены тем же цветом.
+   */
+  onlyExtra?: boolean;
   extraGates?: number[];
   extraChannels?: string[];
   /** Ворота периода → линия, отдельно по каждому партнёру. */
@@ -91,6 +97,7 @@ export function Bodygraph({
   b,
   nameA = "Первый партнёр",
   nameB = "Второй партнёр",
+  onlyExtra = false,
   extraGates = [],
   extraChannels = [],
   extraLinesA,
@@ -327,7 +334,11 @@ export function Bodygraph({
           const extra = extraGateSet.has(gate);
           // Натальная активация всегда важнее «погоды»: ворота, которые есть в
           // карте рождения, не должны перекрашиваться в цвет периода.
-          const natalActive = inPair ? stateA !== "none" || stateB !== "none" : stateA !== "none";
+          const natalLit = inPair ? stateA !== "none" || stateB !== "none" : stateA !== "none";
+          // В режиме «только новые» натальные ворота гасим: канал периода всё
+          // равно замыкается парой «натальные + новые», но подсветить надо
+          // именно то, что принёс период.
+          const natalActive = onlyExtra ? false : natalLit;
           const active = natalActive || extra;
           const shared = inPair && stateA !== "none" && stateB !== "none";
           const isSel = selected?.kind === "gate" && selected.gate === gate;
@@ -427,6 +438,7 @@ export function Bodygraph({
               b={b}
               nameA={nameA}
               nameB={nameB}
+              onlyExtra={onlyExtra}
               extraGates={extraGates}
               extraChannels={extraChannels}
               extraLinesA={extraLinesA}

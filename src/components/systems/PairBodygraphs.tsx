@@ -34,6 +34,13 @@ export function PairBodygraphs({
 }) {
   const [showSaturn, setShowSaturn] = useState(false);
   const [onlyEm, setOnlyEm] = useState(false);
+  /**
+   * Что подсвечивать в режиме возврата Сатурна. По умолчанию карта целиком:
+   * ворота периода замыкают каналы вместе с натальными, и без натальных не
+   * видно, откуда взялся канал. Второе состояние гасит натальные, чтобы было
+   * видно, что именно принёс период.
+   */
+  const [saturnOnlyNew, setSaturnOnlyNew] = useState(false);
   const on = showSaturn && saturn !== null;
 
   const legend = [
@@ -58,6 +65,16 @@ export function PairBodygraphs({
             aria-pressed={on}
           >
             {on ? "Скрыть возврат Сатурна" : "Показать возврат Сатурна"}
+          </button>
+        )}
+        {on && (
+          <button
+            type="button"
+            className={saturnOnlyNew ? styles.saturnBtnOn : styles.saturnBtn}
+            onClick={() => setSaturnOnlyNew((v) => !v)}
+            aria-pressed={saturnOnlyNew}
+          >
+            {saturnOnlyNew ? "Показать вместе с картой рождения" : "Только новые ворота"}
           </button>
         )}
         {/* Вне кнопки: вложенная кнопка невалидна, и клик по подсказке
@@ -120,6 +137,7 @@ export function PairBodygraphs({
               person={chart}
               a={chart}
               nameA={name}
+              onlyExtra={on && saturnOnlyNew}
               extraGates={extra?.gates ?? []}
               extraChannels={extra?.channels ?? []}
               extraLinesA={extra?.lines}
@@ -163,6 +181,7 @@ export function PairBodygraphs({
           b={b}
           nameA={nameA}
           nameB={nameB}
+          onlyExtra={on && saturnOnlyNew}
           extraGates={on ? saturn!.pair.gates : []}
           extraChannels={on ? saturn!.pair.channels : []}
           extraLinesA={on ? saturn!.a.lines : undefined}
