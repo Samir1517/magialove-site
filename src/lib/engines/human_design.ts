@@ -485,3 +485,60 @@ export function calcTimeSensitivity(
   const profileChanges = variants.some((v) => v.profile !== base.profile);
   return { fragile, profileChanges };
 }
+
+/**
+ * Инкарнационный крест — четыре опорные активации карты.
+ *
+ * Складывается из Солнца и Земли в двух моментах: Личности (рождение) и
+ * Дизайна (−88° солнечной дуги). Именно поэтому Земля обязана быть в расчёте:
+ * без неё крест не собрать, а это половина его состава.
+ *
+ * Угол креста определяется профилем, а не воротами:
+ *   — правый угол — личная судьба, человек идёт своим путём;
+ *   — юкстапозиция (только профиль 4/1) — фиксированная роль, ни личная, ни
+ *     трансперсональная;
+ *   — левый угол — трансперсональная судьба, дорога идёт через других людей.
+ *
+ * Названий крестов здесь нет намеренно: это отдельный корпус из 192 имён, и
+ * брать его нам неоткуда, кроме авторских материалов. Состав и угол — чистый
+ * расчёт по нашим же эфемеридам, и они говорят достаточно.
+ */
+export type CrossAngle = "Правый угол" | "Юкстапозиция" | "Левый угол";
+
+export interface IncarnationCross {
+  angle: CrossAngle;
+  /** Солнце и Земля Личности, затем Солнце и Земля Дизайна. */
+  personalitySun: GateLine;
+  personalityEarth: GateLine;
+  designSun: GateLine;
+  designEarth: GateLine;
+  /** Запись в принятом виде: 11/12 | 46/25. */
+  notation: string;
+}
+
+const LEFT_ANGLE_PROFILES = new Set(["5/1", "5/2", "6/2", "6/3"]);
+
+export function calcIncarnationCross(person: Person): IncarnationCross | null {
+  const d = calcPersonalDesign(person);
+  const ps = d.personalityGates[0];
+  const pe = d.personalityGates[1];
+  const ds = d.designGates[0];
+  const de = d.designGates[1];
+  if (!ps || !pe || !ds || !de) return null;
+
+  const angle: CrossAngle =
+    d.profile === "4/1"
+      ? "Юкстапозиция"
+      : LEFT_ANGLE_PROFILES.has(d.profile)
+        ? "Левый угол"
+        : "Правый угол";
+
+  return {
+    angle,
+    personalitySun: ps,
+    personalityEarth: pe,
+    designSun: ds,
+    designEarth: de,
+    notation: `${ps.gate}/${pe.gate} | ${ds.gate}/${de.gate}`,
+  };
+}

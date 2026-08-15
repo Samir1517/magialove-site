@@ -15,6 +15,7 @@ import { formatScore } from "@/components/viz/scale";
 import { NextSystems } from "@/components/result/NextSystems";
 import { TimeSensitivity } from "@/components/systems/TimeSensitivity";
 import { Polarity } from "@/components/systems/Polarity";
+import { Cross } from "@/components/systems/Cross";
 import resultStyles from "@/components/result/result.module.css";
 
 export function HumanDesignResultView() {
@@ -96,6 +97,13 @@ export function HumanDesignResultView() {
       <UpsellToFullCta
         text="Матрица судьбы, Нумерология и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
+      />
+
+      <Cross
+        a={makePerson(dateA, timeA, tzA)}
+        b={makePerson(dateB, timeB, tzB)}
+        nameA={nameA}
+        nameB={nameB}
       />
 
       <Polarity
