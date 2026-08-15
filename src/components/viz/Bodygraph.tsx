@@ -19,6 +19,7 @@ import {
 } from "@/lib/data/human_design/bodygraph-layout";
 import { gateInfo } from "@/lib/data/human_design/gates";
 import { gateLineName } from "@/lib/data/human_design/gate-line-names";
+import { gateLineHint } from "@/lib/data/human_design/gate-line-hints";
 import { channelTheme } from "@/lib/data/human_design/channel-themes";
 import styles from "./viz.module.css";
 
@@ -202,16 +203,15 @@ export function Bodygraph({
       const p = chart.personalityLines[gate];
       const d = chart.designLines[gate];
       const period = periodLines?.[gate];
-      // Запись «ворота.линия» и имя позиции. Своих пояснений к линии здесь
-      // намеренно нет: они выводились из общей роли позиции в гексаграмме
-      // (четвёрка — про своих людей, двойка — про природный дар), а реальный
-      // смысл у позиции свой в каждых воротах. Сверка показала прямые
-      // противоречия: 1.4 зовётся «Одиночество как средство для творчества»,
-      // а моя фраза говорила ровно обратное. Имя из книги точнее любой такой
-      // догадки, поэтому оставлено только оно.
+      // Запись «ворота.линия», имя позиции и одна фраза о том, что это значит
+      // для человека. Пояснение пишется как развёртка имени и сверено с книгой
+      // — см. gate-line-hints.ts. Прошлая версия выводила смысл из номера линии
+      // по общему правилу и противоречила источнику; та ветка закрыта.
       const say = (label: string, line: number) => {
         const nm = gateLineName(gate, line);
-        return nm ? `${label} ${gate}.${line} «${nm}».` : `${label} ${gate}.${line}.`;
+        if (!nm) return `${label} ${gate}.${line}.`;
+        const hint = gateLineHint(gate, line);
+        return `${label} ${gate}.${line} «${nm}»${hint ? ` — ${hint}` : "."}`;
       };
       const parts: string[] = [];
       if (p !== undefined) parts.push(say("Личность", p));
