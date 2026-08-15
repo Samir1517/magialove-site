@@ -19,7 +19,7 @@ export function ContentShell({
         </Link>
         <MainNav />
         <Link href="/" className="btn" style={{ padding: "10px 20px", fontSize: 13 }}>
-          Рассчитать бесплатно
+          Рассчитать совместимость
         </Link>
       </header>
       <Breadcrumbs items={breadcrumbs} />
@@ -51,7 +51,7 @@ export function CalcCta({
       <h2 className={styles.ctaTitle}>{title}</h2>
       <p className={styles.ctaText}>{text}</p>
       <Link href={href} className="btn" style={{ padding: "13px 24px", fontSize: 13.5 }}>
-        Рассчитать бесплатно
+        Рассчитать
       </Link>
     </div>
   );
