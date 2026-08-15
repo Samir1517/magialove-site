@@ -62,6 +62,25 @@ export interface MoonPosition {
   rashiName: RashiName;
 }
 
+/**
+ * Накшатра и пада по сидерической долготе — для любой планеты, не только Луны.
+ *
+ * Пада — это четверть накшатры, 3°20′. Их 108 на круг, и это ровно те же
+ * отрезки, из которых строится навамша: пада планеты и её знак в D-9 — одно и
+ * то же деление, увиденное с двух сторон.
+ */
+export function nakshatraAt(siderealLon: number): {
+  index: number;
+  name: string;
+  nadi: string;
+  pada: number;
+} {
+  const idx = Math.min(Math.floor(siderealLon / NAKSHATRA_WIDTH) + 1, 27);
+  const nak = NAKSHATRAS[idx - 1];
+  const pada = Math.floor((siderealLon % NAKSHATRA_WIDTH) / (NAKSHATRA_WIDTH / 4)) + 1;
+  return { index: nak.i, name: nak.name, nadi: nak.nadi, pada };
+}
+
 export function calcMoonPosition(person: Person): MoonPosition {
   const utc = birthMoment(person);
   const tropicalLon = moonLongitude(utc);

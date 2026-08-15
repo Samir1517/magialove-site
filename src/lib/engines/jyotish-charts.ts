@@ -11,7 +11,7 @@
  * согласована с остальным расчётом: вся Аштакута построена на Луне.
  */
 
-import type { GrahaPosition } from "./jyotish";
+import { nakshatraAt, type GrahaPosition } from "./jyotish";
 import type { DignityState } from "@/lib/data/jyotish/dignities";
 
 /** Ширина навамши: 30° / 9 = 3°20′ — ровно одна пада накшатры. */
@@ -40,6 +40,10 @@ export interface ChartGraha {
   dignity: DignityState;
   /** Сожжена близостью к Солнцу. */
   combust: boolean;
+  /** Накшатра — лунная стоянка, в которой стоит планета. */
+  nakshatra: string;
+  /** Пада — четверть накшатры, 1..4. */
+  pada: number;
 }
 
 const SHORT: Record<string, string> = {
@@ -47,9 +51,19 @@ const SHORT: Record<string, string> = {
   venus: "Ve", saturn: "Sa", rahu: "Ra", ketu: "Ke",
 };
 
+/**
+ * Накшатра и пада планеты. Свойство сидерической долготы, поэтому одинаково
+ * верно и для D-1, и для D-9: в навамше у планеты другой знак, но стоянка та же.
+ */
+function nakshatraOf(g: GrahaPosition): { nakshatra: string; pada: number } {
+  const n = nakshatraAt(g.siderealLon);
+  return { nakshatra: n.name, pada: n.pada };
+}
+
 /** Раши-карта D-1: планеты по их знакам. */
 export function rashiChart(grahas: GrahaPosition[]): ChartGraha[] {
   return grahas.map((g) => ({
+    ...nakshatraOf(g),
     key: g.key,
     short: SHORT[g.key] ?? g.key,
     name: g.name,
@@ -71,6 +85,7 @@ export function navamsaChart(grahas: GrahaPosition[]): ChartGraha[] {
   return grahas.map((g) => {
     const rashi = navamsaRashi(g.siderealLon);
     return {
+      ...nakshatraOf(g),
       key: g.key,
       short: SHORT[g.key] ?? g.key,
       name: g.name,

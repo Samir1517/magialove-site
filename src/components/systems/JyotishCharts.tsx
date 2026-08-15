@@ -75,9 +75,9 @@ export function JyotishCharts({
     const mars = at("mars");
     const lagna = lagnaLon === null ? null : rashiIndex(lagnaLon) - 1;
     return [
-      lagna !== null && mangalFrom(lagna, mars) && "от лагны",
-      mangalFrom(at("moon"), mars) && "от Луны",
-      mangalFrom(at("venus"), mars) && "от Венеры",
+      lagna !== null && mangalFrom(lagna, mars) && "лагны",
+      mangalFrom(at("moon"), mars) && "Луны",
+      mangalFrom(at("venus"), mars) && "Венеры",
     ].filter(Boolean);
   };
 
@@ -135,7 +135,10 @@ export function JyotishCharts({
               {m.length > 0 && (
                 <span className={styles.graphTypeExtra}>
                   Марс в доме Мангал доши
-                  <TermHint id="mangalDosha" label="Мангал доша" /> {m.join(" и ")}
+                  {/* «от лагны и от Луны и от Венеры» — предлог один на всё
+                      перечисление, «и» только перед последним. */}
+                  <TermHint id="mangalDosha" label="Мангал доша" /> от{" "}
+                  {m.length > 1 ? `${m.slice(0, -1).join(", ")} и ${m[m.length - 1]}` : m[0]}
                 </span>
               )}
             </div>

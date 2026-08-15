@@ -612,7 +612,10 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-height: 40px;
+  /* Высота под типовое наполнение: дом с пояснением, две строки планет и одна
+     сноска. Без запаса панель раздувалась на каждом наведении и дёргала всё,
+     что стоит ниже карты. */
+  min-height: 128px;
   padding: 8px 12px;
   border-radius: 10px;
   background: #faf7f9;
@@ -624,6 +627,23 @@
 .sicInfoLine {
   font: 400 11.5px/1.5 var(--font-body);
   color: var(--ink-soft);
+}
+
+/* Что этот дом значит в жизни. Тоном темнее строк с планетами: это прямой
+   ответ на вопрос «а что такое 7-й дом», ради которого клетку и нажимают. */
+.sicInfoBhava {
+  font: 400 11.5px/1.5 var(--font-body);
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+/* Расшифровка пометок вроде «идёт назад» — показывается только тогда, когда
+   такая пометка в этой клетке действительно есть. */
+.sicInfoLegend {
+  font: 400 11px/1.5 var(--font-body);
+  color: var(--ink-faint);
+  padding-top: 4px;
+  border-top: 1px solid #efe6ec;
 }
 
 /* Разворот карты: единственный способ прочитать 64 номера на телефоне. */
