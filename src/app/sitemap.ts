@@ -35,6 +35,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: "/dizajn-cheloveka-sovmestimost/tipy/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/avtoritety/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/kanaly-svyazi/", changeFrequency: "monthly", priority: 0.7 },
+    { url: "/dizajn-cheloveka-sovmestimost/kak-schitaem/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/kanaly/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/profili/", changeFrequency: "monthly", priority: 0.7 },
     { url: "/dizajn-cheloveka-sovmestimost/karta/", changeFrequency: "monthly", priority: 0.5 },

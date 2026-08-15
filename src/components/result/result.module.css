@@ -154,6 +154,16 @@
   color: var(--ink-faint);
 }
 
+/* Примечание над формой — про то, что расчёт строится на моменте, а не на
+   дате. Раньше здесь стоял styles.hint, которого в этом модуле нет: текст
+   выводился вообще без оформления, сливаясь с полями. */
+.formHint {
+  font: 400 12px/1.65 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  max-width: 62ch;
+}
+
 .input {
   border: none;
   border-bottom: 1px solid #eee0e6;

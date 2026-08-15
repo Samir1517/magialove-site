@@ -26,6 +26,16 @@ export default function HumanDesignHubPage() {
         а не на дату.
       </p>
 
+      {/* Ссылка перед формой, а не после: человек как раз собирается вводить
+          дату и время, и вопрос «а насколько это вообще точно считается»
+          возникает именно здесь. Одна строка, без блока — кому надо, перейдёт. */}
+      <p className={styles.sourceNote} style={{ marginBottom: 14 }}>
+        <Link href="/dizajn-cheloveka-sovmestimost/kak-schitaem/">
+          Как правильно рассчитывать бодиграф
+        </Link>{" "}
+        — шесть мест, где расчёт чаще всего ломается, и как проверить любой калькулятор.
+      </p>
+
       <DateTimeForm targetPath="/dizajn-cheloveka-sovmestimost/rezultat" />
 
       <Expectations

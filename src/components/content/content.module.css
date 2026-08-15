@@ -100,6 +100,51 @@ a.eyebrow:hover {
   box-shadow: var(--card-shadow);
 }
 
+/* Абзац внутри карточки. Карточка — обычный блок без flex-gap, поэтому
+   расстояние между абзацами задаётся здесь. Раньше этих классов не было
+   вовсе: страница, которая их использовала, получала class="" и абзацы
+   слипались вплотную — зазор был ровно нулевым. */
+.text {
+  font: 400 14.5px/1.75 var(--font-body);
+  color: var(--ink);
+  margin: 0 0 14px;
+  max-width: 68ch;
+}
+
+.text:last-child {
+  margin-bottom: 0;
+}
+
+/* Выделенное примечание внутри карточки: то, что читатель может проверить
+   сам. Отбивка слева, а не рамка целиком — иначе спорит с самой карточкой. */
+.note {
+  font: 400 13.5px/1.7 var(--font-body);
+  color: var(--ink-soft);
+  margin: 16px 0 0;
+  padding: 12px 14px;
+  border-left: 3px solid var(--accent-pink);
+  background: #fdf9fb;
+  border-radius: 0 10px 10px 0;
+  max-width: 68ch;
+}
+
+.list {
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.listItem {
+  font: 400 14px/1.7 var(--font-body);
+  color: var(--ink);
+  padding-left: 14px;
+  border-left: 2px solid var(--accent-pink);
+  max-width: 68ch;
+}
+
 /* --- Блок «что ты увидишь в разборе» ---
    Стоит сразу под формой: человек уже увидел кнопку, но ещё не решился. Здесь
    он узнаёт, что именно получит, — это и снятие неопределённости, и глубина

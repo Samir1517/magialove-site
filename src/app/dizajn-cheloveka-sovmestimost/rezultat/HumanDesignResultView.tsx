@@ -77,7 +77,13 @@ export function HumanDesignResultView() {
         {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Твоя совместимость"} — {formatScore(report.score)}%
       </h1>
       <p className={resultStyles.lede}>
-        Расчёт только по Дизайну человека — композит пары по точному моменту рождения обоих.
+        Расчёт только по Дизайну человека — композит пары по точному моменту рождения обоих.{" "}
+        {/* Одна короткая ссылка вместо блока о методике: на странице результата
+            человек пришёл за своей картой, а не за лекцией. Кому важна точность
+            — перейдёт и прочитает целиком. */}
+        <Link href="/dizajn-cheloveka-sovmestimost/kak-schitaem/">
+          Как правильно рассчитывать бодиграф
+        </Link>
       </p>
 
       <HumanDesignSection report={report} nameA={nameA} nameB={nameB} saturn={saturn} />
