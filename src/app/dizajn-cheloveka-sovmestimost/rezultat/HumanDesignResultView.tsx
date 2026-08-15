@@ -13,6 +13,7 @@ import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
 import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
 import { NextSystems } from "@/components/result/NextSystems";
+import { TimeSensitivity } from "@/components/systems/TimeSensitivity";
 import resultStyles from "@/components/result/result.module.css";
 
 export function HumanDesignResultView() {
@@ -94,6 +95,13 @@ export function HumanDesignResultView() {
       <UpsellToFullCta
         text="Матрица судьбы, Нумерология и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
+      />
+
+      <TimeSensitivity
+        a={makePerson(dateA, timeA, tzA)}
+        b={makePerson(dateB, timeB, tzB)}
+        nameA={nameA}
+        nameB={nameB}
       />
 
       <NextSystems current="human_design" qs={params.toString()} hasTimes={true} />

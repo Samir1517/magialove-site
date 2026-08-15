@@ -398,3 +398,77 @@ export function calcHumanDesignCompatibility(a: Person, b: Person): SystemReport
     blocks: {}, // текстовые блоки — из content/tipy/*.md, content/avtoritety/*.md, content/svyazi/*.md
   };
 }
+
+/**
+ * Что в карте держится на точности времени рождения.
+ *
+ * Ворота и линия — это отрезок эклиптики, и быстрые тела переходят его за
+ * считанные часы. Луна проходит линию примерно за час сорок, поэтому «плюс-
+ * минус полчаса» в свидетельстве способны сменить линию, а иногда и ворота.
+ * Солнцу на ту же линию нужно около суток, и профиль от получаса не поедет —
+ * это стоит сказать вслух: человек чаще боится не за то.
+ *
+ * Считаем эмпирически, а не по таблице градусов: пересчитываем карту со
+ * сдвигом на ±N минут и смотрим, что изменилось. Так учитывается и то, что
+ * момент Дизайна отсчитывается от момента рождения и едет вместе с ним.
+ */
+export interface FragileActivation {
+  side: "Личность" | "Дизайн";
+  index: number;
+  gate: number;
+  line: number;
+  /** Во что превращается при сдвиге времени. */
+  altGate: number;
+  altLine: number;
+  /** Сменились сами ворота, а не только линия. */
+  gateChanges: boolean;
+}
+
+export function calcTimeSensitivity(
+  person: Person,
+  minutes = 30,
+): { fragile: FragileActivation[]; profileChanges: boolean } {
+  const base = calcPersonalDesign(person);
+  const shift = (deltaMin: number): PersonalDesign => {
+    const utc = birthMoment(person);
+    const moved = new Date(utc.getTime() + deltaMin * 60_000);
+    // Пересобираем Person так, чтобы birthMoment вернул сдвинутый момент:
+    // проще подменить время, чем дублировать половину расчёта.
+    const iso = moved.toISOString();
+    return calcPersonalDesign({
+      ...person,
+      birthDate: iso.slice(0, 10),
+      birthTime: iso.slice(11, 16),
+      birthPlace: { ...person.birthPlace, tz: "UTC" },
+    });
+  };
+  const variants = [shift(-minutes), shift(minutes)];
+  const fragile: FragileActivation[] = [];
+  const sides: ["Личность" | "Дизайн", GateLine[]][] = [
+    ["Личность", base.personalityGates],
+    ["Дизайн", base.designGates],
+  ];
+  for (const [side, list] of sides) {
+    list.forEach((cur, i) => {
+      for (const v of variants) {
+        const other = side === "Личность" ? v.personalityGates[i] : v.designGates[i];
+        if (!other) continue;
+        if (other.gate !== cur.gate || other.line !== cur.line) {
+          if (fragile.some((f) => f.side === side && f.index === i)) break;
+          fragile.push({
+            side,
+            index: i,
+            gate: cur.gate,
+            line: cur.line,
+            altGate: other.gate,
+            altLine: other.line,
+            gateChanges: other.gate !== cur.gate,
+          });
+          break;
+        }
+      }
+    });
+  }
+  const profileChanges = variants.some((v) => v.profile !== base.profile);
+  return { fragile, profileChanges };
+}

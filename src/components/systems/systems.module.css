@@ -362,6 +362,24 @@
   margin: 0;
 }
 
+/* Список того, что «плывёт» при неточном времени рождения: строки короткие,
+   поэтому маркеры убраны — они бы весили больше самого текста. */
+.lsList {
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lsItem {
+  font: 400 12.5px/1.6 var(--font-body);
+  color: var(--ink-soft);
+  padding-left: 10px;
+  border-left: 2px solid var(--accent-pink);
+}
+
 .stepCard {
   display: flex;
   flex-direction: column;
