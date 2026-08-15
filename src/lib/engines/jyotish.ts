@@ -29,6 +29,7 @@ import {
   yoniScore,
   grahaMaitriScore,
   lordOf,
+  type Graha,
   type RashiName,
 } from "./jyotish-tables";
 import { parseBirthDate, type Person, type SystemReport } from "./types";
@@ -322,6 +323,86 @@ export function calcJyotishTimeSensitivity(
       nakshatra:
         moonAt(shiftMinutes).index !== moon0.index || moonAt(-shiftMinutes).index !== moon0.index,
     },
+  };
+}
+
+/**
+ * Показатели брака: 7-й дом и Венера как карака супруга.
+ *
+ * ОТКУДА ЭТО. Брихат Парашара Хора Шастра, глава о караках планет: «Венера —
+ * Карака жены», и там же прямое правило — «для жены (мужа) от Венеры и 7-го
+ * дома от Венеры». Обрати внимание: **Венера отвечает за супруга у обоих
+ * полов**. Расхожее «у женщины за мужа отвечает Юпитер» — поздняя школьная
+ * традиция, у Парашары Юпитер карака учёности, богатства, сына и друга, но не
+ * мужа. Мы следуем источнику и говорим об этом вслух.
+ *
+ * ЗАЧЕМ. Вся остальная наша джйотишская выдача построена на Луне: восемь кут и
+ * доши сравнивают накшатры и знаки Луны. Это отвечает на «насколько вы
+ * совпадаете», но молчит о том, что вообще написано в карте про партнёрство.
+ * Седьмой дом и Венера отвечают именно на это — и считаются из того, что
+ * движок уже знает: Лагна, положения грах, достоинства.
+ *
+ * Без места и времени рождения Лагны нет, и весь блок честно не показывается:
+ * седьмой дом отсчитывается от неё и без неё не существует.
+ */
+export interface MarriageIndicators {
+  /** Знак, попавший в 7-й дом от Лагны. */
+  seventhRashi: RashiName;
+  /** Планета-управитель этого знака — «хозяин» темы партнёрства. */
+  seventhLord: Graha;
+  /** В каком доме от Лагны стоит управитель 7-го (1..12). */
+  lordHouse: number;
+  /** И в каком знаке. */
+  lordRashi: RashiName;
+  lordDignity: DignityState;
+  lordRetro: boolean;
+  lordCombust: boolean;
+  /** Венера — карака супруга: где стоит и в каком состоянии. */
+  venusRashi: RashiName;
+  venusHouse: number;
+  venusDignity: DignityState;
+  venusCombust: boolean;
+  /** 7-й дом ОТ ВЕНЕРЫ — вторая половина правила Парашары. */
+  seventhFromVenusRashi: RashiName;
+  seventhFromVenusLord: Graha;
+}
+
+export function calcMarriageIndicators(person: Person): MarriageIndicators | null {
+  const lagna = calcLagna(person);
+  if (!lagna) return null;
+
+  const grahas = calcNavagraha(person);
+  const find = (key: string) => grahas.find((g) => g.key === key)!;
+
+  // rashiIndex у граха 1-based, houseBetween работает с тем же основанием.
+  const lagnaIdx = lagna.rashiIndex;
+  const seventhIdx = ((lagnaIdx - 1 + 6) % 12) + 1;
+  const seventhRashi = rashiName(seventhIdx);
+  const seventhLord = lordOf(seventhRashi);
+
+  const LORD_KEY: Record<Graha, string> = {
+    "Солнце": "sun", "Луна": "moon", "Марс": "mars", "Меркурий": "mercury",
+    "Юпитер": "jupiter", "Венера": "venus", "Сатурн": "saturn",
+  };
+  const lord = find(LORD_KEY[seventhLord]);
+  const venus = find("venus");
+  const venusSeventhIdx = ((venus.rashiIndex - 1 + 6) % 12) + 1;
+  const venusSeventhRashi = rashiName(venusSeventhIdx);
+
+  return {
+    seventhRashi,
+    seventhLord,
+    lordHouse: houseBetween(lagnaIdx, lord.rashiIndex),
+    lordRashi: lord.rashiName,
+    lordDignity: lord.dignity,
+    lordRetro: lord.retro,
+    lordCombust: lord.combust,
+    venusRashi: venus.rashiName,
+    venusHouse: houseBetween(lagnaIdx, venus.rashiIndex),
+    venusDignity: venus.dignity,
+    venusCombust: venus.combust,
+    seventhFromVenusRashi: venusSeventhRashi,
+    seventhFromVenusLord: lordOf(venusSeventhRashi),
   };
 }
 
