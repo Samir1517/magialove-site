@@ -14,6 +14,7 @@ import { ShareActions } from "@/components/result/ShareActions";
 import { Biwheel } from "@/components/viz/Biwheel";
 import { formatScore } from "@/components/viz/scale";
 import { NextSystems } from "@/components/result/NextSystems";
+import { GrahaStrength } from "@/components/systems/GrahaStrength";
 import resultStyles from "@/components/result/result.module.css";
 import systemStyles from "@/components/systems/systems.module.css";
 
@@ -126,6 +127,13 @@ export function JyotishResultView() {
       <UpsellToFullCta
         text="Матрица судьбы, Нумерология и Дизайн человека смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
+      />
+
+      <GrahaStrength
+        a={makePerson(dateA, timeA, tzA, readCoords((k) => params.get(k), "a"))}
+        b={makePerson(dateB, timeB, tzB, readCoords((k) => params.get(k), "b"))}
+        nameA={nameA}
+        nameB={nameB}
       />
 
       <NextSystems current="jyotish" qs={params.toString()} hasTimes={true} />

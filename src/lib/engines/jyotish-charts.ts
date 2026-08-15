@@ -12,6 +12,7 @@
  */
 
 import type { GrahaPosition } from "./jyotish";
+import type { DignityState } from "@/lib/data/jyotish/dignities";
 
 /** Ширина навамши: 30° / 9 = 3°20′ — ровно одна пада накшатры. */
 const NAVAMSA_ARC = 10 / 3;
@@ -35,6 +36,10 @@ export interface ChartGraha {
   degreeInRashi: number;
   /** Ретроградность традиционно помечается как (R). */
   retro: boolean;
+  /** Экзальтация, падение, мулатрикона, своя обитель — либо null. */
+  dignity: DignityState;
+  /** Сожжена близостью к Солнцу. */
+  combust: boolean;
 }
 
 const SHORT: Record<string, string> = {
@@ -55,8 +60,9 @@ export function rashiChart(grahas: GrahaPosition[]): ChartGraha[] {
     // сетке 0..11 и пропадали с карты совсем.
     rashiIndex: g.rashiIndex - 1,
     degreeInRashi: g.degreeInRashi,
-    // Раху и Кету ретроградны всегда, поэтому их помечать не принято.
-    retro: false,
+    retro: g.retro,
+    dignity: g.dignity,
+    combust: g.combust,
   }));
 }
 
@@ -71,7 +77,11 @@ export function navamsaChart(grahas: GrahaPosition[]): ChartGraha[] {
       symbol: g.symbol,
       rashiIndex: rashi,
       degreeInRashi: (g.siderealLon % NAVAMSA_ARC) * 9,
-      retro: false,
+      retro: g.retro,
+      // Достоинство считается по знаку основной карты: в навамше у планеты
+      // другой знак, и переносить туда экзальтацию из D-1 было бы неверно.
+      dignity: null,
+      combust: g.combust,
     };
   });
 }

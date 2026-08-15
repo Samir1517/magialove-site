@@ -15,6 +15,7 @@ import {
   toSidereal,
   ascendantSidereal,
 } from "./ephemeris";
+import { dignityOf, isCombust, type DignityState } from "@/lib/data/jyotish/dignities";
 import {
   rashiIndex,
   rashiName,
@@ -96,6 +97,17 @@ export interface GrahaPosition {
   rashiName: RashiName;
   /** Градус внутри знака, 0..30. */
   degreeInRashi: number;
+  /**
+   * Ретроградность (вакри). Считается сравнением долготы за час до и через час
+   * после момента: если планета за это время сдвинулась назад — она вакри.
+   * Раньше это поле было захардкожено в false, и ни одна планета никогда не
+   * помечалась, хотя отрисовка «(R)» была написана.
+   */
+  retro: boolean;
+  /** Экзальтация, падение, мулатрикона или своя обитель — либо null. */
+  dignity: DignityState;
+  /** Сожжена ли планета близостью к Солнцу. */
+  combust: boolean;
 }
 
 const NAVAGRAHA: { key: string; name: string; symbol: string }[] = [
@@ -113,6 +125,17 @@ const NAVAGRAHA: { key: string; name: string; symbol: string }[] = [
 export function calcNavagraha(person: Person): GrahaPosition[] {
   assertLicensed();
   const utc = birthMoment(person);
+  const HOUR = 3600_000;
+  const sunNow = toSidereal(sunLongitude(utc), utc);
+
+  const lonAt = (key: string, at: Date): number => {
+    if (key === "sun") return sunLongitude(at);
+    if (key === "moon") return moonLongitude(at);
+    if (key === "rahu") return meanNorthNodeLongitude(at);
+    if (key === "ketu") return meanSouthNodeLongitude(at);
+    return planetLongitude(key as "mars" | "mercury" | "jupiter" | "venus" | "saturn", at);
+  };
+
   return NAVAGRAHA.map(({ key, name, symbol }) => {
     let tropical: number;
     if (key === "sun") tropical = sunLongitude(utc);
@@ -123,14 +146,32 @@ export function calcNavagraha(person: Person): GrahaPosition[] {
 
     const siderealLon = toSidereal(tropical, utc);
     const rIndex = rashiIndex(siderealLon);
+    const rName = rashiName(rIndex);
+    const degreeInRashi = siderealLon % 30;
+
+    // Узлы движутся вспять всегда — это их природа, а не состояние.
+    // Светила не бывают ретроградными вовсе.
+    let retro = false;
+    if (key === "rahu" || key === "ketu") retro = true;
+    else if (key !== "sun" && key !== "moon") {
+      const before = lonAt(key, new Date(utc.getTime() - HOUR));
+      const after = lonAt(key, new Date(utc.getTime() + HOUR));
+      // Разница через границу 0°/360° берётся кратчайшей дугой.
+      const delta = ((after - before + 540) % 360) - 180;
+      retro = delta < 0;
+    }
+
     return {
       key,
       name,
       symbol,
       siderealLon,
       rashiIndex: rIndex,
-      rashiName: rashiName(rIndex),
-      degreeInRashi: siderealLon % 30,
+      rashiName: rName,
+      degreeInRashi,
+      retro,
+      dignity: dignityOf(key, rName, degreeInRashi),
+      combust: key === "sun" ? false : isCombust(key, siderealLon, sunNow),
     };
   });
 }
