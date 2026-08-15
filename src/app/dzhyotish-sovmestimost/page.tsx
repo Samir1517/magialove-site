@@ -26,6 +26,14 @@ export default function JyotishHubPage() {
 
       <DateTimeForm targetPath="/dzhyotish-sovmestimost/rezultat" />
 
+      {/* Одна строка сразу под формой: вопрос «а почему у меня тут другой знак»
+          возникает ещё до расчёта. Кому надо — перейдёт, остальным не мешает. */}
+      <p className={styles.sourceNote} style={{ marginBottom: 14 }}>
+        <Link href="/dzhyotish-sovmestimost/kak-schitaem/">
+          Почему в Джйотише другой знак зодиака и как считается расчёт
+        </Link>
+      </p>
+
       <Expectations
         title="Что ты увидишь в разборе"
         items={[

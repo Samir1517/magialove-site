@@ -84,7 +84,10 @@ export function JyotishResultView() {
         {nameA !== "Первый партнёр" ? `${nameA} и ${nameB}` : "Твоя совместимость"} — {formatScore(report.score)}%
       </h1>
       <p className={resultStyles.lede}>
-        Расчёт только по Джйотиш — Гуна-милан и доши по точному моменту рождения обоих.
+        Расчёт только по Джйотиш — Гуна-милан и доши по точному моменту рождения обоих.{" "}
+        <Link href="/dzhyotish-sovmestimost/kak-schitaem/">
+          Почему знак зодиака здесь другой
+        </Link>
       </p>
 
       <JyotishSection
