@@ -244,6 +244,87 @@ export function calcLagna(person: Person): { rashiIndex: number; lon: number } |
   return { rashiIndex: rashiIndex(asc), lon: asc };
 }
 
+// ---------------------------------------------------------------------------
+// Чувствительность к точности времени рождения
+// ---------------------------------------------------------------------------
+
+/**
+ * Что в карте поплывёт, если время рождения записано приблизительно.
+ *
+ * Человек обычно боится не за то. Он переживает за накшатру Луны — а Луна
+ * проходит стоянку примерно за сутки, и полчаса её не сдвинут. Зато Лагна
+ * меняет знак каждые два часа с небольшим, а иногда человек рождается прямо на
+ * границе, и тогда полчаса переставляют все двенадцать домов разом.
+ *
+ * Поэтому мы не рассуждаем «примерно», а считаем: сколько минут осталось до
+ * ближайшей смены и что конкретно изменится при ошибке в полчаса.
+ */
+export interface JyotishTimeSensitivity {
+  /** Знак Лагны; null — нет места рождения или времени, лагну считать не из чего. */
+  lagnaRashi: RashiName | null;
+  /** Минут до следующей смены знака Лагны; null — дальше окна поиска. */
+  toLagnaChange: number | null;
+  /** Минут назад с прошлой смены; null — дальше окна поиска. */
+  sinceLagnaChange: number | null;
+  moonNakshatra: string;
+  moonPada: number;
+  /** Минут до смены пады Луны; null — дальше окна поиска. */
+  toPadaChange: number | null;
+  /** Что именно изменится при ошибке на ±shift минут. */
+  fragile: { lagna: boolean; pada: boolean; nakshatra: boolean };
+}
+
+/** Окно поиска: дальше трёх часов «плюс-минус» уже не приблизительность, а незнание. */
+const SENSITIVITY_WINDOW = 180;
+
+export function calcJyotishTimeSensitivity(
+  person: Person,
+  shiftMinutes = 30
+): JyotishTimeSensitivity {
+  const utc = birthMoment(person);
+  const { lat, lon } = person.birthPlace;
+  const hasPlace = lat !== undefined && lon !== undefined && person.birthTimeKnown;
+
+  const at = (offset: number) => new Date(utc.getTime() + offset * 60_000);
+  const lagnaSign = (offset: number) =>
+    hasPlace ? rashiIndex(ascendantSidereal(at(offset), lat, lon)) : null;
+  const moonAt = (offset: number) => {
+    const t = at(offset);
+    return nakshatraAt(toSidereal(moonLongitude(t), t));
+  };
+
+  const lagna0 = lagnaSign(0);
+  const moon0 = moonAt(0);
+
+  // Ищем ближайшую границу простым шагом в минуту: точность здесь и нужна
+  // минутная, а формулы дешёвые.
+  const scan = (dir: 1 | -1, differs: (offset: number) => boolean): number | null => {
+    for (let m = 1; m <= SENSITIVITY_WINDOW; m++) if (differs(dir * m)) return m;
+    return null;
+  };
+
+  const lagnaDiffers = (offset: number) => lagnaSign(offset) !== lagna0;
+  const padaDiffers = (offset: number) => {
+    const m = moonAt(offset);
+    return m.index !== moon0.index || m.pada !== moon0.pada;
+  };
+
+  return {
+    lagnaRashi: lagna0 === null ? null : rashiName(lagna0),
+    toLagnaChange: hasPlace ? scan(1, lagnaDiffers) : null,
+    sinceLagnaChange: hasPlace ? scan(-1, lagnaDiffers) : null,
+    moonNakshatra: moon0.name,
+    moonPada: moon0.pada,
+    toPadaChange: scan(1, padaDiffers),
+    fragile: {
+      lagna: hasPlace && (lagnaDiffers(shiftMinutes) || lagnaDiffers(-shiftMinutes)),
+      pada: padaDiffers(shiftMinutes) || padaDiffers(-shiftMinutes),
+      nakshatra:
+        moonAt(shiftMinutes).index !== moon0.index || moonAt(-shiftMinutes).index !== moon0.index,
+    },
+  };
+}
+
 export interface MangalDosha {
   present: boolean;
   /** Дом Марса от Луны — считается всегда, места рождения не требует. */

@@ -15,6 +15,7 @@ import { Biwheel } from "@/components/viz/Biwheel";
 import { formatScore } from "@/components/viz/scale";
 import { NextSystems } from "@/components/result/NextSystems";
 import { GrahaStrength } from "@/components/systems/GrahaStrength";
+import { JyotishTimeSensitivity } from "@/components/systems/JyotishTimeSensitivity";
 import resultStyles from "@/components/result/result.module.css";
 import systemStyles from "@/components/systems/systems.module.css";
 
@@ -130,6 +131,13 @@ export function JyotishResultView() {
       />
 
       <GrahaStrength
+        a={makePerson(dateA, timeA, tzA, readCoords((k) => params.get(k), "a"))}
+        b={makePerson(dateB, timeB, tzB, readCoords((k) => params.get(k), "b"))}
+        nameA={nameA}
+        nameB={nameB}
+      />
+
+      <JyotishTimeSensitivity
         a={makePerson(dateA, timeA, tzA, readCoords((k) => params.get(k), "a"))}
         b={makePerson(dateB, timeB, tzB, readCoords((k) => params.get(k), "b"))}
         nameA={nameA}
