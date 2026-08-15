@@ -14,6 +14,7 @@ import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
 import { NextSystems } from "@/components/result/NextSystems";
 import { TimeSensitivity } from "@/components/systems/TimeSensitivity";
+import { Polarity } from "@/components/systems/Polarity";
 import resultStyles from "@/components/result/result.module.css";
 
 export function HumanDesignResultView() {
@@ -95,6 +96,13 @@ export function HumanDesignResultView() {
       <UpsellToFullCta
         text="Матрица судьбы, Нумерология и Джйотиш смотрят на твою пару совсем другими методами. Когда все четыре сходятся в одном — это сильный сигнал."
         params={new URLSearchParams(params.toString())}
+      />
+
+      <Polarity
+        a={makePerson(dateA, timeA, tzA)}
+        b={makePerson(dateB, timeB, tzB)}
+        nameA={nameA}
+        nameB={nameB}
       />
 
       <TimeSensitivity
