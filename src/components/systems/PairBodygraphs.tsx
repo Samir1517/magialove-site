@@ -46,11 +46,10 @@ export function PairBodygraphs({
   return (
     <div className={styles.graphsBlock}>
       <div className={styles.graphsHead}>
-        <h3 className={styles.blockTitle}>
-          Ваши карты рядом
-          <TermHint id="hdGate" label="Ворота" />
-          <TermHint id="hdChannel" label="Канал" />
-        </h3>
+        {/* Два вопросика подряд в заголовке читались как «Ваши карты рядом??»
+            — вместо двух подсказок получалась опечатка. Термины разведены по
+            тексту, к тем словам, которые объясняют. */}
+        <h3 className={styles.blockTitle}>Ваши карты рядом</h3>
         {saturn && (
           <button
             type="button"
@@ -72,6 +71,15 @@ export function PairBodygraphs({
         Там, где у одного цвет, а у второго пусто, и живёт большая часть ваших
         «почему ты не можешь просто»: один в этом месте постоянен, а второй меняется
         от того, кто рядом. Это не про хуже и лучше — про разную конструкцию.
+      </p>
+
+      <p className={styles.graphsHint}>
+        Цифры на карте — это ворота
+        <TermHint id="hdGate" label="Ворота" />, отдельные свойства характера, всего их 64.
+        Когда одни ворота встречаются со «своими» напротив, между центрами загорается
+        линия — канал
+        <TermHint id="hdChannel" label="Канал" />: свойство перестаёт быть задатком и
+        начинает работать постоянно.
       </p>
 
       {saturn && (

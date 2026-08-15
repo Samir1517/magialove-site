@@ -47,6 +47,21 @@ export function varnaRank(rashi: RashiName): number {
   return VARNA_RANK[rashi];
 }
 
+/**
+ * Название варны и стихия знака. Нужны, чтобы объяснить читателю, откуда взялся
+ * балл: «1 из 1» без пояснения — число из ниоткуда.
+ */
+const VARNA_NAME: Record<number, { name: string; element: string }> = {
+  4: { name: "брахман", element: "вода" },
+  3: { name: "кшатрий", element: "огонь" },
+  2: { name: "вайшья", element: "земля" },
+  1: { name: "шудра", element: "воздух" },
+};
+
+export function varnaOf(rashi: RashiName): { name: string; element: string } {
+  return VARNA_NAME[VARNA_RANK[rashi]];
+}
+
 // ---------------------------------------------------------------------------
 // Вашья (группа притяжения/власти) — упрощённая 5-группная схема
 // ---------------------------------------------------------------------------
@@ -69,6 +84,19 @@ const VASHYA_SCORE: Record<VashyaGroup, Partial<Record<VashyaGroup, number>>> = 
   vanachara: { vanachara: 2, manava: 1 },
   keeta: { keeta: 2 },
 };
+
+/** Название группы Вашья по-русски — для объяснения балла в интерфейсе. */
+const VASHYA_NAME: Record<VashyaGroup, string> = {
+  chatushpada: "четвероногие",
+  manava: "люди",
+  jalachara: "водные",
+  vanachara: "лесные",
+  keeta: "насекомые",
+};
+
+export function vashyaGroupOf(rashi: RashiName): string {
+  return VASHYA_NAME[VASHYA_GROUP[rashi]];
+}
 
 export function vashyaScore(a: RashiName, b: RashiName): number {
   const ga = VASHYA_GROUP[a];

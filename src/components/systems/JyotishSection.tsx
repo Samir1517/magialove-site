@@ -209,6 +209,23 @@ export function JyotishSection({
                   showBandLabel={false}
                   caption={high ? reading.high : reading.low}
                 />
+                {(() => {
+                  const why = f.gunaMilan.details?.[kuta.key];
+                  // Расшифровки появились позже самих кут: у ссылок, сохранённых
+                  // до этого, details в разобранном отчёте нет — тогда просто
+                  // не рисуем блок, а не падаем на undefined.
+                  return why ? (
+                    <div className={styles.kutaWhy}>
+                      <p className={styles.kutaWhyRow}>
+                        <strong className={styles.kutaWhyName}>{nameA}:</strong> {why.a}
+                      </p>
+                      <p className={styles.kutaWhyRow}>
+                        <strong className={styles.kutaWhyName}>{nameB}:</strong> {why.b}
+                      </p>
+                      <p className={styles.kutaWhyVerdict}>{why.verdict}</p>
+                    </div>
+                  ) : null;
+                })()}
                 {article && (
                   <ArticleDisclosure
                     article={article}
