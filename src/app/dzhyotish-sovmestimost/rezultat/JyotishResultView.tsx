@@ -93,6 +93,10 @@ export function JyotishResultView() {
         nameB={nameB}
         grahas={grahas}
         lagna={data.lagna}
+        persons={{
+          a: makePerson(dateA, timeA, tzA, readCoords((k) => params.get(k), "a")),
+          b: makePerson(dateB, timeB, tzB, readCoords((k) => params.get(k), "b")),
+        }}
       />
 
       <ShareActions

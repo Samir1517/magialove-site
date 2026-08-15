@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { SystemReport } from "@/lib/engines/types";
+import type { Person, SystemReport } from "@/lib/engines/types";
 import type { GrahaPosition, JyotishRawFeatures } from "@/lib/engines/jyotish";
 import {
   DOSHA_READINGS,
@@ -12,6 +12,7 @@ import { ScoreRing } from "@/components/viz/ScoreRing";
 import { ScoreBar } from "@/components/viz/ScoreBar";
 import { NakshatraWheel } from "@/components/viz/NakshatraWheel";
 import { JyotishCharts } from "./JyotishCharts";
+import { WhyDifferentSign } from "./WhyDifferentSign";
 import { TermHint } from "@/components/viz/TermHint";
 import { Chip } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
@@ -57,6 +58,7 @@ export function JyotishSection({
   standaloneHref,
   grahas,
   lagna,
+  persons,
 }: {
   report: SystemReport<JyotishRawFeatures>;
   nameA?: string;
@@ -66,6 +68,8 @@ export function JyotishSection({
   grahas?: { a: GrahaPosition[]; b: GrahaPosition[] } | null;
   /** Долготы Лагны обоих; null — места рождения нет в ссылке. */
   lagna?: { a: number | null; b: number | null };
+  /** Сами люди — для блока «почему здесь другой знак». */
+  persons?: { a: Person; b: Person } | null;
 }) {
   const f = report.rawFeatures;
   const total = f.gunaMilan.total;
@@ -101,6 +105,10 @@ export function JyotishSection({
            «Луна Первый партнёр» — то, что получалось раньше без имён. */
         caption={`Гуна-милан: ${formatScore(total)} из 36 — ${gunaBandLabel(total)}. Луна, ${nameA}: накшатра ${f.a.moonNakshatra} (${f.a.moonRashi}). Луна, ${nameB}: ${f.b.moonNakshatra} (${f.b.moonRashi}).`}
       />
+
+      {detailed && persons && (
+        <WhyDifferentSign a={persons.a} b={persons.b} nameA={nameA} nameB={nameB} />
+      )}
 
       <div>
         <h3 className={styles.blockTitle}>
