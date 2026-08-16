@@ -14,7 +14,7 @@ import { calcHumanDesignPro, rankHighlights } from "../src/lib/engines/human-des
 import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { channelTheme } from "../src/lib/data/human_design/channel-themes";
 import { GATES } from "../src/lib/data/human_design/gates";
-import { gateLineName } from "../src/lib/data/human_design/gate-line-names";
+import { gateLineNameShort } from "../src/lib/data/human_design/gate-line-names";
 import { linePolarity } from "../src/lib/data/human_design/line-polarity";
 import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
@@ -52,6 +52,16 @@ const h1 = (s: string) => p("", "", "=".repeat(70), s.toUpperCase(), "=".repeat(
 const h2 = (s: string) => p("", `— ${s} —`);
 const gateName = (n: number) => `${n} «${GATES[n]?.name ?? "?"}»`;
 
+/** Согласование числительного: 1 место, 2 места, 5 мест. */
+function plural(n: number, one: string, few: string, many: string): string {
+  const mod100 = n % 100;
+  if (mod100 >= 11 && mod100 <= 14) return many;
+  const mod10 = n % 10;
+  if (mod10 === 1) return one;
+  if (mod10 >= 2 && mod10 <= 4) return few;
+  return many;
+}
+
 // --- 1. Начало ---------------------------------------------------------------
 h1("Профессиональный разбор пары");
 p("", OPENING.readFreely, "", OPENING.whatThisIs, "", OPENING.howWeCount);
@@ -82,15 +92,32 @@ p("", `Тем, которых у вас нет вовсе, — ${pro.absent.filt
 // --- 2. Почему тянет ---------------------------------------------------------
 h1("Почему тянет именно к нему");
 const channels = ranked.filter((x) => x.kind === "bridge" || x.kind === "closedHanging");
+// Градиент глубины. Полный разбор получают только два первых места, дальше —
+// карточка в две строки. Первая версия печатала пять одинаковых по структуре
+// блоков подряд, и к четвёртому текст начинал пролистываться: та же рамка,
+// тот же ритм, только слова другие. У эталонов рынка перепад плотности между
+// верхушкой и хвостом достигает полусотни раз, и это не экономия, а забота о
+// дочитываемости.
+const DEEP = 2;
 p("", PERSONALIZED_MARK);
-for (const item of channels.slice(0, 5)) {
+channels.slice(0, DEEP).forEach((item) => {
   const t = channelPair(item.channelKey!)!;
   const ch = CHANNELS.find((c) => c.key === item.channelKey)!;
   h2(`${ch.name} (${ch.key})${item.kind === "bridge" ? " · и это мост" : ""}`);
   p("", g(t.appears), "", `Почему тянет. ${g(t.pull)}`, "", `Обратная сторона. ${g(t.shadow)}`);
   if (item.kind === "bridge") p("", BRIDGE_NOTE.light, "", BRIDGE_NOTE.shadow, "", BRIDGE_NOTE.action);
+});
+
+const rest = channels.slice(DEEP);
+if (rest.length) {
+  h2(`Ещё ${rest.length} ${plural(rest.length, "место", "места", "мест")}, где вы достраиваете друг друга`);
+  p("Коротко — по одной строке на каждое. Если что-то зацепит, разверни в карте ниже.", "");
+  for (const item of rest) {
+    const t = channelPair(item.channelKey!)!;
+    const ch = CHANNELS.find((c) => c.key === item.channelKey)!;
+    p(`• ${ch.name} (${ch.key}) — ${channelTheme(ch.key) ?? ""}`, `  ${g(t.pull)}`, "");
+  }
 }
-if (channels.length > 5) p("", `Ещё таких мест: ${channels.length - 5}.`);
 
 // --- 3. Где вы меняете друг друга --------------------------------------------
 h1("Где вы меняете друг друга");
@@ -120,7 +147,7 @@ h1("Что в нём не изменится, а что изменится");
 p("", TRIAD_FRAME.intro, "", TRIAD_FRAME.formula, "", TRIAD_FRAME.water, "", TRIAD_FRAME.trigger, "", TRIAD_FRAME.caution);
 if (pro.shared.length) {
   h2("Темы, которые есть у вас обоих");
-  p(TRIAD_FRAME.shared);
+  p(TRIAD_FRAME.shared, "", TRIAD_FRAME.sharedHowToRead);
   for (const s of pro.shared) {
     const k = geneKey(s.gate)!;
     const gp = gateInPair(s.gate)!;
@@ -164,7 +191,7 @@ for (const [label, design] of [["Ты", a], ["Партнёр", b]] as const) {
     p("", `${side}:`);
     list.forEach((x, i) => {
       const body = ACTIVATION_BODIES[i];
-      const nm = gateLineName(x.gate, x.line);
+      const nm = gateLineNameShort(x.gate, x.line);
       const pol = linePolarity(x.gate, x.line);
       // Полярность обещана в рамке блока, значит обязана быть показана.
       const mark = pol?.ex === body ? "  ← идёт само" : pol?.det === body ? "  ← даётся усилием" : "";
