@@ -13,6 +13,7 @@ import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { GATES } from "../src/lib/data/human_design/gates";
 import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
+import { CHANNEL_PAIR, channelPair, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
 import { applyGender, findBareGendered } from "../src/lib/content/gender";
 import type { Person } from "../src/lib/engines/types";
 
@@ -264,6 +265,39 @@ for (let gate = 1; gate <= 64; gate += 1) {
     check(!/(?<=.)[А-ЯЁ]/.test(value.replace(/\s[А-ЯЁ]/g, " x")), `${gate}.${key}: капитель в «${value}»`);
     check(!/[A-Za-z]/.test(value), `${gate}.${key}: латиница в «${value}»`);
   }
+}
+
+// --- Тексты каналов в паре ---------------------------------------------------
+
+// Канал без текста оставит в платном разборе дырку ровно там, где человек ждёт
+// объяснения, почему его тянет. Поэтому проверяются все 36, а не только те,
+// что выпали у тестовой пары.
+for (const ch of CHANNELS) {
+  const t = channelPair(ch.key);
+  check(Boolean(t), `нет парного текста для канала ${ch.key} «${ch.name}»`);
+  if (!t) continue;
+  for (const [key, value] of Object.entries(t)) {
+    check(value.trim().length > 60, `${ch.key}.${key}: слишком коротко`);
+    const bare = findBareGendered(value);
+    check(bare.length === 0, `${ch.key}.${key}: вне разметки осталось ${bare.join(", ")}`);
+    check(!applyGender(value, { self: "м", other: "м" }).includes("{"), `${ch.key}.${key}: нераскрытая скобка`);
+  }
+}
+// Обратная проверка: лишний ключ означает опечатку в номере канала, и текст
+// молча не покажется никогда.
+for (const key of Object.keys(CHANNEL_PAIR)) {
+  check(CHANNELS.some((c) => c.key === key), `канала ${key} не существует — опечатка в ключе`);
+}
+
+console.log("\n=== Каналы тестовой пары: почему тянет ===");
+for (const h of rankHighlights(pro).filter((x) => x.kind === "bridge" || x.kind === "closedHanging").slice(0, 3)) {
+  const t = channelPair(h.channelKey!)!;
+  const ch = CHANNELS.find((c) => c.key === h.channelKey)!;
+  console.log(`\n--- ${ch.name} (${ch.key})${h.kind === "bridge" ? " · мост" : ""} ---`);
+  console.log(g(t.appears));
+  console.log(`\nПочему тянет: ${g(t.pull)}`);
+  console.log(`\nОбратная сторона: ${g(t.shadow)}`);
+  if (h.kind === "bridge") console.log(`\n${BRIDGE_NOTE.light}\n\n${BRIDGE_NOTE.shadow}\n\n${BRIDGE_NOTE.action}`);
 }
 
 console.log("\n=== Триады на воротах тестовой пары ===");
