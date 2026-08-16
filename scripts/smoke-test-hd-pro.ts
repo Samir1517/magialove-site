@@ -11,6 +11,7 @@ import { calcPersonalDesign, ALL_CENTERS } from "../src/lib/engines/human_design
 import { calcHumanDesignPro, calcDefinition, rankHighlights } from "../src/lib/engines/human-design-pro";
 import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { GATES } from "../src/lib/data/human_design/gates";
+import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
 import { applyGender, findBareGendered } from "../src/lib/content/gender";
 import type { Person } from "../src/lib/engines/types";
@@ -242,6 +243,33 @@ for (const center of ALL_CENTERS) {
     const asM = applyGender(value, { self: "м", other: "м" });
     check(!asM.includes("{"), `${center}.${where}: осталась нераскрытая скобка`);
   }
+}
+
+// --- Триады Генных ключей ----------------------------------------------------
+
+// Для платного продукта пробелы недопустимы: человек заплатил и открыл разбор,
+// а у партнёра в ключевых воротах пусто. Поэтому проверяются все 64, а не
+// «сколько получилось распознать».
+for (let gate = 1; gate <= 64; gate += 1) {
+  const t = geneKey(gate);
+  check(Boolean(t), `нет триады для ворот ${gate}`);
+  if (!t) continue;
+  for (const [key, value] of Object.entries(t)) {
+    check(value.trim().length > 2, `${gate}.${key}: пустое имя`);
+    // Имя уровня — одно-два слова. Длинная строка означает, что в данные
+    // затесалось предложение из текста главы.
+    check(value.trim().length <= 40, `${gate}.${key}: слишком длинное имя «${value}»`);
+    // Заглавная не в начале — след капители в оригинале: так «Щедрость»
+    // приезжала как «ЩЕдрость».
+    check(!/(?<=.)[А-ЯЁ]/.test(value.replace(/\s[А-ЯЁ]/g, " x")), `${gate}.${key}: капитель в «${value}»`);
+    check(!/[A-Za-z]/.test(value), `${gate}.${key}: латиница в «${value}»`);
+  }
+}
+
+console.log("\n=== Триады на воротах тестовой пары ===");
+for (const gate of [...new Set([...a.activatedGates, ...b.activatedGates])].sort((x, y) => x - y).slice(0, 8)) {
+  const t = geneKey(gate)!;
+  console.log(`  ${gateName(gate)}: в страхе «${t.shadow}» → в силе «${t.gift}» → предел «${t.siddhi}»`);
 }
 
 console.log(
