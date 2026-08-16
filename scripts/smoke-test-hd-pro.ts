@@ -14,6 +14,7 @@ import { GATES } from "../src/lib/data/human_design/gates";
 import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
 import { CHANNEL_PAIR, channelPair, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
+import { GATE_IN_PAIR, gateInPair, TRIAD_FRAME } from "../src/lib/content/human-design-triads";
 import { applyGender, findBareGendered } from "../src/lib/content/gender";
 import type { Person } from "../src/lib/engines/types";
 
@@ -300,10 +301,35 @@ for (const h of rankHighlights(pro).filter((x) => x.kind === "bridge" || x.kind 
   if (h.kind === "bridge") console.log(`\n${BRIDGE_NOTE.light}\n\n${BRIDGE_NOTE.shadow}\n\n${BRIDGE_NOTE.action}`);
 }
 
-console.log("\n=== Триады на воротах тестовой пары ===");
-for (const gate of [...new Set([...a.activatedGates, ...b.activatedGates])].sort((x, y) => x - y).slice(0, 8)) {
-  const t = geneKey(gate)!;
-  console.log(`  ${gateName(gate)}: в страхе «${t.shadow}» → в силе «${t.gift}» → предел «${t.siddhi}»`);
+// Тема без описания в паре оставит в главном блоке разбора пустое место.
+for (let gate = 1; gate <= 64; gate += 1) {
+  const t = gateInPair(gate);
+  check(Boolean(t), `нет парного описания темы для ворот ${gate}`);
+  if (!t) continue;
+  for (const [key, value] of Object.entries(t)) {
+    check(value.trim().length > 30, `${gate}.${key}: слишком коротко`);
+    const bare = findBareGendered(value);
+    check(bare.length === 0, `${gate}.${key}: вне разметки осталось ${bare.join(", ")}`);
+    check(!applyGender(value, { self: "м", other: "м" }).includes("{"), `${gate}.${key}: нераскрытая скобка`);
+  }
+}
+for (const key of Object.keys(GATE_IN_PAIR)) {
+  const n = Number(key);
+  check(n >= 1 && n <= 64, `ворот ${key} не существует`);
+}
+for (const [key, value] of Object.entries(TRIAD_FRAME)) {
+  check(value.trim().length > 100, `рамка ${key}: слишком коротко`);
+}
+
+console.log("\n=== Блок «что не изменится» на общих темах пары ===");
+console.log(TRIAD_FRAME.formula);
+for (const s of pro.shared.slice(0, 4)) {
+  const k = geneKey(s.gate)!;
+  const p = gateInPair(s.gate)!;
+  console.log(`\n${gateName(s.gate)} — общая тема`);
+  console.log(`  В страхе «${k.shadow}»: ${g(p.shadow)}`);
+  console.log(`  В силе «${k.gift}»: ${g(p.gift)}`);
+  console.log(`  Предел: «${k.siddhi}»`);
 }
 
 console.log(
