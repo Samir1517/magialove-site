@@ -913,3 +913,33 @@
     max-width: min(320px, calc(38svh * 0.8));
   }
 }
+
+
+/* Второй ярус — узкие телефоны (iPhone SE и подобные). Замер живого сайта:
+   на 320x568 блок «Поделись» занимал 733px, то есть 129% экрана. Причина не
+   только в карточке: на неё приходилось 266px, а остальные ~470 давали
+   отступы, заголовок в три строки, подпись и две кнопки. Поэтому здесь
+   ужимается всё сразу, а карточка ограничивается жёстче. */
+@media (max-width: 380px) {
+  .shareBlock {
+    padding: 18px 14px;
+    gap: 11px;
+  }
+  .shareHeading {
+    font-size: 19px;
+    line-height: 1.2;
+  }
+  .shareSubtext {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .shareCardPreview {
+    max-width: min(320px, calc(26vh * 0.8));
+    max-width: min(320px, calc(26svh * 0.8));
+  }
+  .sharePrimaryBtn,
+  .shareSecondaryBtn {
+    padding-top: 11px;
+    padding-bottom: 11px;
+  }
+}
