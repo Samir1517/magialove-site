@@ -11,6 +11,7 @@ import { calcPersonalDesign, ALL_CENTERS } from "../src/lib/engines/human_design
 import { calcHumanDesignPro, calcDefinition, rankHighlights } from "../src/lib/engines/human-design-pro";
 import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { GATES } from "../src/lib/data/human_design/gates";
+import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
 import type { Person } from "../src/lib/engines/types";
 
 const partnerA: Person = {
@@ -175,6 +176,55 @@ check(reflectorLike.kind === "none" && reflectorLike.groupCount === 0, "пуст
 
 // Все девять центров учтены.
 check(ALL_CENTERS.length === 9, `центров ${ALL_CENTERS.length}, ожидалось 9`);
+
+// --- Контент: собранный блок обусловленности на живых данных -----------------
+
+console.log("\n\n=== СОБРАННЫЙ БЛОК: «Где вы меняете друг друга» ===");
+
+// Читательница — первый партнёр: именно она заполняла форму. Значит сторона "a"
+// это «открыт у тебя», сторона "b" — «открыт у партнёра».
+for (const [side, data] of [
+  ["a", pro.a],
+  ["b", pro.b],
+] as const) {
+  for (const c of data.conditioning) {
+    const t = CONDITIONING_BY_CENTER[c.center];
+    const s = side === "a" ? t.you : t.partner;
+    const heading = side === "a" ? "Партнёр влияет на тебя" : "Ты влияешь на партнёра";
+    const openAt = side === "a" ? "у тебя" : "у партнёра";
+    const definedAt = side === "a" ? "у партнёра" : "у тебя";
+
+    console.log(`\n--- ${heading}: ${t.topic} ---`);
+    console.log(
+      `${CENTER_NAMES[c.center]} открыт ${openAt} · ${definedAt} включён воротами ${c.partnerGates.map(gateName).join(", ")}`
+    );
+    console.log(`\n${t.organ}`);
+    console.log(`\n${s.scene}`);
+    console.log(`\n${s.light}`);
+    if (c.ownGates.length) console.log(`\nСобственные активации: ${c.ownGates.map(gateName).join(", ")}. ${s.anchor}`);
+    console.log(`\nНе изменится: ${s.fixed}`);
+    console.log(`Изменится: ${s.changeable}`);
+  }
+}
+
+// Все девять центров обязаны иметь текст с обеих сторон: центр без описания
+// оставит в платном разборе дырку ровно там, где человек ждёт объяснения.
+// Длина проверяется раздельно — `topic` короткая подпись по замыслу.
+for (const center of ALL_CENTERS) {
+  const t = CONDITIONING_BY_CENTER[center];
+  check(Boolean(t), `нет текста для центра ${center}`);
+  if (!t) continue;
+  check(t.topic.trim().length >= 4, `${center}.topic слишком короткий`);
+  check(t.organ.trim().length > 60, `${center}.organ короче объяснения`);
+  for (const [role, s] of [["you", t.you], ["partner", t.partner]] as const) {
+    for (const [key, value] of Object.entries(s)) {
+      check(value.trim().length > 40, `${center}.${role}.${key} пустое или слишком короткое`);
+    }
+    // Партнёр называется «партнёр», а не по полу: второго комплекта под
+    // женский род нет, и «она забирает» вылезло бы как ошибка.
+    check(!/\bона\b/i.test(s.scene), `${center}.${role}.scene называет партнёра по полу`);
+  }
+}
 
 console.log(
   failures === 0
