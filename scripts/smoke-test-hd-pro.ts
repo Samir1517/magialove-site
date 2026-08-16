@@ -8,7 +8,7 @@
  */
 
 import { calcPersonalDesign, ALL_CENTERS } from "../src/lib/engines/human_design";
-import { calcHumanDesignPro, calcDefinition } from "../src/lib/engines/human-design-pro";
+import { calcHumanDesignPro, calcDefinition, rankHighlights } from "../src/lib/engines/human-design-pro";
 import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { GATES } from "../src/lib/data/human_design/gates";
 import type { Person } from "../src/lib/engines/types";
@@ -116,6 +116,50 @@ console.log(`Тема звучит одной стороной — ${half.length
 for (const t of half) {
   console.log(`  ${t.channelKey} «${t.channelName}»: есть ${t.presentGates.join(", ")}, нет ${t.gates.filter((g) => !t.presentGates.includes(g)).join(", ")}`);
 }
+
+console.log(`\n=== Общие ворота (${pro.shared.length}) ===`);
+for (const s of pro.shared) {
+  console.log(`  ${gateName(s.gate)} · ${CENTER_NAMES[s.center]}${s.bothInChannel ? " — канал замкнут у обоих" : ""}`);
+  check(a.activatedGates.has(s.gate) && b.activatedGates.has(s.gate), `ворота ${s.gate} названы общими, но есть не у обоих`);
+}
+
+const ranked = rankHighlights(pro);
+console.log(`\n=== Ранжирование: топ-12 из ${ranked.length} ===`);
+ranked.slice(0, 12).forEach((h, i) => {
+  console.log(`  ${String(i + 1).padStart(2)}. вес ${String(h.weight).padStart(3)} · ${h.kind} · ${h.label}`);
+});
+
+// Список обязан быть отсортирован по убыванию веса.
+for (let i = 1; i < ranked.length; i += 1) {
+  check(ranked[i - 1].weight >= ranked[i].weight, `порядок сбит на позиции ${i}: ${ranked[i - 1].weight} < ${ranked[i].weight}`);
+}
+
+// Один канал — ровно одна строка в отчёте, чем бы он ни был для каждого из двоих.
+const seenChannels = new Map<string, string>();
+for (const h of ranked) {
+  if (!h.channelKey) continue;
+  const prev = seenChannels.get(h.channelKey);
+  check(prev === undefined, `канал ${h.channelKey} попал в список дважды: «${prev}» и «${h.kind}»`);
+  seenChannels.set(h.channelKey, h.kind);
+}
+
+// Мост поглощает закрытые ворота того же канала: если канал где-то мост, его
+// строка обязана быть мостом, а не подвешенными воротами.
+for (const side of ["a", "b"] as const) {
+  for (const br of (side === "a" ? pro.a : pro.b).bridges) {
+    check(
+      ranked.find((h) => h.channelKey === br.channelKey)?.kind === "bridge",
+      `канал ${br.channelKey} — мост у ${side}, но в списке не как мост`
+    );
+  }
+}
+
+// Порядок обязан быть устойчивым: тот же расчёт — та же страница.
+const again = rankHighlights(calcHumanDesignPro(a, b));
+check(
+  again.map((h) => h.label).join("|") === ranked.map((h) => h.label).join("|"),
+  "повторный прогон дал другой порядок"
+);
 
 // Проверка полноты: каждый канал ровно один раз либо закрыт в композите, либо в absent.
 const unionGates = new Set<number>([...a.activatedGates, ...b.activatedGates]);
