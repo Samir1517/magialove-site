@@ -12,10 +12,13 @@ import { calcHumanDesignPro, calcDefinition, rankHighlights } from "../src/lib/e
 import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { GATES } from "../src/lib/data/human_design/gates";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
+import { applyGender, findBareGendered } from "../src/lib/content/gender";
 import type { Person } from "../src/lib/engines/types";
 
+// Пол по умолчанию: женский у первого партнёра, мужской у второго — так же,
+// как в форме. На расчёт не влияет нигде, только на род в текстах.
 const partnerA: Person = {
-  sex: "м",
+  sex: "ж",
   birthDate: "1990-08-17",
   birthTime: "14:30",
   birthTimeKnown: true,
@@ -23,7 +26,7 @@ const partnerA: Person = {
 };
 
 const partnerB: Person = {
-  sex: "ж",
+  sex: "м",
   birthDate: "1992-03-05",
   birthTime: "08:15",
   birthTimeKnown: true,
@@ -181,8 +184,12 @@ check(ALL_CENTERS.length === 9, `центров ${ALL_CENTERS.length}, ожид�
 
 console.log("\n\n=== СОБРАННЫЙ БЛОК: «Где вы меняете друг друга» ===");
 
-// Читательница — первый партнёр: именно она заполняла форму. Значит сторона "a"
-// это «открыт у тебя», сторона "b" — «открыт у партнёра».
+// Читатель — первый партнёр: именно он заполнял форму. Значит сторона "a" —
+// «открыт у тебя», сторона "b" — «открыт у партнёра». Пол берётся из тех же
+// Person, что ушли в расчёт: по умолчанию женский у первого, мужской у второго.
+const ctx = { self: partnerA.sex, other: partnerB.sex };
+const g = (s: string) => applyGender(s, ctx);
+
 for (const [side, data] of [
   ["a", pro.a],
   ["b", pro.b],
@@ -198,12 +205,12 @@ for (const [side, data] of [
     console.log(
       `${CENTER_NAMES[c.center]} открыт ${openAt} · ${definedAt} включён воротами ${c.partnerGates.map(gateName).join(", ")}`
     );
-    console.log(`\n${t.organ}`);
-    console.log(`\n${s.scene}`);
-    console.log(`\n${s.light}`);
-    if (c.ownGates.length) console.log(`\nСобственные активации: ${c.ownGates.map(gateName).join(", ")}. ${s.anchor}`);
-    console.log(`\nНе изменится: ${s.fixed}`);
-    console.log(`Изменится: ${s.changeable}`);
+    console.log(`\n${g(t.organ)}`);
+    console.log(`\n${g(s.scene)}`);
+    console.log(`\n${g(s.light)}`);
+    if (c.ownGates.length) console.log(`\nСобственные активации: ${c.ownGates.map(gateName).join(", ")}. ${g(s.anchor)}`);
+    console.log(`\nНе изменится: ${g(s.fixed)}`);
+    console.log(`Изменится: ${g(s.changeable)}`);
   }
 }
 
@@ -216,13 +223,24 @@ for (const center of ALL_CENTERS) {
   if (!t) continue;
   check(t.topic.trim().length >= 4, `${center}.topic слишком короткий`);
   check(t.organ.trim().length > 60, `${center}.organ короче объяснения`);
+
+  const fields: [string, string][] = [["organ", t.organ]];
   for (const [role, s] of [["you", t.you], ["partner", t.partner]] as const) {
     for (const [key, value] of Object.entries(s)) {
       check(value.trim().length > 40, `${center}.${role}.${key} пустое или слишком короткое`);
+      fields.push([`${role}.${key}`, value]);
     }
-    // Партнёр называется «партнёр», а не по полу: второго комплекта под
-    // женский род нет, и «она забирает» вылезло бы как ошибка.
-    check(!/\bона\b/i.test(s.scene), `${center}.${role}.scene называет партнёра по полу`);
+  }
+
+  for (const [where, value] of fields) {
+    // Родовое слово вне разметки — забытое место: при женском партнёре текст
+    // скажет «он бодр» про женщину.
+    const bare = findBareGendered(value);
+    check(bare.length === 0, `${center}.${where}: вне разметки осталось ${bare.join(", ")}`);
+    // Обе половины должны разворачиваться: одинаковый результат для м и ж
+    // значит либо рода нет вовсе (нормально), либо разметка не сработала.
+    const asM = applyGender(value, { self: "м", other: "м" });
+    check(!asM.includes("{"), `${center}.${where}: осталась нераскрытая скобка`);
   }
 }
 
