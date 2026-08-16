@@ -7,7 +7,7 @@
  * определённых центров, а мосты обязаны соединять разные группы.
  */
 
-import { calcPersonalDesign, ALL_CENTERS } from "../src/lib/engines/human_design";
+import { calcPersonalDesign, ALL_CENTERS, ACTIVATION_BODIES } from "../src/lib/engines/human_design";
 import { calcHumanDesignPro, calcDefinition, rankHighlights } from "../src/lib/engines/human-design-pro";
 import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { GATES } from "../src/lib/data/human_design/gates";
@@ -15,7 +15,9 @@ import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
 import { CHANNEL_PAIR, channelPair, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
 import { GATE_IN_PAIR, gateInPair, TRIAD_FRAME } from "../src/lib/content/human-design-triads";
-import { applyGender, findBareGendered } from "../src/lib/content/gender";
+import { applyGender, findUnexpanded } from "../src/lib/content/gender";
+import { ABSENT_FRAME } from "../src/lib/content/human-design-absent";
+import { OPENING, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "../src/lib/content/human-design-report-frame";
 import type { Person } from "../src/lib/engines/types";
 
 // Пол по умолчанию: женский у первого партнёра, мужской у второго — так же,
@@ -236,12 +238,11 @@ for (const center of ALL_CENTERS) {
   }
 
   for (const [where, value] of fields) {
-    // Родовое слово вне разметки — забытое место: при женском партнёре текст
-    // скажет «он бодр» про женщину.
-    const bare = findBareGendered(value);
-    check(bare.length === 0, `${center}.${where}: вне разметки осталось ${bare.join(", ")}`);
-    // Обе половины должны разворачиваться: одинаковый результат для м и ж
-    // значит либо рода нет вовсе (нормально), либо разметка не сработала.
+    // Единственная проверка разметки, возможная без ложных срабатываний:
+    // фигурная скобка, которая не раскрылась, — всегда опечатка. Проверку на
+    // забытое голое «он» пришлось убрать, причина описана в content/gender.ts.
+    const broken = findUnexpanded(value);
+    check(broken.length === 0, `${center}.${where}: сломанная разметка ${broken.join(", ")}`);
     const asM = applyGender(value, { self: "м", other: "м" });
     check(!asM.includes("{"), `${center}.${where}: осталась нераскрытая скобка`);
   }
@@ -279,8 +280,8 @@ for (const ch of CHANNELS) {
   if (!t) continue;
   for (const [key, value] of Object.entries(t)) {
     check(value.trim().length > 60, `${ch.key}.${key}: слишком коротко`);
-    const bare = findBareGendered(value);
-    check(bare.length === 0, `${ch.key}.${key}: вне разметки осталось ${bare.join(", ")}`);
+    const broken = findUnexpanded(value);
+    check(broken.length === 0, `${ch.key}.${key}: сломанная разметка ${broken.join(", ")}`);
     check(!applyGender(value, { self: "м", other: "м" }).includes("{"), `${ch.key}.${key}: нераскрытая скобка`);
   }
 }
@@ -308,8 +309,8 @@ for (let gate = 1; gate <= 64; gate += 1) {
   if (!t) continue;
   for (const [key, value] of Object.entries(t)) {
     check(value.trim().length > 30, `${gate}.${key}: слишком коротко`);
-    const bare = findBareGendered(value);
-    check(bare.length === 0, `${gate}.${key}: вне разметки осталось ${bare.join(", ")}`);
+    const broken = findUnexpanded(value);
+    check(broken.length === 0, `${gate}.${key}: сломанная разметка ${broken.join(", ")}`);
     check(!applyGender(value, { self: "м", other: "м" }).includes("{"), `${gate}.${key}: нераскрытая скобка`);
   }
 }
@@ -331,6 +332,48 @@ for (const s of pro.shared.slice(0, 4)) {
   console.log(`  В силе «${k.gift}»: ${g(p.gift)}`);
   console.log(`  Предел: «${k.siddhi}»`);
 }
+
+// --- Обвязка разбора ---------------------------------------------------------
+
+for (const [name, frame] of [
+  ["ABSENT_FRAME", ABSENT_FRAME],
+  ["OPENING", OPENING],
+  ["MAP_FRAME", MAP_FRAME],
+] as const) {
+  for (const [key, value] of Object.entries(frame)) {
+    // Ключи на «Title» — короткие заголовки по замыслу.
+    const min = key.endsWith("Title") ? 10 : 80;
+    check(typeof value === "string" && value.trim().length > min, `${name}.${key}: пусто или слишком коротко`);
+  }
+}
+
+// Каждое из тринадцати тел обязано быть объяснено: строка карты без пояснения
+// читается как бухгалтерия.
+for (const body of ACTIVATION_BODIES) {
+  const m = ACTIVATION_BODY_MEANING[body];
+  check(Boolean(m) && m.trim().length > 60, `нет пояснения для тела «${body}»`);
+}
+check(
+  Object.keys(ACTIVATION_BODY_MEANING).length === ACTIVATION_BODIES.length,
+  `пояснений ${Object.keys(ACTIVATION_BODY_MEANING).length}, а тел ${ACTIVATION_BODIES.length}`
+);
+
+check(CLOSING.questions.length === 8, `вопросов ${CLOSING.questions.length}, ожидалось 8`);
+for (const q of CLOSING.questions) {
+  check(q.trim().endsWith("?"), `вопрос без знака вопроса: «${q}»`);
+  // От первого лица — иначе это советы, а не чек-лист. Границы слова заданы
+  // явно: `\b` в JavaScript про ASCII и с кириллицей не срабатывает вовсе.
+  check(
+    /(?<![а-яё])(я|мо[ейюия]|мен[яе]|себ[яе])(?![а-яё])/i.test(q),
+    `вопрос не от первого лица: «${q}»`
+  );
+}
+check(CLOSING.disclaimer.length > 200, "дисклеймер слишком короткий для финальной мысли");
+
+console.log("\n=== Финал разбора ===");
+console.log(`${CLOSING.questionsTitle}:`);
+CLOSING.questions.forEach((q, i) => console.log(`  ${i + 1}. ${q}`));
+console.log(`\n${CLOSING.disclaimer}`);
 
 console.log(
   failures === 0
