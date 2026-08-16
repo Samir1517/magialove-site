@@ -13,6 +13,7 @@ import { ScoreBar } from "@/components/viz/ScoreBar";
 import { NakshatraWheel } from "@/components/viz/NakshatraWheel";
 import { JyotishCharts } from "./JyotishCharts";
 import { WhyDifferentSign } from "./WhyDifferentSign";
+import { PairSnapshot } from "./PairSnapshot";
 import { TermHint } from "@/components/viz/TermHint";
 import { Chip } from "@/components/viz/Legend";
 import { ArticleDisclosure } from "@/components/viz/ArticleDisclosure";
@@ -87,12 +88,11 @@ export function JyotishSection({
           )}
         </div>
         <h2 id="jyotish-title" className={styles.sectionTitle}>
-          Аштакута: восемь совпадений
+          Что у вас складывается, а что даётся трудно
         </h2>
         <p className={styles.sectionLede}>
-          Классический ведический метод сравнения пары по положению Луны — восемь
-          показателей, вместе дающих 36 баллов. Мы показываем не только сумму, но и то,
-          что стоит за каждым баллом.
+          Ниже — восемь показателей классического ведического расчёта и то, что стоит за
+          каждым из них. Но сначала главное, коротко.
         </p>
       </div>
 
@@ -103,8 +103,10 @@ export function JyotishSection({
         /* Имя ставим перед двоеточием, а не в родительном падеже: склонять
            произвольное имя («Луна Анны», но «Луна Игоря») надёжно нельзя, а
            «Луна Первый партнёр» — то, что получалось раньше без имён. */
-        caption={`Гуна-милан: ${formatScore(total)} из 36 — ${gunaBandLabel(total)}. Луна, ${nameA}: накшатра ${f.a.moonNakshatra} (${f.a.moonRashi}). Луна, ${nameB}: ${f.b.moonNakshatra} (${f.b.moonRashi}).`}
+        caption={`${formatScore(total)} из 36 баллов — это ${formatScore(report.score)}% на нашей шкале, ${gunaBandLabel(total)}. Луна, ${nameA}: накшатра ${f.a.moonNakshatra} (${f.a.moonRashi}). Луна, ${nameB}: ${f.b.moonNakshatra} (${f.b.moonRashi}).`}
       />
+
+      {detailed && <PairSnapshot features={f} />}
 
       {detailed && persons && (
         <WhyDifferentSign a={persons.a} b={persons.b} nameA={nameA} nameB={nameB} />
