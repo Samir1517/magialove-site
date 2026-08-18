@@ -15,9 +15,9 @@ import { useMemo, useState, useEffect, useRef, type ReactNode } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-import { calcPersonalDesign, calcComposite, ACTIVATION_BODIES } from "@/lib/engines/human_design";
+import { calcPersonalDesign, calcComposite, toPersonChart, ACTIVATION_BODIES } from "@/lib/engines/human_design";
 import { calcHumanDesignPro, rankHighlights } from "@/lib/engines/human-design-pro";
-import { CENTER_NAMES, CHANNELS } from "@/lib/engines/human-design-tables";
+import { CENTER_NAMES, CHANNELS, type CenterKey } from "@/lib/engines/human-design-tables";
 import { makePerson, safely, parseSex } from "@/lib/engines/person";
 import type { Sex } from "@/lib/content/gender";
 import { applyGender } from "@/lib/content/gender";
@@ -33,7 +33,7 @@ import { ABSENT_FRAME, channelAbsent } from "@/lib/content/human-design-absent";
 import { OPENING, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "@/lib/content/human-design-report-frame";
 import { CHANNEL_SOURCE_COLOR, CHANNEL_SOURCE_LABEL } from "@/lib/content/human-design";
 
-import { CompositeBodygraph } from "@/components/viz/CompositeBodygraph";
+import { Bodygraph } from "@/components/viz/Bodygraph";
 import { Legend } from "@/components/viz/Legend";
 import { Reveal } from "@/components/viz/Reveal";
 import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
@@ -75,6 +75,32 @@ function ReadingProgress() {
   );
 }
 
+/**
+ * Глобальный body имеет overflow «hidden auto» — это делает его
+ * скролл-контейнером, и position:sticky липнет к нему, а не к окну: карта
+ * оставалась в верху колонки, и при чтении карточек правая колонка пустела.
+ * clip обрезает горизонталь так же, как hidden, но скролл-контейнер не
+ * создаёт. Меняем только на этой странице и возвращаем как было при уходе.
+ */
+function useStickyFriendlyBody() {
+  useEffect(() => {
+    const prevX = document.body.style.overflowX;
+    const prevY = document.body.style.overflowY;
+    document.body.style.overflowX = "clip";
+    document.body.style.overflowY = "visible";
+    return () => {
+      document.body.style.overflowX = prevX;
+      document.body.style.overflowY = prevY;
+    };
+  }, []);
+}
+
+/** Имя центра для фраз со словом «центр»: у G в имени слово уже есть, и без
+ * замены выходило «центр «G-центр (идентичность)»» — масло масляное. */
+function centerLabel(center: CenterKey): string {
+  return CENTER_NAMES[center].replace("G-центр", "G");
+}
+
 function Section({ eyebrow, title, children }: { eyebrow: string; title: string; children: ReactNode }) {
   return (
     <section className={styles.section}>
@@ -90,6 +116,7 @@ function Section({ eyebrow, title, children }: { eyebrow: string; title: string;
 export function ProReportView() {
   const params = useSearchParams();
   const router = useRouter();
+  useStickyFriendlyBody();
 
   const dateA = params.get("a");
   const dateB = params.get("b");
@@ -108,7 +135,16 @@ export function ProReportView() {
       const a = calcPersonalDesign(makePerson(dateA, timeA, tzA, undefined, sexA));
       const b = calcPersonalDesign(makePerson(dateB, timeB, tzB, undefined, sexB));
       const pro = calcHumanDesignPro(a, b);
-      return { a, b, pro, ranked: rankHighlights(pro), composite: calcComposite(a, b) };
+      return {
+        a,
+        b,
+        pro,
+        ranked: rankHighlights(pro),
+        composite: calcComposite(a, b),
+        // PersonChart-формат — для канонического бодиграфа и его подсказок.
+        aChart: toPersonChart(a),
+        bChart: toPersonChart(b),
+      };
     });
   }, [dateA, dateB, timeA, timeB, tzA, tzB, sexA, sexB]);
 
@@ -118,12 +154,10 @@ export function ProReportView() {
     return (s: string) => applyGender(s, ctx);
   }, [sexA, sexB]);
 
+  // Наведение на карточку подсвечивает канал на канонической карте. Клик по
+  // самой карте открывает её собственную подсказку — скролл к карточке ей
+  // только мешал бы.
   const [hoverChannel, setHoverChannel] = useState<string | null>(null);
-  const scrollToChannel = (key: string) => {
-    document.getElementById(`pro-ch-${key}`)?.scrollIntoView({ behavior: "smooth", block: "center" });
-    setHoverChannel(key);
-    setTimeout(() => setHoverChannel(null), 2000);
-  };
 
   const setSex = (key: "sa" | "sb", value: Sex) => {
     const next = new URLSearchParams(params.toString());
@@ -152,7 +186,7 @@ export function ProReportView() {
     );
   }
 
-  const { a, b, pro, ranked, composite } = data;
+  const { a, b, pro, ranked, composite, aChart, bChart } = data;
 
   const heName = nameB || "Партнёр";
   const pairNames = nameA && nameB ? `${nameA} и ${nameB}` : "ваша пара";
@@ -235,7 +269,7 @@ export function ProReportView() {
           {tileTop && (
             <div className={styles.tile}>
               <div className={styles.tileLabel}>Что вас держит</div>
-              <div className={styles.tileValue}>{tileTop.name}</div>
+              <div className={styles.tileValue}>Канал {tileTop.name}</div>
               <div className={styles.tileNote}>
                 {channelTheme(tileTop.key)} Каждый закрывает другому недостающую половину —
                 поодиночке этого нет ни у кого из вас.
@@ -279,6 +313,15 @@ export function ProReportView() {
 
       {/* ============ ПОЧЕМУ ТЯНЕТ ============ */}
       <Section eyebrow="Механика притяжения" title={g("Почему тянет именно к {п:нему|ней}")}>
+        {/* Единственное место, где термины «канал» и «ворота» получают бытовой
+            перевод, — дальше страница пользуется ими свободно. */}
+        <p className={styles.lede}>
+          На карте Дизайна человека между центрами протянуты каналы — ниточки из двух
+          половинок. Каждая половинка называется воротами, у неё свой номер и своё имя.
+          Когда одна половинка твоя, а вторая — {g("{п:его|её}")}, канал замыкается только
+          вдвоём: у пары появляется то, чего нет ни у одного поодиночке. Вот ваши такие
+          места.
+        </p>
         <p className={styles.mark}>{PERSONALIZED_MARK}</p>
         <div className={styles.channelsGrid}>
           <div>
@@ -346,21 +389,23 @@ export function ProReportView() {
           </div>
 
           <div className={styles.graphSide}>
-            <CompositeBodygraph
-              channels={composite.channels}
-              definedCenters={composite.definedCenters}
+            {/* Канонический бодиграф: геометрия классики неизменна, режим
+                композита и подсказки — те же, что на бесплатной странице. */}
+            <Bodygraph
+              composite={{ channels: composite.channels, definedCenters: composite.definedCenters }}
+              a={aChart}
+              b={bChart}
+              nameA={nameA || "Первый партнёр"}
+              nameB={nameB || "Второй партнёр"}
+              size={300}
               highlightKey={hoverChannel}
-              onChannelClick={scrollToChannel}
+              hint="Наведи на карточку слева — канал подсветится. Коснись линии на карте — расскажем, что это."
             />
             <Legend
               entries={(["electromagnetic", "both", "a", "b"] as const)
                 .filter((s) => composite.channels.some((c) => c.source === s))
                 .map((s) => ({ color: CHANNEL_SOURCE_COLOR[s], text: CHANNEL_SOURCE_LABEL[s] }))}
             />
-            <p className={styles.note}>
-              Наведи на карточку — канал подсветится на общей карте. Нажми на линию —
-              страница проскроллит к её разбору.
-            </p>
           </div>
         </div>
       </Section>
@@ -378,7 +423,7 @@ export function ProReportView() {
                 {side === "a" ? `${heName} влияет на тебя` : g("Ты влияешь на {п:него|неё}")}: {t.topic}
               </h3>
               <p className={styles.condMeta}>
-                Центр «{CENTER_NAMES[item.center]}» открыт {side === "a" ? "у тебя" : "у партнёра"}, а{" "}
+                Центр «{centerLabel(item.center)}» открыт {side === "a" ? "у тебя" : "у партнёра"}, а{" "}
                 {side === "a" ? "у партнёра" : "у тебя"} включён воротами{" "}
                 {item.partnerGates.map(gateName).join(", ")}
               </p>
@@ -388,7 +433,7 @@ export function ProReportView() {
               {item.ownGates.length > 0 && (
                 <p className={styles.cardText}>
                   <span className={styles.cardLabel}>
-                    {side === "a" ? "Твои активации здесь: " : "Его активации здесь: "}
+                    {side === "a" ? "Твои ворота здесь: " : "Его ворота здесь: "}
                   </span>
                   {item.ownGates.map(gateName).join(", ")}. {g(s.anchor)}
                 </p>
@@ -419,7 +464,7 @@ export function ProReportView() {
                 <details key={`${side}-${item.center}`} className={styles.detailsBox}>
                   <summary>
                     <span className={styles.compactName}>
-                      {t.topic} — центр «{CENTER_NAMES[item.center]}» (открыт {side === "a" ? "у тебя" : "у партнёра"})
+                      {t.topic} — центр «{centerLabel(item.center)}» (открыт {side === "a" ? "у тебя" : "у партнёра"})
                     </span>
                   </summary>
                   <div className={styles.detailsInner}>
@@ -428,7 +473,7 @@ export function ProReportView() {
                     <p className={styles.cardText}>{g(s.light)}</p>
                     {item.ownGates.length > 0 && (
                       <p className={styles.cardText}>
-                        <span className={styles.cardLabel}>Активации в открытом центре: </span>
+                        <span className={styles.cardLabel}>Свои ворота в открытом центре: </span>
                         {item.ownGates.map(gateName).join(", ")}. {g(s.anchor)}
                       </p>
                     )}
@@ -563,7 +608,7 @@ export function ProReportView() {
       <hr className={styles.divider} />
 
       {/* ============ ПОЛНАЯ КАРТА ============ */}
-      <Section eyebrow="Справочник пары" title="Полная карта: 26 активаций каждого">
+      <Section eyebrow="Справочник пары" title="Полная карта: 26 точек каждого">
         <p className={styles.note}>{MAP_FRAME.intro}</p>
         <details className={styles.detailsBox}>
           <summary>
@@ -631,12 +676,13 @@ export function ProReportView() {
         <p className={styles.lede}>{CLOSING.intro}</p>
 
         <h3 className={styles.cardTitle} style={{ marginTop: 20 }}>{CLOSING.needsTitle}</h3>
-        <p className={styles.note}>{CLOSING.needsHint}</p>
+        <p className={styles.note}>{g(CLOSING.needsHint)}</p>
+        {/* Хвост «это твоё собственное…» один раз в подводке, а не в каждом
+            пункте: шесть одинаковых окончаний подряд читались как сбой шаблона. */}
         <ul className={styles.closeList}>
           {[...a.definedCenters].map((center) => (
             <li key={center}>
-              {CONDITIONING_BY_CENTER[center].topic} — центр «{CENTER_NAMES[center]}» у тебя
-              включён: это твоё собственное и не зависит от {g("{п:него|неё}")}.
+              {CONDITIONING_BY_CENTER[center].topic} — центр «{centerLabel(center)}»
             </li>
           ))}
         </ul>
@@ -661,7 +707,7 @@ export function ProReportView() {
         {condItems.some(({ item }) => item.ownGates.length === 0) && (
           <>
             <h3 className={styles.cardTitle} style={{ marginTop: 20 }}>{CLOSING.avoidTitle}</h3>
-            <p className={styles.note}>{CLOSING.avoidHint}</p>
+            <p className={styles.note}>{g(CLOSING.avoidHint)}</p>
             <ul className={styles.closeList}>
               {condItems
                 .filter(({ item }) => item.ownGates.length === 0)

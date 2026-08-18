@@ -277,7 +277,7 @@ p("", CLOSING.intro);
 // заканчивался тремя пустыми разделами — худшее, чем можно закончить платный
 // текст.
 h2(CLOSING.needsTitle);
-p(CLOSING.needsHint, "");
+p(g(CLOSING.needsHint), "");
 for (const center of [...a.definedCenters]) {
   p(`• ${CONDITIONING_BY_CENTER[center].topic} — центр «${CENTER_NAMES[center]}» у тебя включён, это твоё собственное и не зависит от него.`);
 }
@@ -303,7 +303,7 @@ if (pro.shared.length) {
 }
 
 h2(CLOSING.avoidTitle);
-p(CLOSING.avoidHint, "");
+p(g(CLOSING.avoidHint), "");
 for (const [side, data] of [["a", pro.a], ["b", pro.b]] as const) {
   for (const c of data.conditioning.filter((x) => x.ownGates.length === 0)) {
     const t = CONDITIONING_BY_CENTER[c.center];

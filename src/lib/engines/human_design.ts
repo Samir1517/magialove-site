@@ -362,7 +362,12 @@ function linesByGate(gates: GateLine[]): Record<number, number> {
   return out;
 }
 
-function toPersonChart(d: PersonalDesign): PersonChart {
+/**
+ * Экспортирован для страницы платного разбора: ей нужны и PersonalDesign (для
+ * расширенного расчёта), и PersonChart (для канонического бодиграфа), а считать
+ * эфемериды дважды ради смены формата незачем.
+ */
+export function toPersonChart(d: PersonalDesign): PersonChart {
   return {
     type: d.type,
     authority: d.authority,

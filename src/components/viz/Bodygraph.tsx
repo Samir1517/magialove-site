@@ -88,6 +88,11 @@ export interface BodygraphProps {
   focusElectromagnetic?: boolean;
   /** Подпись карты в развороте на весь экран. */
   fullscreenTitle?: string;
+  /**
+   * Внешняя подсветка канала (наведение на карточку в тексте страницы):
+   * остальные каналы приглушаются. Геометрии не касается — только цвет.
+   */
+  highlightKey?: string | null;
 }
 
 export function Bodygraph({
@@ -106,6 +111,7 @@ export function Bodygraph({
   hint = "Наведи курсор или коснись канала — расскажем, что это.",
   focusElectromagnetic = false,
   fullscreenTitle,
+  highlightKey = null,
 }: BodygraphProps) {
   // На телефоне 64 номера ворот в карте шириной 270px рендерятся мельче 5px —
   // прочитать нельзя. Разворот на весь экран решает это, не раздувая карту в
@@ -127,6 +133,8 @@ export function Bodygraph({
 
   /** Цвет половины канала со стороны конкретных ворот. */
   function halfColor(gate: number, channelKey: string): string {
+    // Внешняя подсветка: всё, кроме выделенного канала, уводится в фон.
+    if (highlightKey && channelKey !== highlightKey) return IDLE_CHANNEL;
     if (isPair) {
       const c = compositeByKey.get(channelKey);
       // Режим «только вдвоём»: остальное уводим в фон, чтобы главное не
