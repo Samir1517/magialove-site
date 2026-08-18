@@ -102,12 +102,19 @@ function centerLabel(center: CenterKey): string {
   return CENTER_NAMES[center].replace("G-центр", "G");
 }
 
-function Section({ eyebrow, title, children }: { eyebrow: string; title: string; children: ReactNode }) {
+/**
+ * hintId — блочный вопросик у заголовка: отвечает не «что это за слово», а
+ * «как этот блок собран и как им пользоваться».
+ */
+function Section({ eyebrow, title, hintId, children }: { eyebrow: string; title: string; hintId?: string; children: ReactNode }) {
   return (
     <section className={styles.section}>
       <Reveal>
         <div className={styles.eyebrow}>{eyebrow}</div>
-        <h2 className={styles.h2}>{title}</h2>
+        <h2 className={styles.h2}>
+          {title}
+          {hintId && <TermHint id={hintId} label={title} />}
+        </h2>
         {children}
       </Reveal>
     </section>
@@ -343,7 +350,7 @@ export function ProReportView() {
       <hr className={styles.divider} />
 
       {/* ============ ПОЧЕМУ ТЯНЕТ ============ */}
-      <Section eyebrow="Механика притяжения" title={g("Почему тянет именно к {п:нему|ней}")}>
+      <Section eyebrow="Механика притяжения" title={g("Почему тянет именно к {п:нему|ней}")} hintId="proWhyPulls">
         {/* Развёрнутое объяснение — в подсказке наверху; здесь короткое
             напоминание, чтобы блок читался и при выборочном чтении. */}
         <p className={styles.lede}>
@@ -453,6 +460,11 @@ export function ProReportView() {
                 .filter((s) => composite.channels.some((c) => c.source === s))
                 .map((s) => ({ color: CHANNEL_SOURCE_COLOR[s], text: CHANNEL_SOURCE_LABEL[s] }))}
             />
+            <p className={styles.note}>
+              Схема выше — композит
+              <TermHint id="hdComposite" label="Композит" />: общая карта вашей пары, все
+              ворота обоих на одной схеме.
+            </p>
           </div>
         </div>
       </Section>
@@ -460,7 +472,7 @@ export function ProReportView() {
       <hr className={styles.divider} />
 
       {/* ============ ГДЕ ВЫ МЕНЯЕТЕ ДРУГ ДРУГА ============ */}
-      <Section eyebrow="Обусловленность" title="Где вы меняете друг друга">
+      <Section eyebrow="Обусловленность" title="Где вы меняете друг друга" hintId="proWhereChange">
         {condItems.slice(0, 2).map(({ side, item }, condIdx) => {
           const t = CONDITIONING_BY_CENTER[item.center];
           const s = side === "a" ? t.you : t.partner;
@@ -546,7 +558,7 @@ export function ProReportView() {
       <hr className={styles.divider} />
 
       {/* ============ ЧТО НЕ ИЗМЕНИТСЯ ============ */}
-      <Section eyebrow="Самая честная часть" title={g("Что в {п:нём|ней} не изменится, а что изменится")}>
+      <Section eyebrow="Самая честная часть" title={g("Что в {п:нём|ней} не изменится, а что изменится")} hintId="proTriadsSource">
         <p className={styles.lede}>{TRIAD_FRAME.intro}</p>
         <p className={styles.lede}>{g(TRIAD_FRAME.formula)}</p>
         <WaterSteamArt />
@@ -623,7 +635,7 @@ export function ProReportView() {
       <hr className={styles.divider} />
 
       {/* ============ ЧЕГО В ПАРЕ НЕТ ============ */}
-      <Section eyebrow="О чём обычно молчат" title="Чего в вашей паре нет">
+      <Section eyebrow="О чём обычно молчат" title="Чего в вашей паре нет" hintId="proAbsentHow">
         <p className={styles.lede}>{ABSENT_FRAME.intro}</p>
         <p className={styles.note}>{ABSENT_FRAME.norm}</p>
         <p className={styles.note}>{ABSENT_FRAME.water}</p>
