@@ -11,48 +11,52 @@ const HER = "#c9548a";
 const HIM = "#7e5bad";
 const GOLD = "#a17a2c";
 
-/** Две линии сходятся в одну: метафора канала, который замыкается вдвоём. */
+/**
+ * «Переплетение» — вариант А, выбран заказчиком из трёх предложенных.
+ *
+ * Две линии — её и его — переплетаются, как две жизни: пересеклись, поменялись
+ * сторонами, остались собой. В точке встречи золотое ядро с тонким ореолом.
+ * Симметрия даёт композиции спокойствие и завершённость, которых не хватало
+ * первой версии с асимметричным «хвостом».
+ */
 export function VignetteArt() {
   return (
     <svg
-      viewBox="0 0 340 56"
+      viewBox="0 0 340 64"
       role="img"
-      aria-label="Две линии, её и его, сходятся в одну общую"
+      aria-label="Две линии, её и его, переплетаются, встречаясь в золотом центре"
       style={{ width: "100%", height: "auto", display: "block" }}
     >
       <defs>
-        <linearGradient id="pro-vig-gold" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor={GOLD} stopOpacity="0.95" />
-          <stop offset="1" stopColor={GOLD} stopOpacity="0.55" />
+        <linearGradient id="pro-vig-her" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor={HER} />
+          <stop offset="1" stopColor="#a2537c" />
+        </linearGradient>
+        <linearGradient id="pro-vig-him" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor={HIM} />
+          <stop offset="1" stopColor="#5f4b91" />
         </linearGradient>
       </defs>
-      {/* Толщина и размер точек подобраны глазами: тонкая версия читалась как
-          случайная закорючка, а не как фирменный элемент. */}
       <path
-        d="M8 10 C 90 10, 120 28, 170 28"
+        d="M14 22 C 80 22, 100 42, 170 42 C 240 42, 260 22, 326 22"
         fill="none"
-        stroke={HER}
-        strokeWidth={3.2}
+        stroke="url(#pro-vig-her)"
+        strokeWidth={3}
         strokeLinecap="round"
       />
       <path
-        d="M8 46 C 90 46, 120 28, 170 28"
+        d="M14 42 C 80 42, 100 22, 170 22 C 240 22, 260 42, 326 42"
         fill="none"
-        stroke={HIM}
-        strokeWidth={3.2}
+        stroke="url(#pro-vig-him)"
+        strokeWidth={3}
         strokeLinecap="round"
       />
-      <path
-        d="M170 28 H 326"
-        fill="none"
-        stroke="url(#pro-vig-gold)"
-        strokeWidth={3.6}
-        strokeLinecap="round"
-      />
-      <circle cx={8} cy={10} r={5} fill={HER} />
-      <circle cx={8} cy={46} r={5} fill={HIM} />
-      <circle cx={170} cy={28} r={6} fill={GOLD} />
-      <circle cx={326} cy={28} r={3.2} fill={GOLD} opacity={0.5} />
+      <circle cx={14} cy={22} r={4.6} fill={HER} />
+      <circle cx={14} cy={42} r={4.6} fill={HIM} />
+      <circle cx={326} cy={22} r={4.6} fill={HIM} />
+      <circle cx={326} cy={42} r={4.6} fill={HER} />
+      <circle cx={170} cy={32} r={5.6} fill={GOLD} />
+      <circle cx={170} cy={32} r={10.5} fill="none" stroke={GOLD} strokeWidth={1.1} opacity={0.45} />
     </svg>
   );
 }
