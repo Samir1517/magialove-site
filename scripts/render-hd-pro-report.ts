@@ -151,24 +151,28 @@ for (const [side, data] of [["a", pro.a], ["b", pro.b]] as const) {
 // --- 4. Что не изменится -----------------------------------------------------
 h1("Что в нём не изменится, а что изменится");
 p("", TRIAD_FRAME.intro, "", TRIAD_FRAME.formula, "", TRIAD_FRAME.water, "", TRIAD_FRAME.trigger, "", TRIAD_FRAME.caution);
+// Пояснение про совпадение имён показывается один раз за разбор.
+let sameNameExplained = false;
 if (pro.shared.length) {
   h2("Темы, которые есть у вас обоих");
   p(TRIAD_FRAME.shared, "", TRIAD_FRAME.sharedHowToRead);
   for (const s of pro.shared) {
     const k = geneKey(s.gate)!;
     const gp = gateInPair(s.gate)!;
-    // У семи ворот из 64 имя уровня совпадает с именем самих ворот: 39-е
-    // «Провокация» и в тени «Провокация», 63-и «Сомнение» и в тени «Сомнение»,
-    // 34-е «Сила» и в даре «Сила». Это не сбой данных, а смысл: у таких ворот
-    // тема названа по своему самому чистому проявлению. Но напечатанное подряд
-    // одно и то же слово читается как ошибка, поэтому повтор не показываем.
+    // У семи ворот из 64 имя уровня совпадает с именем самих ворот: 39 и 63 —
+    // с тенью, 34, 54 и 59 — с даром, 43 и 52 — с сиддхи. Скрывать повтор
+    // нельзя: пустое место читается как потерянные данные. Объясняем один раз
+    // за разбор, при первом совпадении, — дальше слово печатается как есть.
     const nm = GATES[s.gate]?.name ?? "";
-    const lvl = (label: string, value: string) =>
-      value.toLowerCase() === nm.toLowerCase() ? label : `${label} «${value}»`;
+    const collides = [k.shadow, k.gift, k.siddhi].some((v) => v.toLowerCase() === nm.toLowerCase());
+    if (collides && !sameNameExplained) {
+      p("", TRIAD_FRAME.sameName);
+      sameNameExplained = true;
+    }
     p("", `${gateName(s.gate)}`,
-      `  ${lvl("в страхе", k.shadow)} — ${g(gp.shadow)}`,
-      `  ${lvl("в силе", k.gift)} — ${g(gp.gift)}`,
-      `  ${lvl("предел —", k.siddhi)}`);
+      `  в страхе «${k.shadow}» — ${g(gp.shadow)}`,
+      `  в силе «${k.gift}» — ${g(gp.gift)}`,
+      `  предел — «${k.siddhi}»`);
   }
 }
 
