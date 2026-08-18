@@ -401,7 +401,12 @@ export function ProReportView() {
                       <p className={styles.cardText}>{BRIDGE_NOTE.light}</p>
                       <p className={styles.cardText}>{BRIDGE_NOTE.shadow}</p>
                       <p className={styles.cardText}>{BRIDGE_NOTE.action}</p>
-                      <p className={styles.storyText}>{BRIDGE_NOTE.story}</p>
+                      {/* История спрятана под раскрытие: карточка легче, а
+                          нажатие — маленькая награда любопытству. */}
+                      <details className={styles.storyBox}>
+                        <summary>Как это выглядит у людей</summary>
+                        <p className={styles.storyText}>{BRIDGE_NOTE.story}</p>
+                      </details>
                     </div>
                   )}
                 </article>
@@ -636,7 +641,12 @@ export function ProReportView() {
                       <div className={styles.themeKeyRow}>
                         <span className={styles.themeKeyLabel}>Как с этим обращаться</span>
                         {g(gp.key)}
-                        {gp.story && <p className={styles.storyText}>{gp.story}</p>}
+                        {gp.story && (
+                          <details className={styles.storyBox}>
+                            <summary>Как это выглядит у людей</summary>
+                            <p className={styles.storyText}>{gp.story}</p>
+                          </details>
+                        )}
                       </div>
                     )}
                   </div>

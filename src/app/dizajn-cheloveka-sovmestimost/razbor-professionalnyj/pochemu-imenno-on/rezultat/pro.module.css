@@ -271,16 +271,45 @@
   font-weight: 600;
   color: var(--ink-dark);
 }
-/* История с именами: курсив и лёгкая отбивка отделяют её от инструкции —
- * читается как рассказ, а не как продолжение совета. */
+/* История с именами прячется под раскрытие: карточка легче, а нажатие —
+ * маленькая награда любопытству. Плюсик поворачивается при открытии. */
+.storyBox {
+  margin-top: 10px;
+}
+.storyBox summary {
+  cursor: pointer;
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+.storyBox summary::-webkit-details-marker {
+  display: none;
+}
+.storyBox summary::before {
+  content: "+";
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--accent-pink);
+  border-radius: 50%;
+  font-size: 0.8rem;
+  line-height: 1;
+  transition: transform 0.2s ease;
+}
+.storyBox[open] summary::before {
+  transform: rotate(45deg);
+}
 .storyText {
   font-style: italic;
   color: var(--ink-soft);
   font-size: 0.92rem;
   line-height: 1.65;
-  border-top: 1px dashed #f0dfe8;
-  padding-top: 10px;
-  margin: 12px 0 0;
+  margin: 8px 0 0;
 }
 .bridgeBox {
   border-left: 3px solid #a17a2c;
