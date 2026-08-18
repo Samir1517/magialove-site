@@ -235,6 +235,12 @@ export function ProReportView() {
         <div className={styles.heroNames}>{pairNames}</div>
         {label && <h1 className={styles.heroLabel}>Вы — {label}</h1>}
         <div className={styles.heroVignette}><VignetteArt /></div>
+        {/* Обещание с обложки продукта — первое, что она читает после оплаты.
+            Без него после пика-ярлыка сразу шло служебное «читай в своём
+            темпе», и эмоция покупки проваливалась в яму. */}
+        <p className={styles.heroPromise}>
+          {g("Почему тянет именно к {п:нему|ней} — и почему именно {п:он|она} умеет делать больно: это одно и то же место в вашей карте. Ниже мы его покажем.")}
+        </p>
         <div className={styles.heroLede}>
           <p>{OPENING.readFreely}</p>
           <p>{OPENING.whatThisIs}</p>
@@ -395,6 +401,7 @@ export function ProReportView() {
                       <p className={styles.cardText}>{BRIDGE_NOTE.light}</p>
                       <p className={styles.cardText}>{BRIDGE_NOTE.shadow}</p>
                       <p className={styles.cardText}>{BRIDGE_NOTE.action}</p>
+                      <p className={styles.storyText}>{BRIDGE_NOTE.story}</p>
                     </div>
                   )}
                 </article>
@@ -473,6 +480,13 @@ export function ProReportView() {
 
       {/* ============ ГДЕ ВЫ МЕНЯЕТЕ ДРУГ ДРУГА ============ */}
       <Section eyebrow="Обусловленность" title="Где вы меняете друг друга" hintId="proWhereChange">
+        {/* Крючок «то, что было всегда, но не имело названия»: эмоция здесь
+            создаётся не позитивом, а узнаванием больного — с обещанием выхода. */}
+        <p className={styles.lede}>
+          Дальше — то, что происходило у вас годами, но не имело названия. Кое-что из этого
+          читать неприятно. Именно оно обычно оказывается самым полезным: у названного
+          появляется выход, у безымянного — только повторение.
+        </p>
         {condItems.slice(0, 2).map(({ side, item }, condIdx) => {
           const t = CONDITIONING_BY_CENTER[item.center];
           const s = side === "a" ? t.you : t.partner;
@@ -622,6 +636,7 @@ export function ProReportView() {
                       <div className={styles.themeKeyRow}>
                         <span className={styles.themeKeyLabel}>Как с этим обращаться</span>
                         {g(gp.key)}
+                        {gp.story && <p className={styles.storyText}>{gp.story}</p>}
                       </div>
                     )}
                   </div>
@@ -813,6 +828,15 @@ export function ProReportView() {
           </ol>
         </div>
 
+        {/* Гордость владения: чем именно она теперь владеет — в цифрах её
+            пары. Это и «не зря купила», и готовый пересказ подруге. */}
+        <p className={styles.mark}>
+          Всё выше собрано только по вашим двум датам: {chanItems.length}{" "}
+          {plural(chanItems.length, "место", "места", "мест")}, где вы достраиваете друг друга,{" "}
+          {condItems.length} {plural(condItems.length, "зона", "зоны", "зон")} взаимного влияния,{" "}
+          {pro.shared.length} {plural(pro.shared.length, "общая тема", "общие темы", "общих тем")} и
+          полная карта на 52 точки. Второй такой пары нет.
+        </p>
         <div className={styles.disclaimer}>{CLOSING.disclaimer}</div>
         <div className={styles.warmth}>{g(CLOSING.warmth)}</div>
       </Section>
