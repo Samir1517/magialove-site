@@ -527,6 +527,12 @@ export function ProReportView() {
                 <span className={styles.fixedLabel}>Изменится</span>
                 {g(s.changeable)}
               </div>
+              {s.story && (
+                <details className={styles.storyBox}>
+                  <summary>Как это выглядит у людей</summary>
+                  <p className={styles.storyText}>{s.story}</p>
+                </details>
+              )}
             </article>
           );
         })}
@@ -566,6 +572,12 @@ export function ProReportView() {
                       <span className={styles.fixedLabel}>Изменится</span>
                       {g(s.changeable)}
                     </div>
+                    {s.story && (
+                      <details className={styles.storyBox}>
+                        <summary>Как это выглядит у людей</summary>
+                        <p className={styles.storyText}>{s.story}</p>
+                      </details>
+                    )}
                   </div>
                 </details>
               );
@@ -684,6 +696,10 @@ export function ProReportView() {
               })}
             </ul>
             <p className={styles.note}>{ABSENT_FRAME.halfAction}</p>
+            <details className={styles.storyBox}>
+              <summary>Как это выглядит у людей</summary>
+              <p className={styles.storyText}>{ABSENT_FRAME.halfStory}</p>
+            </details>
           </>
         )}
 

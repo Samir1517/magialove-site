@@ -123,7 +123,7 @@ channels.slice(0, DEEP).forEach((item) => {
   const ch = CHANNELS.find((c) => c.key === item.channelKey)!;
   h2(`${ch.name} (${ch.key})${item.kind === "bridge" ? " · и это мост" : ""}`);
   p("", g(t.appears), "", `Почему тянет. ${g(t.pull)}`, "", `Обратная сторона. ${g(t.shadow)}`);
-  if (item.kind === "bridge") p("", BRIDGE_NOTE.light, "", BRIDGE_NOTE.shadow, "", BRIDGE_NOTE.action);
+  if (item.kind === "bridge") p("", BRIDGE_NOTE.light, "", BRIDGE_NOTE.shadow, "", BRIDGE_NOTE.action, "", `[история] ${BRIDGE_NOTE.story}`);
 });
 
 const rest = channels.slice(DEEP);
@@ -221,6 +221,7 @@ if (pro.shared.length) {
     // Ключ к качеству: как с чертой обращаться, чтобы она работала на пару.
     // Есть не у всех ворот намеренно — только где он бытовой и сильный.
     if (gp.key) p(`  как с этим обращаться — ${g(gp.key)}`);
+    if (gp.story) p(`  [история] ${gp.story}`);
   }
 }
 
