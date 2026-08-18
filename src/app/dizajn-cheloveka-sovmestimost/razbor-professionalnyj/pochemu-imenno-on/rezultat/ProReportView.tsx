@@ -579,7 +579,9 @@ export function ProReportView() {
                     </div>
                     <div className={styles.themeRow}>
                       <span className={styles.themeLevel}>предел</span>
-                      <span className={styles.themeText}>«{k.siddhi}»</span>
+                      <span className={styles.themeText}>
+                        <span className={styles.themeName}>«{k.siddhi}»</span> — {g(gp.siddhi)}
+                      </span>
                     </div>
                     {gp.key && (
                       <div className={styles.themeKeyRow}>
