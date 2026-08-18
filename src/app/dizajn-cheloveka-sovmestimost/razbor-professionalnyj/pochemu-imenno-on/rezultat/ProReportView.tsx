@@ -34,6 +34,7 @@ import { OPENING, TERM_HINTS, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from
 import { CHANNEL_SOURCE_COLOR, CHANNEL_SOURCE_LABEL } from "@/lib/content/human-design";
 
 import { Bodygraph } from "@/components/viz/Bodygraph";
+import { TermHint } from "@/components/viz/TermHint";
 import { Legend } from "@/components/viz/Legend";
 import { Reveal } from "@/components/viz/Reveal";
 import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
@@ -296,7 +297,10 @@ export function ProReportView() {
           {tileTop && (
             <div className={styles.tile}>
               <div className={styles.tileLabel}>Что вас держит</div>
-              <div className={styles.tileValue}>Канал {tileTop.name}</div>
+              <div className={styles.tileValue}>
+                Канал {tileTop.name}
+                <TermHint id="hdChannel" label="Канал" />
+              </div>
               <div className={styles.tileNote}>
                 {channelTheme(tileTop.key)} Каждый закрывает другому недостающую половину —
                 поодиночке этого нет ни у кого из вас.
@@ -365,7 +369,12 @@ export function ProReportView() {
                 >
                   <h3 className={styles.cardTitle}>
                     {ch.name} ({ch.key})
-                    {isBridge && <span className={styles.cardTag}>мост</span>}
+                    {isBridge && (
+                      <>
+                        <span className={styles.cardTag}>мост</span>
+                        <TermHint id="hdBridge" label="Мост" />
+                      </>
+                    )}
                   </h3>
                   <p className={styles.cardText}>{g(t.appears)}</p>
                   <p className={styles.cardText}>
@@ -452,7 +461,7 @@ export function ProReportView() {
 
       {/* ============ ГДЕ ВЫ МЕНЯЕТЕ ДРУГ ДРУГА ============ */}
       <Section eyebrow="Обусловленность" title="Где вы меняете друг друга">
-        {condItems.slice(0, 2).map(({ side, item }) => {
+        {condItems.slice(0, 2).map(({ side, item }, condIdx) => {
           const t = CONDITIONING_BY_CENTER[item.center];
           const s = side === "a" ? t.you : t.partner;
           return (
@@ -461,9 +470,12 @@ export function ProReportView() {
                 {side === "a" ? `${heName} влияет на тебя` : g("Ты влияешь на {п:него|неё}")}: {t.topic}
               </h3>
               <p className={styles.condMeta}>
-                Центр «{centerLabel(item.center)}» открыт {side === "a" ? "у тебя" : "у партнёра"}, а{" "}
+                Центр «{centerLabel(item.center)}»
+                {condIdx === 0 && <TermHint id="hdCenter" label="Центр" />} открыт{" "}
+                {side === "a" ? "у тебя" : "у партнёра"}, а{" "}
                 {side === "a" ? "у партнёра" : "у тебя"} включён воротами{" "}
                 {item.partnerGates.map(gateName).join(", ")}
+                {condIdx === 0 && <TermHint id="hdGate" label="Ворота" />}
               </p>
               <p className={styles.cardText}>{g(t.organ)}</p>
               <p className={styles.cardText}>{g(s.scene)}</p>
@@ -548,7 +560,7 @@ export function ProReportView() {
             <p className={styles.note}>{TRIAD_FRAME.shared}</p>
             <p className={styles.note}>{TRIAD_FRAME.sharedHowToRead}</p>
             <p className={styles.mark}>{PERSONALIZED_MARK}</p>
-            {pro.shared.map((sh) => {
+            {pro.shared.map((sh, sharedIdx) => {
               const k = geneKey(sh.gate)!;
               const gp = gateInPair(sh.gate)!;
               const nm = gateInfo(sh.gate)?.name ?? "";
@@ -565,20 +577,31 @@ export function ProReportView() {
                       <span className={styles.themeShared} aria-hidden="true" />
                       {gateName(sh.gate)}
                     </div>
+                    {/* Вопросики уровней стоят только в первой карточке: на
+                        девяти подряд они превратились бы в визуальный шум. */}
                     <div className={styles.themeRow}>
-                      <span className={styles.themeLevel}>в страхе</span>
+                      <span className={styles.themeLevel}>
+                        в страхе
+                        {sharedIdx === 0 && <TermHint id="hdShadow" label="В страхе" />}
+                      </span>
                       <span className={styles.themeText}>
                         <span className={styles.themeName}>«{k.shadow}»</span> — {g(gp.shadow)}
                       </span>
                     </div>
                     <div className={styles.themeRow}>
-                      <span className={styles.themeLevel}>в силе</span>
+                      <span className={styles.themeLevel}>
+                        в силе
+                        {sharedIdx === 0 && <TermHint id="hdGift" label="В силе" />}
+                      </span>
                       <span className={styles.themeText}>
                         <span className={styles.themeName}>«{k.gift}»</span> — {g(gp.gift)}
                       </span>
                     </div>
                     <div className={styles.themeRow}>
-                      <span className={styles.themeLevel}>предел</span>
+                      <span className={styles.themeLevel}>
+                        предел
+                        {sharedIdx === 0 && <TermHint id="hdSiddhi" label="Предел" />}
+                      </span>
                       <span className={styles.themeText}>
                         <span className={styles.themeName}>«{k.siddhi}»</span> — {g(gp.siddhi)}
                       </span>
@@ -673,16 +696,17 @@ export function ProReportView() {
           {([
             [nameA ? `${nameA} — ты` : "Ты", a],
             [nameB || "Партнёр", b],
-          ] as const).map(([title, design]) => (
+          ] as const).map(([title, design], personIdx) => (
             <div key={title}>
               <div className={styles.mapColTitle}>{title}</div>
               {([
-                ["Личность", design.personalityGates, styles.dotPersonality, "то, как человек себя знает"],
-                ["Дизайн", design.designGates, styles.dotDesign, "то, что видят другие"],
-              ] as const).map(([part, gates, dotCls, hint]) => (
+                ["Личность", design.personalityGates, styles.dotPersonality, "то, как человек себя знает", "hdPersonality"],
+                ["Дизайн", design.designGates, styles.dotDesign, "то, что видят другие", "hdDesign"],
+              ] as const).map(([part, gates, dotCls, hint, hintId]) => (
                 <div key={part}>
                   <div className={styles.mapPart}>
                     <span className={dotCls} aria-hidden="true" /> {part} — {hint}
+                    {personIdx === 0 && <TermHint id={hintId} label={part} />}
                   </div>
                   {gates.map((x, i) => {
                     const body = ACTIVATION_BODIES[i];
@@ -707,6 +731,11 @@ export function ProReportView() {
             </div>
           ))}
         </div>
+        <p className={styles.note}>
+          Пометки «идёт само» и «даётся усилием»
+          <TermHint id="hdPolarity" label="Идёт само и даётся усилием" /> показывают, где
+          качество раскрывается легко, а где то же самое достаётся трудом.
+        </p>
       </Section>
 
       <hr className={styles.divider} />
