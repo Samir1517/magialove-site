@@ -30,7 +30,7 @@ import { CONDITIONING_BY_CENTER } from "@/lib/content/human-design-pro";
 import { channelPair, pairLabel, BRIDGE_NOTE } from "@/lib/content/human-design-channels-pair";
 import { gateInPair, TRIAD_FRAME, PERSONALIZED_MARK } from "@/lib/content/human-design-triads";
 import { ABSENT_FRAME, channelAbsent } from "@/lib/content/human-design-absent";
-import { OPENING, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "@/lib/content/human-design-report-frame";
+import { OPENING, TERM_HINTS, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "@/lib/content/human-design-report-frame";
 import { CHANNEL_SOURCE_COLOR, CHANNEL_SOURCE_LABEL } from "@/lib/content/human-design";
 
 import { Bodygraph } from "@/components/viz/Bodygraph";
@@ -263,6 +263,33 @@ export function ProReportView() {
         </div>
       </header>
 
+      {/* ============ ПОДСКАЗКИ ПЕРЕД ЧТЕНИЕМ ============ */}
+      {/* Стоят до первого употребления терминов: тайлы ниже уже говорят
+          «канал» и «центр открыт». Раскрываются и закрываются нажатием. */}
+      <section className={styles.section}>
+        <p className={styles.hintIntro}>{TERM_HINTS.intro}</p>
+        <details className={`${styles.detailsBox} ${styles.hintBox}`}>
+          <summary>
+            <span className={styles.compactName}>{TERM_HINTS.channelTitle}</span>
+          </summary>
+          <div className={styles.detailsInner}>
+            {TERM_HINTS.channelBody.map((p) => (
+              <p key={p.slice(0, 24)} className={styles.cardText}>{p}</p>
+            ))}
+          </div>
+        </details>
+        <details className={`${styles.detailsBox} ${styles.hintBox}`}>
+          <summary>
+            <span className={styles.compactName}>{TERM_HINTS.centersTitle}</span>
+          </summary>
+          <div className={styles.detailsInner}>
+            {TERM_HINTS.centersBody.map((p) => (
+              <p key={p.slice(0, 24)} className={styles.cardText}>{p}</p>
+            ))}
+          </div>
+        </details>
+      </section>
+
       {/* ============ ГЛАВНОЕ ЗА МИНУТУ ============ */}
       <Section eyebrow="Сначала ответ" title="Главное за минуту">
         <div className={styles.tiles}>
@@ -313,14 +340,13 @@ export function ProReportView() {
 
       {/* ============ ПОЧЕМУ ТЯНЕТ ============ */}
       <Section eyebrow="Механика притяжения" title={g("Почему тянет именно к {п:нему|ней}")}>
-        {/* Единственное место, где термины «канал» и «ворота» получают бытовой
-            перевод, — дальше страница пользуется ими свободно. */}
+        {/* Развёрнутое объяснение — в подсказке наверху; здесь короткое
+            напоминание, чтобы блок читался и при выборочном чтении. */}
         <p className={styles.lede}>
-          На карте Дизайна человека между центрами протянуты каналы — ниточки из двух
-          половинок. Каждая половинка называется воротами, у неё свой номер и своё имя.
-          Когда одна половинка твоя, а вторая — {g("{п:его|её}")}, канал замыкается только
-          вдвоём: у пары появляется то, чего нет ни у одного поодиночке. Вот ваши такие
-          места.
+          Канал — два качества-ворот, которые вместе создают особенную способность.
+          Здесь — каналы, которые замыкаются только между вами: одна половинка твоя,
+          вторая — {g("{п:его|её}")}. Вот что у пары появляется такого, чего нет ни у
+          одного поодиночке.
         </p>
         <p className={styles.mark}>{PERSONALIZED_MARK}</p>
         <div className={styles.channelsGrid}>
@@ -366,24 +392,36 @@ export function ProReportView() {
                   {plural(chanItems.length - DEEP, "место", "места", "мест")}, где вы достраиваете
                   друг друга, — коротко:
                 </p>
-                <ul className={styles.compactList}>
-                  {chanItems.slice(DEEP).map((item) => {
-                    const t = channelPair(item.channelKey!)!;
-                    const ch = CHANNELS.find((c) => c.key === item.channelKey)!;
-                    return (
-                      <li
-                        key={ch.key}
-                        id={`pro-ch-${ch.key}`}
-                        className={styles.compactItem}
-                        onMouseEnter={() => setHoverChannel(ch.key)}
-                        onMouseLeave={() => setHoverChannel(null)}
-                      >
+                {/* Каждое сжатое место разворачивается в полное описание — то же,
+                    что у больших карточек: появляется / почему тянет / обратная
+                    сторона. Коротко по умолчанию, глубина по желанию. */}
+                {chanItems.slice(DEEP).map((item) => {
+                  const t = channelPair(item.channelKey!)!;
+                  const ch = CHANNELS.find((c) => c.key === item.channelKey)!;
+                  return (
+                    <details
+                      key={ch.key}
+                      id={`pro-ch-${ch.key}`}
+                      className={styles.detailsBox}
+                      onMouseEnter={() => setHoverChannel(ch.key)}
+                      onMouseLeave={() => setHoverChannel(null)}
+                    >
+                      <summary>
                         <span className={styles.compactName}>{ch.name} ({ch.key})</span>
-                        <p className={styles.compactText}>{g(t.pull)}</p>
-                      </li>
-                    );
-                  })}
-                </ul>
+                        <span className={styles.compactText}>{channelTheme(ch.key)}</span>
+                      </summary>
+                      <div className={styles.detailsInner}>
+                        <p className={styles.cardText}>{g(t.appears)}</p>
+                        <p className={styles.cardText}>
+                          <span className={styles.cardLabel}>Почему тянет. </span>{g(t.pull)}
+                        </p>
+                        <p className={styles.cardText}>
+                          <span className={styles.cardLabel}>Обратная сторона. </span>{g(t.shadow)}
+                        </p>
+                      </div>
+                    </details>
+                  );
+                })}
               </>
             )}
           </div>

@@ -122,6 +122,18 @@
   color: #fff;
 }
 
+/* Подсказки перед чтением: заметнее обычных details — на них стоит весь разбор. */
+.hintIntro {
+  font-size: 0.92rem;
+  color: var(--ink-dark);
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+.hintBox {
+  border-color: #ecd6e2;
+  background: #fdf7fa;
+}
+
 /* --- Секции ----------------------------------------------------------------- */
 
 .section {

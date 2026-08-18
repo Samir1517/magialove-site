@@ -17,7 +17,7 @@ import { CHANNEL_PAIR, channelPair, BRIDGE_NOTE, PAIR_LABEL, pairLabel } from ".
 import { GATE_IN_PAIR, gateInPair, TRIAD_FRAME } from "../src/lib/content/human-design-triads";
 import { applyGender, findUnexpanded } from "../src/lib/content/gender";
 import { ABSENT_FRAME, CHANNEL_ABSENT, channelAbsent } from "../src/lib/content/human-design-absent";
-import { OPENING, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "../src/lib/content/human-design-report-frame";
+import { OPENING, TERM_HINTS, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "../src/lib/content/human-design-report-frame";
 import type { Person } from "../src/lib/engines/types";
 
 // Пол по умолчанию: женский у первого партнёра, мужской у второго — так же,
@@ -339,11 +339,17 @@ for (const [name, frame] of [
   ["ABSENT_FRAME", ABSENT_FRAME],
   ["OPENING", OPENING],
   ["MAP_FRAME", MAP_FRAME],
+  ["TERM_HINTS", TERM_HINTS],
 ] as const) {
   for (const [key, value] of Object.entries(frame)) {
-    // Ключи на «Title» — короткие заголовки по замыслу.
+    // Ключи на «Title» — короткие заголовки по замыслу. Значение может быть
+    // массивом абзацев — проверяется каждый.
     const min = key.endsWith("Title") ? 10 : 80;
-    check(typeof value === "string" && value.trim().length > min, `${name}.${key}: пусто или слишком коротко`);
+    const items = Array.isArray(value) ? value : [value];
+    check(items.length > 0, `${name}.${key}: пусто`);
+    for (const item of items) {
+      check(typeof item === "string" && item.trim().length > min, `${name}.${key}: пусто или слишком коротко`);
+    }
   }
 }
 
