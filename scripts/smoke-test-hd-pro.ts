@@ -16,7 +16,7 @@ import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
 import { CHANNEL_PAIR, channelPair, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
 import { GATE_IN_PAIR, gateInPair, TRIAD_FRAME } from "../src/lib/content/human-design-triads";
 import { applyGender, findUnexpanded } from "../src/lib/content/gender";
-import { ABSENT_FRAME } from "../src/lib/content/human-design-absent";
+import { ABSENT_FRAME, CHANNEL_ABSENT, channelAbsent } from "../src/lib/content/human-design-absent";
 import { OPENING, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "../src/lib/content/human-design-report-frame";
 import type { Person } from "../src/lib/engines/types";
 
@@ -345,6 +345,17 @@ for (const [name, frame] of [
     const min = key.endsWith("Title") ? 10 : 80;
     check(typeof value === "string" && value.trim().length > min, `${name}.${key}: пусто или слишком коротко`);
   }
+}
+
+// У каждого канала обязана быть фраза про его отсутствие: без неё в блоке
+// «чего нет» останется голое название, а это читается как оглавление.
+for (const ch of CHANNELS) {
+  const t = channelAbsent(ch.key);
+  check(Boolean(t), `нет фразы об отсутствии для канала ${ch.key} «${ch.name}»`);
+  if (t) check(t.trim().length > 60, `${ch.key}: фраза об отсутствии слишком короткая`);
+}
+for (const key of Object.keys(CHANNEL_ABSENT)) {
+  check(CHANNELS.some((c) => c.key === key), `канала ${key} не существует — опечатка в ключе`);
 }
 
 // Каждое из тринадцати тел обязано быть объяснено: строка карты без пояснения

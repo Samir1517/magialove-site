@@ -20,7 +20,7 @@ import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
 import { channelPair, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
 import { gateInPair, TRIAD_FRAME, PERSONALIZED_MARK } from "../src/lib/content/human-design-triads";
-import { ABSENT_FRAME } from "../src/lib/content/human-design-absent";
+import { ABSENT_FRAME, channelAbsent } from "../src/lib/content/human-design-absent";
 import { OPENING, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "../src/lib/content/human-design-report-frame";
 import { applyGender } from "../src/lib/content/gender";
 import type { Person } from "../src/lib/engines/types";
@@ -52,6 +52,9 @@ const h1 = (s: string) => p("", "", "=".repeat(70), s.toUpperCase(), "=".repeat(
 const h2 = (s: string) => p("", `— ${s} —`);
 const gateName = (n: number) => `${n} «${GATES[n]?.name ?? "?"}»`;
 
+/** Строчная первая буква: тема канала вставляется в середину фразы. */
+const lower = (s: string) => (s ? s[0].toLowerCase() + s.slice(1) : s);
+
 /** Согласование числительного: 1 место, 2 места, 5 мест. */
 function plural(n: number, one: string, few: string, many: string): string {
   const mod100 = n % 100;
@@ -75,8 +78,11 @@ const topChannel = ranked.find((x) => x.kind === "bridge" || x.kind === "closedH
 const topCond = ranked.find((x) => x.kind === "conditioningBare" || x.kind === "conditioningAnchored");
 if (topChannel) {
   const ch = CHANNELS.find((c) => c.key === topChannel.channelKey)!;
-  p("", `ЧТО ВАС ДЕРЖИТ. ${channelTheme(ch.key) ?? ch.name} Это место, где каждый достраивает другого: ` +
-    `${topChannel.kind === "bridge" ? "и оно же сшивает разрыв в карте — отсюда ощущение целости рядом с ним." : "поодиночке этого нет ни у кого из вас."}`);
+  // Тема канала — это обрывок фразы, и без подводки она читалась как начатая
+  // с середины мысль. Сначала называем, о чём речь, потом саму тему.
+  p("", `ЧТО ВАС ДЕРЖИТ. Сильнее всего вас связывает одна тема — ${lower(channelTheme(ch.key) ?? ch.name)} ` +
+    `Каждый из вас закрывает другому её недостающую половину, и поодиночке этого нет ни у кого. ` +
+    `${topChannel.kind === "bridge" ? "Больше того: этот же канал сшивает две части карты, которые до встречи жили отдельно, — отсюда ощущение целости рядом с ним." : ""}`.trim());
 }
 if (topCond) {
   const t = CONDITIONING_BY_CENTER[topCond.center!];
@@ -151,10 +157,18 @@ if (pro.shared.length) {
   for (const s of pro.shared) {
     const k = geneKey(s.gate)!;
     const gp = gateInPair(s.gate)!;
+    // У семи ворот из 64 имя уровня совпадает с именем самих ворот: 39-е
+    // «Провокация» и в тени «Провокация», 63-и «Сомнение» и в тени «Сомнение»,
+    // 34-е «Сила» и в даре «Сила». Это не сбой данных, а смысл: у таких ворот
+    // тема названа по своему самому чистому проявлению. Но напечатанное подряд
+    // одно и то же слово читается как ошибка, поэтому повтор не показываем.
+    const nm = GATES[s.gate]?.name ?? "";
+    const lvl = (label: string, value: string) =>
+      value.toLowerCase() === nm.toLowerCase() ? label : `${label} «${value}»`;
     p("", `${gateName(s.gate)}`,
-      `  в страхе «${k.shadow}» — ${g(gp.shadow)}`,
-      `  в силе «${k.gift}» — ${g(gp.gift)}`,
-      `  предел — «${k.siddhi}»`);
+      `  ${lvl("в страхе", k.shadow)} — ${g(gp.shadow)}`,
+      `  ${lvl("в силе", k.gift)} — ${g(gp.gift)}`,
+      `  ${lvl("предел —", k.siddhi)}`);
   }
 }
 
@@ -179,7 +193,9 @@ for (const t of half) {
 p("", ABSENT_FRAME.halfAction);
 h2(ABSENT_FRAME.noneTitle);
 p(ABSENT_FRAME.none, "");
-for (const t of none) p(`• ${channelTheme(t.channelKey) ?? t.channelName}`);
+// Голое перечисление названий читалось как оглавление и не говорило ничего.
+// Теперь у каждой темы своя фраза о том, чего именно не происходит.
+for (const t of none) p(`• ${channelAbsent(t.channelKey) ?? t.channelName}`, "");
 p("", ABSENT_FRAME.closing);
 
 // --- 6. Карта ----------------------------------------------------------------
@@ -214,14 +230,24 @@ for (const center of [...a.definedCenters]) {
   p(`• ${CONDITIONING_BY_CENTER[center].topic} — центр «${CENTER_NAMES[center]}» у тебя включён, это твоё собственное и не зависит от него.`);
 }
 
+// Единая форма «что — почему легко». Прежде здесь мешались темы каналов целыми
+// предложениями и ворота одной строкой, и список читался рвано.
+// Причина стоит один раз подзаголовком, а не хвостом у каждой строки: иначе
+// одна и та же фраза повторяется четыре раза подряд и список читается как
+// сбой шаблона.
 h2(CLOSING.easyTitle);
 p(CLOSING.easyHint, "");
-for (const item of ranked.filter((x) => x.kind === "bridge" || x.kind === "closedHanging").slice(0, 4)) {
-  const ch = CHANNELS.find((c) => c.key === item.channelKey)!;
-  p(`• ${channelTheme(ch.key) ?? ch.name}`);
+const easyChannels = ranked.filter((x) => x.kind === "bridge" || x.kind === "closedHanging").slice(0, 4);
+if (easyChannels.length) {
+  p("Здесь вы достраиваете друг друга — поодиночке этого нет ни у кого из вас:");
+  for (const item of easyChannels) {
+    const ch = CHANNELS.find((c) => c.key === item.channelKey)!;
+    p(`  • ${ch.name} — ${lower(channelTheme(ch.key) ?? "")}`);
+  }
 }
-for (const s of pro.shared.slice(0, 3)) {
-  p(`• ${gateName(s.gate)} — общая тема: понимаете друг друга здесь без слов.`);
+if (pro.shared.length) {
+  p("", "Здесь вы устроены одинаково — договариваться об этом не нужно:");
+  p(`  • ${pro.shared.slice(0, 5).map((s) => GATES[s.gate]?.name ?? String(s.gate)).join(", ")}`);
 }
 
 h2(CLOSING.avoidTitle);
@@ -230,7 +256,7 @@ for (const [side, data] of [["a", pro.a], ["b", pro.b]] as const) {
   for (const c of data.conditioning.filter((x) => x.ownGates.length === 0)) {
     const t = CONDITIONING_BY_CENTER[c.center];
     p(`• Решать вопросы про «${t.topic}» на усталости и в спешке: ` +
-      `${side === "a" ? "здесь ты" : "здесь партнёр"} принимает чужое за своё сильнее всего.`);
+      `${side === "a" ? "здесь ты принимаешь" : "здесь партнёр принимает"} чужое за своё сильнее всего.`);
   }
 }
 h2(CLOSING.questionsTitle);
