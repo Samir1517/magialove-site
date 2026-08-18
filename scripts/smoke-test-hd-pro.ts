@@ -13,7 +13,7 @@ import { CENTER_NAMES, CHANNELS } from "../src/lib/engines/human-design-tables";
 import { GATES } from "../src/lib/data/human_design/gates";
 import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
-import { CHANNEL_PAIR, channelPair, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
+import { CHANNEL_PAIR, channelPair, BRIDGE_NOTE, PAIR_LABEL, pairLabel } from "../src/lib/content/human-design-channels-pair";
 import { GATE_IN_PAIR, gateInPair, TRIAD_FRAME } from "../src/lib/content/human-design-triads";
 import { applyGender, findUnexpanded } from "../src/lib/content/gender";
 import { ABSENT_FRAME, CHANNEL_ABSENT, channelAbsent } from "../src/lib/content/human-design-absent";
@@ -380,6 +380,18 @@ for (const q of CLOSING.questions) {
   );
 }
 check(CLOSING.disclaimer.length > 200, "дисклеймер слишком короткий для финальной мысли");
+check(findUnexpanded(CLOSING.warmth).length === 0, "warmth: сломанная разметка");
+
+// Ярлык пары обязан быть у всех 36 каналов: главный канал может оказаться
+// любым, и пара без имени выглядит как сбой.
+for (const ch of CHANNELS) {
+  const l = pairLabel(ch.key);
+  check(Boolean(l), `нет ярлыка пары для канала ${ch.key} «${ch.name}»`);
+  if (l) check(l.trim().length >= 15 && l.trim().length <= 80, `${ch.key}: ярлык вне разумной длины`);
+}
+for (const key of Object.keys(PAIR_LABEL)) {
+  check(CHANNELS.some((c) => c.key === key), `ярлык для несуществующего канала ${key}`);
+}
 
 console.log("\n=== Финал разбора ===");
 console.log(`${CLOSING.questionsTitle}:`);

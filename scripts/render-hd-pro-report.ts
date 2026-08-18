@@ -18,7 +18,7 @@ import { gateLineNameShort } from "../src/lib/data/human_design/gate-line-names"
 import { linePolarity } from "../src/lib/data/human_design/line-polarity";
 import { geneKey } from "../src/lib/data/human_design/gene-keys";
 import { CONDITIONING_BY_CENTER } from "../src/lib/content/human-design-pro";
-import { channelPair, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
+import { channelPair, pairLabel, BRIDGE_NOTE } from "../src/lib/content/human-design-channels-pair";
 import { gateInPair, TRIAD_FRAME, PERSONALIZED_MARK } from "../src/lib/content/human-design-triads";
 import { ABSENT_FRAME, channelAbsent } from "../src/lib/content/human-design-absent";
 import { OPENING, MAP_FRAME, ACTIVATION_BODY_MEANING, CLOSING } from "../src/lib/content/human-design-report-frame";
@@ -39,6 +39,12 @@ const partnerB: Person = {
   birthTimeKnown: true,
   birthPlace: { city: "Санкт-Петербург", lat: 59.9311, lon: 30.3609, tz: "Europe/Moscow" },
 };
+
+// Имена — как их введут в форму. В тексте используются только в именительном
+// падеже (шапка, заголовки карт, схема «кто → кого»): склонять русские имена
+// автоматикой нельзя, а «влияет на Сергея» требует винительного.
+const NAME_A = "Анна";
+const NAME_B = "Сергей";
 
 const a = calcPersonalDesign(partnerA);
 const b = calcPersonalDesign(partnerB);
@@ -66,7 +72,7 @@ function plural(n: number, one: string, few: string, many: string): string {
 }
 
 // --- 1. Начало ---------------------------------------------------------------
-h1("Профессиональный разбор пары");
+h1(`Профессиональный разбор пары: ${NAME_A} и ${NAME_B}`);
 p("", OPENING.readFreely, "", OPENING.whatThisIs, "", OPENING.howWeCount);
 
 // --- 1a. Главное за минуту ---------------------------------------------------
@@ -75,6 +81,12 @@ p("", OPENING.readFreely, "", OPENING.whatThisIs, "", OPENING.howWeCount);
 // принципиально более спокойный режим чтения.
 h1("Главное за минуту");
 const topChannel = ranked.find((x) => x.kind === "bridge" || x.kind === "closedHanging");
+// Ярлык пары — качественный вердикт вместо процента, приём Truity. Имя
+// собирается из главного канала пары, поэтому у разных пар оно разное.
+if (topChannel) {
+  const label = pairLabel(topChannel.channelKey!);
+  if (label) p("", `ВЫ — ${label.toUpperCase()}.`);
+}
 const topCond = ranked.find((x) => x.kind === "conditioningBare" || x.kind === "conditioningAnchored");
 if (topChannel) {
   const ch = CHANNELS.find((c) => c.key === topChannel.channelKey)!;
@@ -148,7 +160,9 @@ const COND_DEEP = 2;
 condItems.slice(0, COND_DEEP).forEach(({ side, item: c }) => {
   const t = CONDITIONING_BY_CENTER[c.center];
   const s = side === "a" ? t.you : t.partner;
-  h2(`${side === "a" ? "Партнёр влияет на тебя" : "Ты влияешь на партнёра"}: ${t.topic}`);
+  // Имя безопасно только в именительном падеже, поэтому «Сергей влияет на
+  // тебя» — с именем, а обратное направление — через местоимение с разметкой.
+  h2(`${side === "a" ? `${NAME_B} влияет на тебя` : g("Ты влияешь на {п:него|неё}")}: ${t.topic}`);
   // Слово «центр» стоит здесь не для красоты: названия центров разного рода
   // («Селезёнка», «Горло», «Сакральный»), и без него выходило «Селезёнка
   // открыт». С «центром» прилагательное согласуется всегда.
@@ -239,7 +253,7 @@ p("", ABSENT_FRAME.closing);
 // --- 6. Карта ----------------------------------------------------------------
 h1("Полная карта: 26 активаций каждого");
 p("", MAP_FRAME.intro, "", MAP_FRAME.twoMoments, "", MAP_FRAME.personality, "", MAP_FRAME.design, "", MAP_FRAME.polarity);
-for (const [label, design] of [["Ты", a], ["Партнёр", b]] as const) {
+for (const [label, design] of [[`${NAME_A} — ты`, a], [NAME_B, b]] as const) {
   h2(label);
   for (const [side, list] of [["Личность", design.personalityGates], ["Дизайн", design.designGates]] as const) {
     p("", `${side}:`);
@@ -300,4 +314,4 @@ for (const [side, data] of [["a", pro.a], ["b", pro.b]] as const) {
 h2(CLOSING.questionsTitle);
 p(CLOSING.questionsHint, "");
 CLOSING.questions.forEach((q, i) => p(`  ${i + 1}. ${q}`));
-p("", "", CLOSING.disclaimer);
+p("", "", CLOSING.disclaimer, "", g(CLOSING.warmth));
