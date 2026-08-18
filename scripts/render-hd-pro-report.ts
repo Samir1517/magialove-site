@@ -313,5 +313,5 @@ for (const [side, data] of [["a", pro.a], ["b", pro.b]] as const) {
 }
 h2(CLOSING.questionsTitle);
 p(CLOSING.questionsHint, "");
-CLOSING.questions.forEach((q, i) => p(`  ${i + 1}. ${q}`));
+CLOSING.questions.forEach((q, i) => p(`  ${i + 1}. ${g(q)}`));
 p("", "", CLOSING.disclaimer, "", g(CLOSING.warmth));
