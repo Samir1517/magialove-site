@@ -153,6 +153,12 @@
   margin: 0 0 14px;
   line-height: 1.25;
 }
+/* Кружок-вопросик наследует кегль строки и в заголовке секции раздувался
+ * вместе со шрифтом. Прижимаем к размеру, каким он стоит в тайлах. */
+.h2 :global(button) {
+  font-size: 1.25rem;
+  vertical-align: middle;
+}
 .lede {
   color: var(--ink);
   line-height: 1.7;
