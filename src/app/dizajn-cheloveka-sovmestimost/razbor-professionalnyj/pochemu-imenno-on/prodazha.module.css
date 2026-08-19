@@ -1,0 +1,371 @@
+/*
+ * Продающая страница «Почему именно он» — 750 ₽.
+ *
+ * Тон-лестница (утверждена заказчиком): вход — прямая подруга, середина —
+ * снятие вины и фрагменты разбора, финал и цена — спокойный эксперт.
+ * Палитра сущностей та же, что в разборе: она #c9548a · он #7e5bad · #a17a2c.
+ */
+
+.wrap {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 24px 20px 80px;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 44px;
+}
+.brand {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+/* --- Hero: подруга ----------------------------------------------------------- */
+
+.hero {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.heroEyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-softer);
+  margin-bottom: 14px;
+}
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 5.6vw, 3rem);
+  line-height: 1.12;
+  color: var(--ink-dark);
+  margin: 0 0 16px;
+  text-wrap: balance;
+}
+.heroVignette {
+  margin: 8px auto 20px;
+  width: min(430px, 86%);
+}
+.heroLead {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: clamp(1.05rem, 2.6vw, 1.25rem);
+  line-height: 1.5;
+  color: var(--ink-dark);
+  max-width: 560px;
+  margin: 0 auto 18px;
+}
+.heroSub {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+  line-height: 1.65;
+  max-width: 540px;
+  margin: 0 auto 24px;
+}
+
+/* CTA-кнопка: одна и та же сверху и внизу. */
+.cta {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 999px;
+  padding: 14px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(162, 105, 138, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.cta:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 34px rgba(162, 105, 138, 0.45);
+}
+.ctaNote {
+  margin-top: 10px;
+  font-size: 0.82rem;
+  color: var(--ink-softer);
+}
+
+/* --- Секции ------------------------------------------------------------------ */
+
+.section {
+  margin: 56px 0;
+}
+.eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 3.4vw, 1.8rem);
+  color: var(--ink-dark);
+  margin: 0 0 14px;
+  line-height: 1.25;
+}
+.lede {
+  color: var(--ink);
+  line-height: 1.7;
+  margin: 0 0 12px;
+}
+.note {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.65;
+  margin: 10px 0;
+}
+
+/* --- Узнавание: сцены-боли ---------------------------------------------------- */
+
+.scenes {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+.scene {
+  background: #fff;
+  border: 1px solid #f3e4ec;
+  border-left: 3px solid #c9548a;
+  border-radius: 14px;
+  padding: 16px 18px;
+  color: var(--ink);
+  font-size: 0.97rem;
+  line-height: 1.65;
+  font-style: italic;
+}
+
+/* --- Разворот ----------------------------------------------------------------- */
+
+.turn {
+  background: linear-gradient(135deg, #fdf4f8, #f7f2fb);
+  border-radius: 18px;
+  padding: 26px 26px;
+  margin-top: 18px;
+}
+.turnText {
+  font-family: var(--font-display);
+  font-size: clamp(1.1rem, 2.8vw, 1.35rem);
+  line-height: 1.5;
+  color: var(--ink-dark);
+  margin: 0;
+}
+
+/* --- Состав ------------------------------------------------------------------- */
+
+.blocks {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+.block {
+  background: #fff;
+  border: 1px solid #f3e4ec;
+  border-radius: 14px;
+  padding: 16px 18px;
+}
+.blockTitle {
+  font-weight: 600;
+  color: var(--ink-dark);
+  margin-bottom: 4px;
+}
+.blockText {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.blockTag {
+  display: inline-block;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #a17a2c;
+  margin-left: 8px;
+}
+
+/* --- Фрагменты разбора --------------------------------------------------------- */
+
+.fragment {
+  background: #fff;
+  border: 1px solid #f3e4ec;
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-top: 14px;
+  box-shadow: 0 6px 22px rgba(162, 105, 138, 0.07);
+}
+.fragmentLabel {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-softer);
+  margin-bottom: 10px;
+}
+.fragmentText {
+  color: var(--ink);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+.fragmentText p {
+  margin: 0 0 10px;
+}
+.fixedTag {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-dark);
+}
+
+/* --- Честность и шаги ---------------------------------------------------------- */
+
+.honest {
+  border-left: 3px solid #a17a2c;
+  padding-left: 16px;
+  margin-top: 16px;
+  color: var(--ink);
+  line-height: 1.7;
+}
+.steps {
+  counter-reset: step;
+  margin: 18px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.steps li {
+  position: relative;
+  padding: 10px 0 10px 46px;
+  color: var(--ink);
+  line-height: 1.6;
+}
+.steps li::before {
+  counter-increment: step;
+  content: counter(step);
+  position: absolute;
+  left: 0;
+  top: 8px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--accent-lilac);
+  color: var(--ink-dark);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --- Цена ---------------------------------------------------------------------- */
+
+.priceCard {
+  background: #fff;
+  border: 1px solid #f3e4ec;
+  border-radius: 20px;
+  padding: 30px 28px;
+  text-align: center;
+  margin-top: 20px;
+  box-shadow: 0 10px 34px rgba(162, 105, 138, 0.12);
+}
+.priceValue {
+  font-family: var(--font-display);
+  font-size: 2.6rem;
+  color: var(--ink-dark);
+  line-height: 1;
+  margin: 6px 0 4px;
+}
+.priceOld {
+  font-size: 0.9rem;
+  color: var(--ink-softer);
+}
+.priceList {
+  margin: 16px auto 20px;
+  padding: 0;
+  list-style: none;
+  max-width: 430px;
+  text-align: left;
+}
+.priceList li {
+  padding: 6px 0 6px 24px;
+  position: relative;
+  color: var(--ink);
+  font-size: 0.93rem;
+  line-height: 1.55;
+}
+.priceList li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.75em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a17a2c;
+}
+
+/* --- FAQ ------------------------------------------------------------------------ */
+
+.faqBox {
+  border: 1px solid #f0dfe8;
+  border-radius: 14px;
+  margin-bottom: 10px;
+  background: #fff;
+}
+.faqBox summary {
+  cursor: pointer;
+  padding: 14px 18px;
+  list-style: none;
+  font-weight: 600;
+  color: var(--ink-dark);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.faqBox summary::-webkit-details-marker {
+  display: none;
+}
+.faqBox summary::after {
+  content: "+";
+  color: var(--accent);
+}
+.faqBox[open] summary::after {
+  content: "−";
+}
+.faqInner {
+  padding: 0 18px 16px;
+  color: var(--ink);
+  font-size: 0.93rem;
+  line-height: 1.65;
+}
+
+/* --- Финал ---------------------------------------------------------------------- */
+
+.finale {
+  text-align: center;
+  margin-top: 60px;
+}
+.finaleText {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 3vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--ink-dark);
+  max-width: 560px;
+  margin: 0 auto 22px;
+  text-wrap: balance;
+}
+
+.divider {
+  border: none;
+  border-top: 1px solid #f0dfe8;
+  margin: 44px 0;
+}
+
+@media (max-width: 720px) {
+  .scenes {
+    gap: 10px;
+  }
+}
