@@ -19,6 +19,7 @@ import { JyotishTimeSensitivity } from "@/components/systems/JyotishTimeSensitiv
 import { MarriageHouse } from "@/components/systems/MarriageHouse";
 import resultStyles from "@/components/result/result.module.css";
 import systemStyles from "@/components/systems/systems.module.css";
+import { SellerLine } from "@/components/result/SellerLine";
 
 export function JyotishResultView() {
   const params = useSearchParams();
@@ -164,6 +165,7 @@ export function JyotishResultView() {
       <Link href="/dzhyotish-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару
       </Link>
+      <SellerLine />
     </div>
   );
 }

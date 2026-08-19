@@ -12,6 +12,7 @@ import { ShareActions } from "@/components/result/ShareActions";
 import { formatScore } from "@/components/viz/scale";
 import { NextSystems } from "@/components/result/NextSystems";
 import resultStyles from "@/components/result/result.module.css";
+import { SellerLine } from "@/components/result/SellerLine";
 
 export function NumerologyResultView() {
   const params = useSearchParams();
@@ -76,6 +77,7 @@ export function NumerologyResultView() {
       <Link href="/numerologiya-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару
       </Link>
+      <SellerLine />
     </div>
   );
 }

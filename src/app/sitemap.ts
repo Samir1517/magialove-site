@@ -51,6 +51,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     { url: "/faq/", changeFrequency: "monthly", priority: 0.4 },
     { url: "/o-servise/", changeFrequency: "monthly", priority: 0.4 },
+    // Требование платёжного сервиса. Ссылка на неё стоит только на главной,
+    // но в карте сайта нужна: страница должна быть находимой.
+    { url: "/tarify/", changeFrequency: "monthly", priority: 0.3 },
     { url: "/politika-konfidentsialnosti/", changeFrequency: "monthly", priority: 0.2 },
   ];
 

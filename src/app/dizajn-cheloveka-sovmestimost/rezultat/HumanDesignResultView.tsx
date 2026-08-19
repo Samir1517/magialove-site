@@ -17,6 +17,7 @@ import { TimeSensitivity } from "@/components/systems/TimeSensitivity";
 import { Polarity } from "@/components/systems/Polarity";
 import { Cross } from "@/components/systems/Cross";
 import resultStyles from "@/components/result/result.module.css";
+import { SellerLine } from "@/components/result/SellerLine";
 
 export function HumanDesignResultView() {
   const params = useSearchParams();
@@ -131,6 +132,7 @@ export function HumanDesignResultView() {
       <Link href="/dizajn-cheloveka-sovmestimost/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару
       </Link>
+      <SellerLine />
     </div>
   );
 }

@@ -182,7 +182,7 @@ export default function Home() {
       />
       <header className={styles.header}>
         <div className={styles.logo}>СОВМЕСТИМОСТЬ</div>
-        <MainNav />
+        <MainNav showTariffs />
         <a href="#top" className={`btn ${styles.headerCta}`}>
           Рассчитать совместимость
         </a>
@@ -387,6 +387,9 @@ export default function Home() {
           © {new Date().getFullYear()} Совместимость. Все права защищены. Расчёт носит
           рекомендательный характер. Копирование текстов сайта без разрешения запрещено.
         </div>
+        {/* Формальное требование платёжного сервиса: продавец должен быть назван
+            на сайте. Тем же классом, что и строка выше, — выделять не нужно. */}
+        <div className={styles.footerText}>Соловьёв Самир Викторович · ИНН 253605749197</div>
       </footer>
     </>
   );

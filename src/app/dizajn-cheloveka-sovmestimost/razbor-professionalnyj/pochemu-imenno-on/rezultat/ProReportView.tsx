@@ -40,6 +40,7 @@ import { Reveal } from "@/components/viz/Reveal";
 import { DateTimeForm } from "@/components/system-calc/DateTimeForm";
 import styles from "./pro.module.css";
 import { VignetteArt, WaterSteamArt, AbsentArt } from "./ProArt";
+import { SellerLine } from "@/components/result/SellerLine";
 
 const SELF_PATH = "/dizajn-cheloveka-sovmestimost/razbor-professionalnyj/pochemu-imenno-on/rezultat";
 
@@ -866,6 +867,7 @@ export function ProReportView() {
         <div className={styles.disclaimer}>{CLOSING.disclaimer}</div>
         <div className={styles.warmth}>{g(CLOSING.warmth)}</div>
       </Section>
+      <SellerLine />
     </div>
   );
 }

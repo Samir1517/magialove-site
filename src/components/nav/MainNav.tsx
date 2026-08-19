@@ -20,7 +20,13 @@ const LINKS = [
   { href: "/dzhyotish-sovmestimost/", label: "Джйотиш" },
 ];
 
-export function MainNav() {
+/**
+ * Тарифы показываем только на главной — так просил заказчик, и это временно:
+ * страница нужна платёжному сервису, потом уйдёт. Сквозной ссылкой её ставить
+ * не стали, чтобы не отнимать вес у разделов и не путать читателя ценами там,
+ * где он пришёл за бесплатным расчётом.
+ */
+export function MainNav({ showTariffs = false }: { showTariffs?: boolean }) {
   return (
     <nav className={styles.nav} aria-label="Основная навигация">
       {LINKS.map((l) => (
@@ -28,6 +34,7 @@ export function MainNav() {
           {l.label}
         </Link>
       ))}
+      {showTariffs && <Link href="/tarify/">Тарифы</Link>}
     </nav>
   );
 }

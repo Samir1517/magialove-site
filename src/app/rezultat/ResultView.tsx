@@ -37,6 +37,7 @@ import { Reveal } from "@/components/viz/Reveal";
 import { ScoreRing } from "@/components/viz/ScoreRing";
 import { bandStyle, formatScore } from "@/components/viz/scale";
 import styles from "@/components/result/result.module.css";
+import { SellerLine } from "@/components/result/SellerLine";
 
 export function ResultView() {
   const params = useSearchParams();
@@ -268,6 +269,7 @@ export function ResultView() {
       <Link href="/" className={`btn ${styles.backLink}`}>
         Рассчитать другую пару
       </Link>
+      <SellerLine />
     </div>
   );
 }

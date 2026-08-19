@@ -12,6 +12,7 @@ import { TermHint } from "@/components/viz/TermHint";
 import { ShareActions } from "@/components/result/ShareActions";
 import resultStyles from "@/components/result/result.module.css";
 import contentStyles from "@/components/content/content.module.css";
+import { SellerLine } from "@/components/result/SellerLine";
 
 function safely<T>(fn: () => T): T | null {
   try {
@@ -144,6 +145,7 @@ export function NameResultView() {
       <Link href="/po-imeni/" className={`btn ${resultStyles.backLink}`}>
         Рассчитать другую пару
       </Link>
+      <SellerLine />
     </div>
   );
 }
