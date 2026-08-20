@@ -49,11 +49,13 @@ export default function PochemuImennoOnPage() {
   const greed = GATE_IN_PAIR[54];
   const greedKey = GENE_KEYS[54];
 
-  // Пример карты пары для витрины: даты подобраны так, чтобы на схеме были видны
-  // все три вида линий — её, его и электромагнитные каналы («почему тянет»).
-  // Считается один раз на сборке; геометрия — канонический Bodygraph из разбора.
-  const exampleA = calcPersonalDesign(makePerson("1987-03-10", "07:14", "Europe/Moscow", undefined, "ж"));
-  const exampleB = calcPersonalDesign(makePerson("1984-03-24", "00:13", "Europe/Moscow", undefined, "м"));
+  // Пример карты пары для витрины: даты подобраны перебором так, чтобы карта
+  // продавала. Все три электромагнитных канала — весомые темы пары: 6-59
+  // «Близости», 19-49 «Синтеза», 30-41 «Узнавания»; общий — 1-8 «Вдохновения»;
+  // всего 7 каналов, чтобы линии читались. Считается один раз на сборке;
+  // геометрия — канонический Bodygraph из разбора.
+  const exampleA = calcPersonalDesign(makePerson("1994-02-04", "17:37", "Europe/Moscow", undefined, "ж"));
+  const exampleB = calcPersonalDesign(makePerson("1989-05-14", "11:16", "Europe/Moscow", undefined, "м"));
   const exampleComposite = calcComposite(exampleA, exampleB);
 
   return (
