@@ -5,6 +5,9 @@ import { CONDITIONING_BY_CENTER } from "@/lib/content/human-design-pro";
 import { GATE_IN_PAIR } from "@/lib/content/human-design-triads";
 import { GENE_KEYS } from "@/lib/data/human_design/gene-keys";
 import { applyGender } from "@/lib/content/gender";
+import { calcPersonalDesign, calcComposite, toPersonChart } from "@/lib/engines/human_design";
+import { makePerson } from "@/lib/engines/person";
+import { Bodygraph } from "@/components/viz/Bodygraph";
 import { SellerLine } from "@/components/result/SellerLine";
 import { VignetteArt } from "./rezultat/ProArt";
 import styles from "./prodazha.module.css";
@@ -20,7 +23,8 @@ import styles from "./prodazha.module.css";
  * Доверие без выдумок: отзывов, счётчиков и фото здесь нет и не будет —
  * их не существует. Вместо них: настоящие фрагменты продукта (импортированы
  * из контент-констант разбора, разойтись не могут), честные ограничения,
- * возврат в течение часа, строка продавца.
+ * строка продавца. Возвраты убраны по решению заказчика (21.08.2026): цена
+ * импульсная, риск снят показом настоящих фрагментов до оплаты.
  */
 
 export const metadata: Metadata = {
@@ -45,6 +49,13 @@ export default function PochemuImennoOnPage() {
   const greed = GATE_IN_PAIR[54];
   const greedKey = GENE_KEYS[54];
 
+  // Пример карты пары для витрины: даты подобраны так, чтобы на схеме были видны
+  // все три вида линий — её, его и электромагнитные каналы («почему тянет»).
+  // Считается один раз на сборке; геометрия — канонический Bodygraph из разбора.
+  const exampleA = calcPersonalDesign(makePerson("1987-03-10", "07:14", "Europe/Moscow", undefined, "ж"));
+  const exampleB = calcPersonalDesign(makePerson("1984-03-24", "00:13", "Europe/Moscow", undefined, "м"));
+  const exampleComposite = calcComposite(exampleA, exampleB);
+
   return (
     <div className={styles.wrap}>
       <div className={styles.topBar}>
@@ -68,7 +79,7 @@ export default function PochemuImennoOnPage() {
           механика, из-за которой всё повторяется, — она ниже.
         </p>
         <a className={styles.cta} href="#kupit">Получить разбор пары — 750 ₽</a>
-        <div className={styles.ctaNote}>Готов сразу после оплаты · Если не подойдёт — вернём деньги в течение часа</div>
+        <div className={styles.ctaNote}>Готов сразу после оплаты · ссылка остаётся навсегда</div>
       </header>
 
       {/* ============ УЗНАВАНИЕ: сцены ============ */}
@@ -261,6 +272,31 @@ export default function PochemuImennoOnPage() {
             <p><span className={styles.fixedTag}>Не изменится:</span> {g(gGate.partner.fixed)}</p>
           </div>
         </div>
+
+        <div className={styles.fragment}>
+          <div className={styles.fragmentLabel}>А так выглядит карта пары — обе карты на одной схеме</div>
+          <div className={styles.mapWrap}>
+            <Bodygraph
+              composite={{ channels: exampleComposite.channels, definedCenters: exampleComposite.definedCenters }}
+              a={toPersonChart(exampleA)}
+              b={toPersonChart(exampleB)}
+              nameA="Она"
+              nameB="Он"
+              size={280}
+            />
+          </div>
+          <p className={styles.note}>
+            Это пример по чужим датам — твоя считается по вашим двум. Розовые линии — её,
+            сиреневые — его, а самые яркие — каналы, которые замыкаются только вдвоём: то
+            самое «почему тянет». Попробуй прямо здесь — тронь любую линию, и карта
+            расскажет, чья она и что значит.
+          </p>
+        </div>
+
+        <div className={styles.midCta}>
+          <a className={styles.cta} href="#kupit">Рассчитать нашу пару</a>
+          <div className={styles.ctaNote}>Считается по вашим двум датам · готов сразу после оплаты</div>
+        </div>
       </section>
 
       <hr className={styles.divider} />
@@ -320,9 +356,9 @@ export default function PochemuImennoOnPage() {
             <li>Полная карта пары: 52 точки, все каналы, общие темы</li>
             <li>Ссылка навсегда, можно перечитывать и пересылать</li>
             <li>Готов сразу после оплаты, без ожидания</li>
-            <li>Не подойдёт — вернём деньги в течение часа, без вопросов</li>
+            <li>Что покупаешь — видно до оплаты: фрагменты выше взяты из разбора как есть</li>
           </ul>
-          <a className={styles.cta} href={PAYMENT_URL}>Получить разбор пары — 750 ₽</a>
+          <a className={styles.cta} href={PAYMENT_URL}>Получить разбор пары</a>
           <div className={styles.ctaNote}>Оплата картой или СБП · чек придёт на почту</div>
         </div>
       </section>
@@ -376,7 +412,10 @@ export default function PochemuImennoOnPage() {
         <details className={styles.faqBox}>
           <summary>Что, если мне не подойдёт?</summary>
           <div className={styles.faqInner}>
-            Напиши нам в течение часа после покупки — вернём деньги без вопросов и выяснений.
+            Ты уже видела товар: фрагменты выше — настоящие куски разбора, взятые из него как
+            есть. Весь разбор написан этим же языком и с этой же прямотой, только про вас
+            двоих и по вашим датам. Если фрагменты не отозвались — не покупай. Если
+            отозвались — внутри восемь таких разделов.
           </div>
         </details>
 
@@ -396,8 +435,8 @@ export default function PochemuImennoOnPage() {
           Ты можешь ещё год гадать, почему тебя к нему тянет и почему рядом с ним больно.
           А можешь за вечер увидеть это место в вашей карте — по имени.
         </p>
-        <a className={styles.cta} href="#kupit">Получить разбор пары — 750 ₽</a>
-        <div className={styles.ctaNote}>Готов сразу · ссылка навсегда · возврат в течение часа</div>
+        <a className={styles.cta} href="#kupit">Рассчитать нашу пару</a>
+        <div className={styles.ctaNote}>Готов сразу · ссылка навсегда · по вашим датам</div>
       </div>
 
       <hr className={styles.divider} />
