@@ -148,6 +148,43 @@ a.eyebrow:hover {
   max-width: 68ch;
 }
 
+/* --- Список смысловых связей между арканами ---
+   Ширина та же, что у .text (68ch): блок должен читаться одной колонкой, иначе
+   узкий вводный абзац рядом с широким списком выглядит вёрсткой, а не мерой. */
+.relList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 68ch;
+}
+
+.relItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-left: 14px;
+  border-left: 2px solid var(--accent-pink);
+}
+
+.relLink {
+  font: 600 13.5px var(--font-body);
+  color: var(--accent);
+  text-decoration: none;
+  align-self: flex-start;
+}
+.relLink:hover {
+  text-decoration: underline;
+}
+
+.relText {
+  font: 400 13.5px/1.7 var(--font-body);
+  color: var(--ink-soft);
+  margin: 0;
+}
+
 /* --- Блок «что ты увидишь в разборе» ---
    Стоит сразу под формой: человек уже увидел кнопку, но ещё не решился. Здесь
    он узнаёт, что именно получит, — это и снятие неопределённости, и глубина

@@ -179,7 +179,12 @@ export function MatrixSection({
             return (
               <li key={c.key} className={styles.openItem}>
                 <strong className={styles.openName}>
-                  {c.name} · Аркан {info.number} «{info.name}»
+                  {c.name} ·{" "}
+                  {/* Аркан здесь только назван — полный разбор лежит своей страницей,
+                      и семь чакровых позиций это семь честных входов в неё. */}
+                  <Link href={`/matrica-sudby-sovmestimost/arkany/${info.number}/`}>
+                    Аркан {info.number} «{info.name}»
+                  </Link>
                 </strong>
                 <span className={styles.doshaText}>{c.pairMeaning}</span>
               </li>

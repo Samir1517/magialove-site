@@ -31,7 +31,7 @@ export function ArticleFull({ article }: { article: Article }) {
           <h2 style={{ font: "600 15px var(--font-body)", color: "var(--ink)", margin: "0 0 8px" }}>
             {s.heading}
           </h2>
-          <MarkdownBody body={s.body} />
+          <MarkdownBody body={s.body} headingLevel="h3" />
         </div>
       ))}
       {article.disclaimer && (
@@ -42,10 +42,25 @@ export function ArticleFull({ article }: { article: Article }) {
       {article.meta.length > 0 && (
         <div className={styles.sourceNote}>
           <strong style={{ color: "var(--ink-soft)" }}>Источники: </strong>
-          {article.meta
-            .filter((m) => m.startsWith("**Источник") || m.startsWith("**Философская") || m.startsWith("**Первоисточник"))
-            .map((m) => m.replace(/\*\*/g, ""))
-            .join(" ")}
+          {renderInline(
+            article.meta
+              .filter((m) => m.startsWith("**Источник") || m.startsWith("**Философская") || m.startsWith("**Первоисточник"))
+              .map((m) =>
+                m
+                  .replace(/\*\*/g, "")
+                  // Подпись «Источники:» уже стоит жирным слева — второй раз её
+                  // печатать не нужно, иначе читатель видит «Источники: Источники:».
+                  .replace(/^Источники:\s*/, "")
+                  // Имена служебных файлов движка в тексте для читателя — шум:
+                  // «Источник зон: `data/compatibility_zones.json` — Аркан 6…»
+                  // читается как техническая утечка. Смысл после тире остаётся.
+                  .replace(/\s*`[^`]+`\s*(—\s*)?/g, " ")
+                  .trim()
+              )
+              .join(" ")
+              .replace(/\s{2,}/g, " "),
+            "meta"
+          )}
         </div>
       )}
     </article>

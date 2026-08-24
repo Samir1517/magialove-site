@@ -36,7 +36,7 @@ export function ArticleDisclosure({
           {article.sections.map((s) => (
             <div key={s.heading} className={styles.section}>
               <h4 className={styles.sectionHeading}>{s.heading}</h4>
-              <MarkdownBody body={s.body} />
+              <MarkdownBody body={s.body} headingLevel="h5" />
             </div>
           ))}
           {article.disclaimer && <p className={styles.disclaimer}>{article.disclaimer}</p>}

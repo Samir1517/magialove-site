@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import Link from "next/link";
 import type { IndividualMatrix, PositionKey } from "@/lib/engines/matrix";
 import { getArcanumInfo, POSITION_TO_ZONE, ZONE_TITLES, zoneCharacter } from "@/lib/engines/matrix";
 import { useInView } from "./useInView";
@@ -290,6 +291,14 @@ export function MatrixOctagram({
                 : "Формула считает аркан нейтральным для зоны — но нейтральных качеств не бывает: направление задаёте вы двое."}
           </p>
         )}
+        {/* Разбор аркана целиком лежит отдельной страницей — уводим туда именно
+            с той точки, которую человек сейчас открыл, а не общей ссылкой. */}
+        <Link
+          href={`/matrica-sudby-sovmestimost/arkany/${selArcanum.number}/`}
+          className={styles.octagramCardLink}
+        >
+          Аркан {selArcanum.number} «{selArcanum.name}»: значение и совместимость →
+        </Link>
         <p className={styles.octagramHint}>
           {hasTabs
             ? "Нажимай на точки схемы — карточка обновится. Вкладки сверху переключают личные матрицы и общую."

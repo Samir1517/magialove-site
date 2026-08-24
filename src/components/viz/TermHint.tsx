@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useId, useRef, useState } from "react";
+import Link from "next/link";
 import { glossaryEntry } from "@/lib/content/glossary";
 import styles from "./viz.module.css";
 
@@ -108,6 +109,13 @@ export function TermHint({ id, label }: { id: string; label?: string }) {
           <strong className={styles.termHintTitle}>{entry.title}</strong>
           <p className={styles.termHintText}>{entry.what}</p>
           <p className={styles.termHintText}>{entry.why}</p>
+          {/* Подсказка объясняет термин в двух абзацах, но у части понятий есть
+              полноценный разбор отдельной страницей — отсюда туда и уводим. */}
+          {entry.href && (
+            <Link href={entry.href} className={styles.termHintLink} onClick={() => setOpen(false)}>
+              {entry.hrefLabel ?? "Читать подробнее"} →
+            </Link>
+          )}
           <button
             type="button"
             className={styles.termHintClose}

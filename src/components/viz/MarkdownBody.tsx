@@ -1,26 +1,52 @@
 import { Fragment } from "react";
+import Link from "next/link";
 
 /**
  * Минимальный рендерер для тела секций наших статей — не общий markdown-парсер,
  * а разбор ровно того подмножества, которое реально встречается в 69 файлах
  * (проверено `grep` перед написанием): абзацы, "### " подзаголовки, плоские
- * списки "- ", инлайновый **жирный**. Без dangerouslySetInnerHTML: контент наш
- * собственный, но React-элементы проще поддерживать и безопаснее по умолчанию.
+ * списки "- ", инлайновый **жирный** и ссылки [текст](/адрес).
+ * Без dangerouslySetInnerHTML: контент наш собственный, но React-элементы проще
+ * поддерживать и безопаснее по умолчанию.
+ *
+ * Уровень подзаголовка задаётся снаружи: одна и та же статья рендерится и как
+ * самостоятельная SEO-страница (секция = h2, значит подзаголовок = h3), и внутри
+ * раскрывашки на странице результата (секция = h4, значит подзаголовок = h5).
+ * Прибитый гвоздями h4 давал на страницах арканов дыру в иерархии h2 → h4.
  */
 
-/** Инлайновый **жирный** без блочной разметки — для однострочных капсул-тизеров. */
+/** Разбирает **жирный** и [текст](адрес); всё остальное — обычный текст. */
 export function renderInline(text: string, keyPrefix: string): React.ReactNode {
-  const parts = text.split(/(\*\*[^*]+\*\*)/g).filter(Boolean);
+  const parts = text.split(/(\*\*[^*]+\*\*|\[[^\]]+\]\([^)\s]+\))/g).filter(Boolean);
   return parts.map((part, i) => {
+    const key = `${keyPrefix}-${i}`;
+
     if (part.startsWith("**") && part.endsWith("**")) {
-      return <strong key={`${keyPrefix}-${i}`}>{part.slice(2, -2)}</strong>;
+      return <strong key={key}>{part.slice(2, -2)}</strong>;
     }
-    return <Fragment key={`${keyPrefix}-${i}`}>{part}</Fragment>;
+
+    const link = /^\[([^\]]+)\]\(([^)\s]+)\)$/.exec(part);
+    if (link) {
+      const [, label, href] = link;
+      // Внутренние адреса — через Link (клиентский переход, вес перелинковки),
+      // внешние — обычной ссылкой в новую вкладку.
+      return href.startsWith("/") ? (
+        <Link key={key} href={href}>
+          {label}
+        </Link>
+      ) : (
+        <a key={key} href={href} target="_blank" rel="noopener nofollow">
+          {label}
+        </a>
+      );
+    }
+
+    return <Fragment key={key}>{part}</Fragment>;
   });
 }
 
 type Block =
-  | { type: "h4"; text: string }
+  | { type: "sub"; text: string }
   | { type: "ul"; items: string[] }
   | { type: "p"; text: string };
 
@@ -51,7 +77,7 @@ function toBlocks(body: string): Block[] {
     } else if (line.startsWith("### ")) {
       flushPara();
       flushList();
-      blocks.push({ type: "h4", text: line.slice(4).trim() });
+      blocks.push({ type: "sub", text: line.slice(4).trim() });
     } else if (line.startsWith("- ")) {
       flushPara();
       list.push(line.slice(2).trim());
@@ -65,17 +91,25 @@ function toBlocks(body: string): Block[] {
   return blocks;
 }
 
-export function MarkdownBody({ body }: { body: string }) {
+export function MarkdownBody({
+  body,
+  headingLevel = "h4",
+}: {
+  body: string;
+  /** Уровень "### "-подзаголовка: на ступень ниже заголовка секции у вызывающего. */
+  headingLevel?: "h3" | "h4" | "h5";
+}) {
   const blocks = toBlocks(body);
+  const Sub = headingLevel;
   return (
     <>
       {blocks.map((block, i) => {
         const key = `b${i}`;
-        if (block.type === "h4") {
+        if (block.type === "sub") {
           return (
-            <h4 key={key} style={{ font: "600 13px var(--font-body)", color: "var(--ink)", margin: "12px 0 4px" }}>
+            <Sub key={key} style={{ font: "600 13px var(--font-body)", color: "var(--ink)", margin: "12px 0 4px" }}>
               {renderInline(block.text, key)}
-            </h4>
+            </Sub>
           );
         }
         if (block.type === "ul") {

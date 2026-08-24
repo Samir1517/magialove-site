@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ContentShell, CalcCta } from "@/components/content/ContentShell";
 import { ArticleFull } from "@/components/content/ArticleFull";
+import { ArcanumRelations } from "@/components/content/ArcanumRelations";
+import { ArcanumAstro } from "@/components/content/ArcanumAstro";
+import { ArcanumGlyphs } from "@/components/content/ArcanumGlyphs";
+import { getArcanumInfo } from "@/lib/engines/matrix";
 import { allMatrixArticles, getMatrixArticle } from "@/lib/content/articles";
 import styles from "@/components/content/content.module.css";
 
@@ -53,6 +57,12 @@ export default async function ArcanumPage({ params }: { params: Promise<{ n: str
       <h1 className={styles.h1}>{article.title}</h1>
 
       <ArticleFull article={article} />
+
+      <ArcanumGlyphs n={num} arcanumName={`аркан ${num} «${getArcanumInfo(num).name}»`} />
+
+      <ArcanumAstro n={num} arcanumName={`Аркан ${num} «${getArcanumInfo(num).name}»`} />
+
+      <ArcanumRelations n={num} />
 
       <CalcCta
         title="Узнай свой аркан пары"

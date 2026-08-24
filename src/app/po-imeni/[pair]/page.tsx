@@ -6,6 +6,7 @@ import { ScoreRing } from "@/components/viz/ScoreRing";
 import { calcNameCompatibility } from "@/lib/engines/name-numerology";
 import { getNameNumberArticle } from "@/lib/content/articles";
 import { PILOT_MALE_NAMES, PILOT_FEMALE_NAMES, nameSlug } from "@/lib/data/name-popularity";
+import { RelatedPages, type RelatedLink } from "@/components/content/RelatedPages";
 import styles from "@/components/content/content.module.css";
 
 /**
@@ -42,6 +43,48 @@ export function generateStaticParams() {
 
 function getData(slug: string): PairParams | null {
   return allPairs().find((p) => p.slug === slug) ?? null;
+}
+
+/**
+ * Куда идти дальше со страницы пары имён. Раньше отсюда вела ровно одна
+ * содержательная ссылка — на хаб раздела; ни к числам имени обоих партнёров,
+ * ни к соседним парам с теми же именами попасть было нельзя.
+ *
+ * Берём по три пары с тем же мужским и тем же женским именем: это и есть
+ * ближайшие по смыслу расчёты («а с другой — как?»), плюс разборы обоих чисел.
+ */
+function relatedLinks(m: string, f: string, numM: number, numF: number): RelatedLink[] {
+  const links: RelatedLink[] = [];
+
+  for (const other of PILOT_FEMALE_NAMES.filter((x) => x !== f).slice(0, 3)) {
+    links.push({
+      href: `/po-imeni/${nameSlug(m)}-i-${nameSlug(other)}/`,
+      label: `${m} и ${other}: совместимость имён`,
+      note: `То же мужское имя, другая пара`,
+    });
+  }
+  for (const other of PILOT_MALE_NAMES.filter((x) => x !== m).slice(0, 3)) {
+    links.push({
+      href: `/po-imeni/${nameSlug(other)}-i-${nameSlug(f)}/`,
+      label: `${other} и ${f}: совместимость имён`,
+      note: `То же женское имя, другая пара`,
+    });
+  }
+
+  links.push({
+    href: `/po-imeni/chislo-imeni/${numM}/`,
+    label: `Число имени ${numM}`,
+    note: `Число имени ${m} — характер самоподачи`,
+  });
+  if (numF !== numM) {
+    links.push({
+      href: `/po-imeni/chislo-imeni/${numF}/`,
+      label: `Число имени ${numF}`,
+      note: `Число имени ${f} — характер самоподачи`,
+    });
+  }
+
+  return links;
 }
 
 export async function generateMetadata({
@@ -112,14 +155,31 @@ export default async function NamePairPage({ params }: { params: Promise<{ pair:
 
       {articleA && (
         <div className={styles.card}>
-          <ArticleDisclosure article={articleA} eyebrow={`${m} · Число имени ${aNumbers.expression}`} />
+          <ArticleDisclosure
+            article={articleA}
+            eyebrow={`${m} · Число имени ${aNumbers.expression}`}
+            moreHref={`/po-imeni/chislo-imeni/${aNumbers.expression}/`}
+            moreLabel={`Число имени ${aNumbers.expression}: значение и совместимость →`}
+          />
         </div>
       )}
       {articleB && aNumbers.expression !== bNumbers.expression && (
         <div className={styles.card}>
-          <ArticleDisclosure article={articleB} eyebrow={`${f} · Число имени ${bNumbers.expression}`} />
+          <ArticleDisclosure
+            article={articleB}
+            eyebrow={`${f} · Число имени ${bNumbers.expression}`}
+            moreHref={`/po-imeni/chislo-imeni/${bNumbers.expression}/`}
+            moreLabel={`Число имени ${bNumbers.expression}: значение и совместимость →`}
+          />
         </div>
       )}
+
+      <RelatedPages
+        headingId="name-related"
+        title="Другие пары с этими именами"
+        lede={`Одно и то же имя в разных парах даёт разный результат — число складывается со вторым именем заново. Ниже — соседние расчёты и разборы самих чисел имени.`}
+        links={relatedLinks(m, f, aNumbers.expression, bNumbers.expression)}
+      />
 
       <CalcCta
         title="Узнай полную совместимость твоей пары"

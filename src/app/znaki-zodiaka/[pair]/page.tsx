@@ -8,47 +8,96 @@ import {
   type ZodiacSign,
 } from "@/lib/data/zodiac";
 import { elementText, modalityText, signPairNote } from "@/lib/content/zodiac";
+import { RelatedPages, type RelatedLink } from "@/components/content/RelatedPages";
+import { arcanumOfSign } from "@/lib/content/matrix-arcana-astro";
+import { getArcanumInfo } from "@/lib/engines/matrix";
+import {
+  allZodiacPairSlugs,
+  parseZodiacPairSlug as parseSlug,
+  pairsOfSign,
+  sameElementSigns,
+  zodiacHref,
+} from "@/lib/data/zodiac-pairs";
 import styles from "@/components/content/content.module.css";
 
 /**
  * 78 страниц (12 «сам с собой» + 66 уникальных пар, C(12,2)) — справочный
  * хаб без калькулятора, см. semantika/_generator.py секция "5. ЗНАКИ
- * ЗОДИАКА". Канонический порядок пары — по алфавиту русского названия
- * (та же дедупликация, что и в исходном генераторе семантического ядра),
- * чтобы не публиковать одну и ту же пару дважды под разными URL.
+ * ЗОДИАКА". Работа со слагами вынесена в @/lib/data/zodiac-pairs, чтобы
+ * связи между страницами можно было строить и отсюда, и с других разделов.
  */
 
-function canonicalPair(a: ZodiacSign, b: ZodiacSign): [ZodiacSign, ZodiacSign] {
-  return a.name <= b.name ? [a, b] : [b, a];
+export { allZodiacPairSlugs };
+
+/**
+ * Куда вести читателя дальше. До этого страница пары была тупиком: с неё
+ * нельзя было попасть даже на страницы двух её собственных знаков.
+ *
+ * Одиночный знак → все его 11 пар (страница знака становится хабом).
+ * Пара → оба знака по отдельности + пары каждого из них со знаками стихии
+ * второго: это соседи по смыслу, а не случайный список.
+ */
+function relatedLinks(a: ZodiacSign, b: ZodiacSign): RelatedLink[] {
+  if (a.key === b.key) {
+    return pairsOfSign(a).map(({ sign, href }) => ({
+      href,
+      // Оба знака в именительном: «Лев и Телец». С родительным у второго
+      // («Лев и Тельца») подпись читается как оборванная фраза.
+      label: `${a.name} и ${sign.name}`,
+      note: `Стихии: ${ELEMENT_LABEL[a.element]} и ${ELEMENT_LABEL[sign.element]}`,
+    }));
+  }
+
+  const links: RelatedLink[] = [
+    {
+      href: `/znaki-zodiaka/${a.slug}/`,
+      label: `${a.name}: характер знака`,
+      note: `${a.dateRange} · ${ELEMENT_LABEL[a.element]} · управитель ${a.ruler}`,
+    },
+    {
+      href: `/znaki-zodiaka/${b.slug}/`,
+      label: `${b.name}: характер знака`,
+      note: `${b.dateRange} · ${ELEMENT_LABEL[b.element]} · управитель ${b.ruler}`,
+    },
+  ];
+
+  for (const mate of sameElementSigns(b).slice(0, 2)) {
+    if (mate.key === a.key) continue;
+    links.push({
+      href: zodiacHref(a, mate),
+      label: `${a.name} и ${mate.name}`,
+      note: `Тот же ${ELEMENT_LABEL[b.element].toLowerCase()}, что и у ${b.genitive}`,
+    });
+  }
+  for (const mate of sameElementSigns(a).slice(0, 2)) {
+    if (mate.key === b.key) continue;
+    links.push({
+      href: zodiacHref(b, mate),
+      label: `${b.name} и ${mate.name}`,
+      note: `Тот же ${ELEMENT_LABEL[a.element].toLowerCase()}, что и у ${a.genitive}`,
+    });
+  }
+
+  return [...links, ...arcanumLinks(a, b)];
 }
 
-export function allZodiacPairSlugs(): string[] {
-  const seen = new Set<string>();
-  const slugs: string[] = [];
-  for (const s1 of ZODIAC_SIGNS) {
-    for (const s2 of ZODIAC_SIGNS) {
-      const [a, b] = canonicalPair(s1, s2);
-      const slug = a.key === b.key ? a.slug : `${a.slug}-${b.slug}`;
-      if (seen.has(slug)) continue;
-      seen.add(slug);
-      slugs.push(slug);
-    }
+/**
+ * Мост в Матрицу судьбы. В классической системе соответствий каждому из
+ * двенадцати знаков отвечает свой старший аркан — это даёт читателю зодиака
+ * честный повод заглянуть в другую систему сервиса, а не рекламную врезку.
+ */
+function arcanumLinks(a: ZodiacSign, b: ZodiacSign): RelatedLink[] {
+  const out: RelatedLink[] = [];
+  for (const sign of a.key === b.key ? [a] : [a, b]) {
+    const n = arcanumOfSign(sign.name);
+    if (n === null) continue;
+    out.push({
+      href: `/matrica-sudby-sovmestimost/arkany/${n}/`,
+      label: `Аркан ${n} «${getArcanumInfo(n).name}»`,
+      note: `Аркан ${sign.genitive} в Матрице судьбы`,
+    });
   }
-  return slugs;
-}
-
-function parseSlug(slug: string): [ZodiacSign, ZodiacSign] | null {
-  for (const s1 of ZODIAC_SIGNS) {
-    if (slug === s1.slug) return [s1, s1];
-  }
-  for (const s1 of ZODIAC_SIGNS) {
-    for (const s2 of ZODIAC_SIGNS) {
-      if (s1.key === s2.key) continue;
-      const [a, b] = canonicalPair(s1, s2);
-      if (slug === `${a.slug}-${b.slug}`) return [a, b];
-    }
-  }
-  return null;
+  return out;
 }
 
 export function generateStaticParams() {
@@ -156,6 +205,17 @@ export default async function ZodiacPairPage({ params }: { params: Promise<{ pai
           не только Солнце, но и точную дату (а для двух систем — время и место) рождения.
         </p>
       </div>
+
+      <RelatedPages
+        headingId="zodiac-related"
+        title={sameSign ? `Совместимость ${a.genitive} с другими знаками` : "Что почитать рядом"}
+        lede={
+          sameSign
+            ? `Как ${a.name} сходится с каждым из остальных одиннадцати знаков — со стихиями, крестами и теневыми сторонами каждой пары.`
+            : `Разборы двух этих знаков по отдельности и их пары с другими знаками той же стихии.`
+        }
+        links={relatedLinks(a, b)}
+      />
 
       <CalcCta
         title="Узнай настоящую совместимость твоей пары"

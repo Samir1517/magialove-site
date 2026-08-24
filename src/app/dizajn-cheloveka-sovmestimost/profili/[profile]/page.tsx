@@ -9,6 +9,7 @@ import {
   profileFromSlug,
   profileSlug,
 } from "@/lib/content/articles";
+import { RelatedPages } from "@/components/content/RelatedPages";
 import styles from "@/components/content/content.module.css";
 
 export function generateStaticParams() {
@@ -30,12 +31,30 @@ export async function generateMetadata({
   };
 }
 
-/** Профили с той же первой линией — самые близкие соседи по смыслу. */
-function relatives(profile: string): string[] {
-  const first = profile.split("/")[0];
-  return Object.keys(allHDProfileArticles()).filter(
-    (k) => k !== profile && k.split("/")[0] === first,
-  );
+/**
+ * Соседи профиля по смыслу. Было только «та же первая линия» — одна ссылка
+ * на страницу. Добавлены ещё две оси, обе осмысленные внутри системы:
+ * та же вторая линия (одинаково выглядят со стороны партнёра) и зеркальный
+ * профиль, где те же две линии стоят в обратном порядке (существует не у всех).
+ */
+function relatives(profile: string): { key: string; note: string }[] {
+  const all = Object.keys(allHDProfileArticles());
+  const [first, second] = profile.split("/");
+  const out: { key: string; note: string }[] = [];
+  const add = (key: string, note: string) => {
+    if (key === profile || out.some((x) => x.key === key) || !all.includes(key)) return;
+    out.push({ key, note });
+  };
+
+  for (const k of all) {
+    if (k.split("/")[0] === first) add(k, `Та же первая линия — ${first}`);
+  }
+  for (const k of all) {
+    if (k.split("/")[1] === second) add(k, `Та же вторая линия — ${second}`);
+  }
+  add(`${second}/${first}`, "Зеркальный профиль: те же линии в обратном порядке");
+
+  return out;
 }
 
 export default async function ProfilePage({
@@ -66,33 +85,16 @@ export default async function ProfilePage({
 
       <ArticleFull article={article} />
 
-      {near.length > 0 && (
-        <div className={styles.card}>
-          <h2 className={styles.ctaTitle}>Профили с той же первой линией</h2>
-          <p className={styles.ctaText}>
-            Первая цифра у них общая — значит, осознаёт себя такой человек похоже. Всё
-            различие держится на второй линии, той, которую видит партнёр.
-          </p>
-          <div className={styles.grid}>
-            {near.map((k) => {
-              const a = getHDProfileArticle(k);
-              if (!a) return null;
-              return (
-                <Link
-                  key={k}
-                  href={`/dizajn-cheloveka-sovmestimost/profili/${profileSlug(k)}/`}
-                  className={styles.gridLink}
-                >
-                  <span className={styles.gridLinkNum}>{k}</span>
-                  <span className={styles.gridLinkTitle}>
-                    {a.title.match(/«([^»]+)»/)?.[1] ?? ""}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      )}
+      <RelatedPages
+        headingId="profile-related"
+        title="Соседние профили"
+        lede="Первая цифра — то, как человек осознаёт себя сам; вторая — то, каким его видит партнёр. Профили, где совпадает одна из них, читаются в сравнении лучше всего."
+        links={near.map(({ key, note }) => ({
+          href: `/dizajn-cheloveka-sovmestimost/profili/${profileSlug(key)}/`,
+          label: `Профиль ${key} «${getHDProfileArticle(key)?.title.match(/«([^»]+)»/)?.[1] ?? ""}»`,
+          note,
+        }))}
+      />
 
       <CalcCta
         title={`Узнай, у кого из вас профиль ${profile}`}
