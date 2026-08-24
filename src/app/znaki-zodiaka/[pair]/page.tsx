@@ -100,6 +100,25 @@ function arcanumLinks(a: ZodiacSign, b: ZodiacSign): RelatedLink[] {
   return out;
 }
 
+/**
+ * Заголовок страницы пары.
+ *
+ * Было: «Совместимость Дева и Льва» — родительный падеж у второго знака при
+ * именительном у первого, то есть просто ошибка в русском. Родительный у обоих
+ * («Совместимость Девы и Льва») грамматику чинит, но уводит оба ключевых слова
+ * из именительного, в котором их набирают в поиске.
+ *
+ * Поэтому названия знаков вынесены вперёд и оба стоят в именительном, а слово
+ * «совместимость» ушло во вторую часть: и грамматика верна, и ключ сохранён.
+ * Побочная выгода: H1 теперь совпадает с title — так поисковик реже переписывает
+ * заголовок в выдаче на свой.
+ */
+function pairTitle(a: ZodiacSign, b: ZodiacSign): string {
+  return a.key === b.key
+    ? `${a.name} и ${a.name}: совместимость внутри одного знака`
+    : `${a.name} и ${b.name}: совместимость в любви, браке и дружбе`;
+}
+
 export function generateStaticParams() {
   return allZodiacPairSlugs().map((pair) => ({ pair }));
 }
@@ -113,13 +132,9 @@ export async function generateMetadata({
   const parsed = parseSlug(pair);
   if (!parsed) return {};
   const [a, b] = parsed;
-  const title =
-    a.key === b.key
-      ? `Совместимость ${a.name} и ${a.name}: два представителя одного знака`
-      : `Совместимость ${a.name} и ${b.genitive}: любовь, брак, дружба`;
   return {
     alternates: { canonical: `/znaki-zodiaka/${pair}/` },
-    title,
+    title: pairTitle(a, b),
     description: `Классическая астрологическая совместимость ${a.genitive} и ${b.genitive} — стихии, кресты, светлые и теневые стороны союза.`,
   };
 }
@@ -144,11 +159,7 @@ export default async function ZodiacPairPage({ params }: { params: Promise<{ pai
       ]}
     >
       <div className={styles.eyebrow}>Знаки зодиака</div>
-      <h1 className={styles.h1}>
-        {sameSign
-          ? `Совместимость ${a.name} и ${a.name}: два представителя одного знака`
-          : `Совместимость ${a.name} и ${b.genitive}: любовь, брак, дружба`}
-      </h1>
+      <h1 className={styles.h1}>{pairTitle(a, b)}</h1>
       <p className={styles.lede}>{note}</p>
 
       <div className={styles.card} style={{ display: "flex", flexDirection: "column", gap: 22 }}>

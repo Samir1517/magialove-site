@@ -6,6 +6,8 @@ import { ArticleFull } from "@/components/content/ArticleFull";
 import { ArcanumRelations } from "@/components/content/ArcanumRelations";
 import { ArcanumAstro } from "@/components/content/ArcanumAstro";
 import { ArcanumGlyphs } from "@/components/content/ArcanumGlyphs";
+import { HubFaq } from "@/components/content/HubDepth";
+import { arcanumFaq } from "@/lib/content/matrix-arcana-faq";
 import { getArcanumInfo } from "@/lib/engines/matrix";
 import { allMatrixArticles, getMatrixArticle } from "@/lib/content/articles";
 import styles from "@/components/content/content.module.css";
@@ -63,6 +65,12 @@ export default async function ArcanumPage({ params }: { params: Promise<{ n: str
       <ArcanumAstro n={num} arcanumName={`Аркан ${num} «${getArcanumInfo(num).name}»`} />
 
       <ArcanumRelations n={num} />
+
+      {/* Вопросы читателя с готовыми ответами — отдельный жанр от раздела
+          «О чём поговорить вдвоём», где вопросы намеренно без ответов. */}
+      <div className={styles.card}>
+        <HubFaq items={arcanumFaq(num)} title={`Частые вопросы про аркан ${num} «${getArcanumInfo(num).name}»`} />
+      </div>
 
       <CalcCta
         title="Узнай свой аркан пары"
