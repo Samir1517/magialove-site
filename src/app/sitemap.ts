@@ -27,6 +27,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
     { url: "/po-date-rozhdeniya/", changeFrequency: "monthly", priority: 0.9 },
     { url: "/matrica-sudby-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
+    { url: "/matrica-sudby-sovmestimost/arkany/", changeFrequency: "monthly", priority: 0.8 },
+    { url: "/matrica-sudby-sovmestimost/centr/", changeFrequency: "monthly", priority: 0.7 },
+    { url: "/matrica-sudby-sovmestimost/kak-schitaem/", changeFrequency: "monthly", priority: 0.6 },
     { url: "/matrica-sudby-sovmestimost/karta/", changeFrequency: "monthly", priority: 0.5 },
     { url: "/numerologiya-sovmestimost/", changeFrequency: "monthly", priority: 0.9 },
     { url: "/numerologiya-sovmestimost/psihomatritsa/", changeFrequency: "monthly", priority: 0.7 },

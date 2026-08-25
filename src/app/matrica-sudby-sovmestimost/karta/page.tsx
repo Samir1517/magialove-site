@@ -44,6 +44,24 @@ export default function MatrixKartaPage() {
             все четыре системы
           </span>
         </Link>
+        <Link href="/matrica-sudby-sovmestimost/arkany/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Совместимость арканов: все 22 →</span>
+          <span className={styles.gridLinkText}>
+            Сводка по пяти зонам союза: где каждый аркан работает сам, а где даёт напряжение
+          </span>
+        </Link>
+        <Link href="/matrica-sudby-sovmestimost/centr/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Центр матрицы пары →</span>
+          <span className={styles.gridLinkText}>
+            Что означает аркан в центре — общий фон отношений, и значение всех 22 в этой точке
+          </span>
+        </Link>
+        <Link href="/matrica-sudby-sovmestimost/kak-schitaem/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Как читается матрица пары →</span>
+          <span className={styles.gridLinkText}>
+            Метод расчёта по шагам и честный разбор, где традиция, а где наша интерпретация
+          </span>
+        </Link>
       </div>
 
       <h2 style={{ font: "600 15px var(--font-body)", color: "var(--ink)", margin: 0 }}>

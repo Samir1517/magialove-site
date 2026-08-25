@@ -58,6 +58,16 @@ export default function MatrixHubPage() {
       />
 
       <h2 className={styles.h2}>22 аркана: значение в совместимости пары</h2>
+      <p className={styles.text}>
+        Аркан в матрице пары — не предсказание, а имя качества, которое включается между двумя
+        людьми.{" "}
+        <Link href="/matrica-sudby-sovmestimost/arkany/">
+          Сводка по всем 22 арканам и пяти зонам союза
+        </Link>{" "}
+        показывает, где каждый работает сам, а где его придётся включать осознанно; отдельно
+        разобран{" "}
+        <Link href="/matrica-sudby-sovmestimost/centr/">центр матрицы — общий фон отношений</Link>.
+      </p>
       <div className={styles.grid}>
         {Array.from({ length: 22 }, (_, i) => i + 1).map((n) => {
           const article = articles[String(n)];
@@ -74,6 +84,12 @@ export default function MatrixHubPage() {
       </div>
 
       <div className={styles.grid}>
+        <Link href="/matrica-sudby-sovmestimost/kak-schitaem/" className={styles.gridLink}>
+          <span className={styles.gridLinkTitle}>Как читается матрица пары →</span>
+          <span className={styles.gridLinkText}>
+            Метод по шагам и честно о том, где традиция, а где наша интерпретация зон
+          </span>
+        </Link>
         <Link href="/matrica-sudby-sovmestimost/karta/" className={styles.gridLink}>
           <span className={styles.gridLinkTitle}>Карта раздела →</span>
           <span className={styles.gridLinkText}>Все страницы Матрицы судьбы на сервисе в одном месте</span>

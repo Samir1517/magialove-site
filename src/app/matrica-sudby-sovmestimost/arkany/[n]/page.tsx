@@ -52,6 +52,7 @@ export default async function ArcanumPage({ params }: { params: Promise<{ n: str
       breadcrumbs={[
         { label: "Главная", href: "/" },
         { label: "Матрица судьбы", href: "/matrica-sudby-sovmestimost/" },
+        { label: "22 аркана", href: "/matrica-sudby-sovmestimost/arkany/" },
         { label: `Аркан ${num}` },
       ]}
     >
