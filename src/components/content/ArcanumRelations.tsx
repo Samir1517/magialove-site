@@ -1,6 +1,8 @@
+import { Suspense } from "react";
 import Link from "next/link";
 import { getArcanumInfo } from "@/lib/engines/matrix";
 import { arcanumRelations } from "@/lib/content/matrix-arcana-relations";
+import { KeepParamsLink } from "./KeepParamsLink";
 import styles from "./content.module.css";
 
 /**
@@ -34,9 +36,19 @@ export function ArcanumRelations({ n }: { n: number }) {
           const info = getArcanumInfo(rel.to);
           return (
             <li key={rel.to} className={styles.relItem}>
-              <Link href={`/matrica-sudby-sovmestimost/arkany/${rel.to}/`} className={styles.relLink}>
-                Аркан {info.number} «{info.name}»
-              </Link>
+              {/* Переход к соседнему аркану сохраняет расчёт: иначе на второй
+                  же странице человек теряет свои даты и путь назад. */}
+              <Suspense
+                fallback={
+                  <Link href={`/matrica-sudby-sovmestimost/arkany/${rel.to}/`} className={styles.relLink}>
+                    Аркан {info.number} «{info.name}»
+                  </Link>
+                }
+              >
+                <KeepParamsLink href={`/matrica-sudby-sovmestimost/arkany/${rel.to}/`} className={styles.relLink}>
+                  Аркан {info.number} «{info.name}»
+                </KeepParamsLink>
+              </Suspense>
               <p className={styles.relText}>{rel.text}</p>
             </li>
           );

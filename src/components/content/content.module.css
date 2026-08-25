@@ -148,6 +148,25 @@ a.eyebrow:hover {
   max-width: 68ch;
 }
 
+/* Возврат к своему расчёту со статейной страницы: человек пришёл из результата
+   и должен иметь возможность вернуться, не вводя даты заново. */
+.backToResult {
+  display: inline-block;
+  align-self: flex-start;
+  font: 600 13px var(--font-body);
+  color: var(--accent);
+  text-decoration: none;
+  padding: 8px 16px;
+  border: 1px solid var(--accent-pink);
+  border-radius: 99px;
+  background: #fff;
+  transition: border-color 0.15s ease, transform 0.15s ease;
+}
+.backToResult:hover {
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
 /* --- Список смысловых связей между арканами ---
    Ширина та же, что у .text (68ch): блок должен читаться одной колонкой, иначе
    узкий вводный абзац рядом с широким списком выглядит вёрсткой, а не мерой. */

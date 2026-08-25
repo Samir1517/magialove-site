@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { BackToCalculation } from "@/components/content/BackToCalculation";
 import Link from "next/link";
 import { ContentShell, CalcCta } from "@/components/content/ContentShell";
 import { ArticleFull } from "@/components/content/ArticleFull";
@@ -56,6 +58,12 @@ export default async function ArcanumPage({ params }: { params: Promise<{ n: str
         { label: `Аркан ${num}` },
       ]}
     >
+      {/* Пусто, если человек пришёл из поиска; ссылка появляется только у тех,
+          кто перешёл сюда из своего расчёта. */}
+      <Suspense fallback={null}>
+        <BackToCalculation resultHref="/matrica-sudby-sovmestimost/rezultat/" />
+      </Suspense>
+
       <div className={styles.eyebrow}>Матрица судьбы · Аркан {num}</div>
       <h1 className={styles.h1}>{article.title}</h1>
 

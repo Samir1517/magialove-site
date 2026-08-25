@@ -57,6 +57,9 @@ export function MatrixResultView() {
         report={report}
         nameA={nameA !== "Первый партнёр" ? nameA : "Ты"}
         nameB={nameB !== "Второй партнёр" ? nameB : "Он"}
+        /* Параметры расчёта уезжают вместе со ссылками в статьи — со страницы
+           аркана человек сможет вернуться сюда, не вводя даты заново. */
+        qs={params.toString()}
       />
 
       <ShareActions

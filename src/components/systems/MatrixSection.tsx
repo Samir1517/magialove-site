@@ -47,18 +47,23 @@ export function MatrixSection({
   standaloneHref,
   nameA = "Она",
   nameB = "Он",
+  qs = "",
 }: {
   report: SystemReport<MatrixRawFeatures>;
   /** Если задано — ссылка «только эта система» на отдельный калькулятор (показывается на общем /rezultat/). */
   standaloneHref?: string;
   nameA?: string;
   nameB?: string;
+  /** Параметры расчёта — уезжают со ссылками в статьи, чтобы был путь назад. */
+  qs?: string;
 }) {
   const f = report.rawFeatures;
   const zoneKeys = Object.keys(ZONE_TITLES) as ZoneKey[];
   // На отдельной странице системы показываем углублённые схемы; на общем
   // результате 4 систем они были бы перегрузом (октаграмма + таблица чакр).
   const detailed = !standaloneHref;
+  /** Хвост адреса для ссылок в статьи: пустой, если расчёта нет. */
+  const tail = qs ? `?${qs}` : "";
 
   return (
     <section className={styles.section} aria-labelledby="matrix-title">
@@ -109,7 +114,7 @@ export function MatrixSection({
             сердцевина союза: точка, к которой сходится всё остальное. Нажми на любую —
             расскажем, что она значит именно для вас двоих.
           </p>
-          <MatrixOctagram pair={f.pairMatrix} a={f.aMatrix} b={f.bMatrix} nameA={nameA} nameB={nameB} />
+          <MatrixOctagram pair={f.pairMatrix} a={f.aMatrix} b={f.bMatrix} nameA={nameA} nameB={nameB} qs={qs} />
         </div>
       )}
 
@@ -131,7 +136,10 @@ export function MatrixSection({
                   score={zoneWeight(zone, arcanum) * 100}
                   max={100}
                   showBandLabel={false}
-                  caption={`${info.inPair} ${
+                  /* Точка обязательна: `inPair` — назывное перечисление без
+                     знака в конце, и без разделителя получалось «…глубина
+                     бессознательного По формуле зона нейтральна». */
+                  caption={`${info.inPair}. ${
                     character === "other" ? NEUTRAL_NOTE[zone] : CHARACTER_NOTE[character]
                   }`}
                 />
@@ -139,7 +147,7 @@ export function MatrixSection({
                   <ArticleDisclosure
                     article={article}
                     eyebrow={`Аркан ${info.number} «${info.name}» в зоне «${ZONE_TITLES[zone]}»`}
-                    moreHref={`/matrica-sudby-sovmestimost/arkany/${info.number}/`}
+                    moreHref={`/matrica-sudby-sovmestimost/arkany/${info.number}/${tail}`}
                     moreLabel={`Аркан ${info.number} «${info.name}»: значение и совместимость →`}
                   />
                 )}
@@ -182,7 +190,7 @@ export function MatrixSection({
                   {c.name} ·{" "}
                   {/* Аркан здесь только назван — полный разбор лежит своей страницей,
                       и семь чакровых позиций это семь честных входов в неё. */}
-                  <Link href={`/matrica-sudby-sovmestimost/arkany/${info.number}/`}>
+                  <Link href={`/matrica-sudby-sovmestimost/arkany/${info.number}/${tail}`}>
                     Аркан {info.number} «{info.name}»
                   </Link>
                 </strong>

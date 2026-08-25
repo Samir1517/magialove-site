@@ -99,6 +99,7 @@ export function MatrixOctagram({
   b,
   nameA = "Она",
   nameB = "Он",
+  qs = "",
 }: {
   pair: IndividualMatrix;
   /** Личные матрицы партнёров — включают вкладки «Она / Он / Вместе». */
@@ -106,6 +107,8 @@ export function MatrixOctagram({
   b?: IndividualMatrix;
   nameA?: string;
   nameB?: string;
+  /** Параметры расчёта — чтобы со страницы аркана был путь назад. */
+  qs?: string;
 }) {
   const [selected, setSelected] = useState<PositionKey>("center");
   const [view, setView] = useState<View>("pair");
@@ -294,7 +297,7 @@ export function MatrixOctagram({
         {/* Разбор аркана целиком лежит отдельной страницей — уводим туда именно
             с той точки, которую человек сейчас открыл, а не общей ссылкой. */}
         <Link
-          href={`/matrica-sudby-sovmestimost/arkany/${selArcanum.number}/`}
+          href={`/matrica-sudby-sovmestimost/arkany/${selArcanum.number}/${qs ? `?${qs}` : ""}`}
           className={styles.octagramCardLink}
         >
           Аркан {selArcanum.number} «{selArcanum.name}»: значение и совместимость →
