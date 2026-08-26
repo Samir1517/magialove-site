@@ -108,12 +108,16 @@ export default function MatrixCenterPage() {
           {arcana.map((n) => {
             const info = getArcanumInfo(n);
             const c = zoneCharacter("center", n);
+            // Сначала — то, чем аркан отличается от других, и только потом оценка.
+            // При обратном порядке большинство карточек начиналось одинаково
+            // («В центре формула молчит…»), и сетка читалась как шаблон.
+            const own = info.inPair.charAt(0).toUpperCase() + info.inPair.slice(1);
             const note =
               c === "harmonic"
-                ? `В центре работает само: ${info.inPair}.`
+                ? `${own} — в центре это включается само.`
                 : c === "tense"
-                  ? `В центре напряжён: ${info.inPair} — качество сильное, но фон отношений на нём не отдыхает.`
-                  : `В центре формула молчит: ${info.inPair} — направление задаёте вы.`;
+                  ? `${own} — качество сильное, но фон отношений на нём не отдыхает.`
+                  : `${own} — в центре формула направления не задаёт, его выбираете вы.`;
             return (
               <Link key={n} href={`/matrica-sudby-sovmestimost/arkany/${n}/`} className={styles.gridLink}>
                 <span className={styles.gridLinkNum}>{n}</span>
