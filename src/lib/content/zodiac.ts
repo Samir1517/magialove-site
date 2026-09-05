@@ -11,7 +11,7 @@
  */
 
 import type { Element, Modality, ZodiacSign } from "../data/zodiac";
-import { elementPairKey, modalityPairKey } from "../data/zodiac";
+import { elementPairKey, modalityPairKey, verb } from "../data/zodiac";
 
 export interface DualText {
   light: string;
@@ -99,8 +99,8 @@ export function signPairNote(a: ZodiacSign, b: ZodiacSign): string {
     return `Два ${a.genitive} в паре — зеркало: ${a.strength} усиливается вдвое, но и ${a.shadow} тоже. Это союз, где вы либо узнаёте себя в партнёре и растёте вместе, либо видите свою тень со стороны — и это может быть неприятным открытием.`;
   }
   const templates = [
-    `${a.name} привносит ${a.strength}, ${b.name} — ${b.strength}: вместе это создаёт настоящую опору, если оба помнят и о собственной тени — ${a.shadow} у одного и ${b.shadow} у другого.`,
-    `Сильная сторона ${a.genitive} — ${a.strength}, у ${b.genitive} — ${b.strength}. Слабое место у каждого своё: ${a.name} рискует скатиться в ${a.shadow}, ${b.name} — в ${b.shadow}, и паре стоит подстраховывать друг друга именно здесь.`,
+    `${a.name} ${verb(a, "привносит", "привносят")} ${a.strength}, ${b.name} — ${b.strength}: вместе это создаёт настоящую опору, если оба помнят и о собственной тени — ${a.shadow} у одного и ${b.shadow} у другого.`,
+    `Сильная сторона ${a.genitive} — ${a.strength}, у ${b.genitive} — ${b.strength}. Слабое место у каждого своё: ${a.name} ${verb(a, "рискует", "рискуют")} скатиться в ${a.shadow}, ${b.name} — в ${b.shadow}, и паре стоит подстраховывать друг друга именно здесь.`,
     `${a.name} и ${b.name} дополняют друг друга: один приносит ${a.strength}, другой — ${b.strength}. Но именно из-за разницы характеров легко наткнуться на теневые стороны — ${a.shadow} у ${a.genitive} и ${b.shadow} у ${b.genitive}.`,
   ];
   // Детерминированный выбор шаблона — стабильный между сборками, не Math.random().

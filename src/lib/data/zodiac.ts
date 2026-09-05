@@ -119,6 +119,27 @@ export function signByKey(key: string): ZodiacSign | undefined {
   return ZODIAC_SIGNS.find((s) => s.key === key);
 }
 
+/**
+ * Три знака зодиака стоят во множественном числе, и глагол при них меняется:
+ * «Лев приносит», но «Весы приносят». Без этого на страницах Близнецов, Весов
+ * и Рыб — а это 33 страницы пар из 66 — выходило «Весы скорее настаивает».
+ */
+const PLURAL_KEYS = new Set(["bliznecy", "vesy", "ryby"]);
+
+export function isPluralSign(s: ZodiacSign): boolean {
+  return PLURAL_KEYS.has(s.key);
+}
+
+/**
+ * Согласование глагола со знаком. Формы задаются обеими: автоматически
+ * образовать множественное число в русском нельзя.
+ *
+ *   verb(sign, "приносит", "приносят")
+ */
+export function verb(s: ZodiacSign, singular: string, plural: string): string {
+  return isPluralSign(s) ? plural : singular;
+}
+
 export function elementPairKey(a: Element, b: Element): string {
   return [a, b].sort().join("-");
 }

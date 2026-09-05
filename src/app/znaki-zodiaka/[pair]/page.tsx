@@ -5,9 +5,22 @@ import {
   ZODIAC_SIGNS,
   ELEMENT_LABEL,
   MODALITY_LABEL,
+  verb,
   type ZodiacSign,
 } from "@/lib/data/zodiac";
 import { elementText, modalityText, signPairNote } from "@/lib/content/zodiac";
+import {
+  aspectBetween,
+  aspectInPair,
+  elementsInPair,
+  modalitiesInPair,
+  pairScore,
+  pairSpheres,
+  rulersText,
+  scoreVerdict,
+} from "@/lib/content/zodiac-synastry";
+import { zodiacPairFaq } from "@/lib/content/zodiac-faq";
+import { HubFaq } from "@/components/content/HubDepth";
 import { RelatedPages, type RelatedLink } from "@/components/content/RelatedPages";
 import { arcanumOfSign } from "@/lib/content/matrix-arcana-astro";
 import { getArcanumInfo } from "@/lib/engines/matrix";
@@ -114,8 +127,11 @@ function arcanumLinks(a: ZodiacSign, b: ZodiacSign): RelatedLink[] {
  * заголовок в выдаче на свой.
  */
 function pairTitle(a: ZodiacSign, b: ZodiacSign): string {
+  // Одиночный слаг вида /znaki-zodiaka/lev/ — это хаб знака, а не пара: на него
+  // ссылаются анкором «Лев: характер знака», и ищут его как знак, а не как
+  // «Лев и Лев». Заголовок должен обещать то же, что обещает ссылка.
   return a.key === b.key
-    ? `${a.name} и ${a.name}: совместимость внутри одного знака`
+    ? `${a.name}: характер знака и совместимость с другими знаками`
     : `${a.name} и ${b.name}: совместимость в любви, браке и дружбе`;
 }
 
@@ -135,7 +151,10 @@ export async function generateMetadata({
   return {
     alternates: { canonical: `/znaki-zodiaka/${pair}/` },
     title: pairTitle(a, b),
-    description: `Классическая астрологическая совместимость ${a.genitive} и ${b.genitive} — стихии, кресты, светлые и теневые стороны союза.`,
+    description:
+      a.key === b.key
+        ? `${a.name} (${a.dateRange}): стихия ${ELEMENT_LABEL[a.element]}, управитель ${a.ruler}. Сильная и теневая стороны знака и совместимость со всеми двенадцатью знаками зодиака.`
+        : `Совместимость ${a.genitive} и ${b.genitive} в любви, браке и дружбе: аспект между знаками, стихии, кресты, управители и справочный балл пары.`,
   };
 }
 
@@ -149,6 +168,10 @@ export default async function ZodiacPairPage({ params }: { params: Promise<{ pai
   const elements = elementText(a.element, b.element);
   const modalities = modalityText(a.modality, b.modality);
   const note = signPairNote(a, b);
+  const aspect = aspectBetween(a, b);
+  const score = pairScore(a, b);
+  const spheres = pairSpheres(a, b);
+  const rulers = rulersText(a, b);
 
   return (
     <ContentShell
@@ -160,21 +183,66 @@ export default async function ZodiacPairPage({ params }: { params: Promise<{ pai
     >
       <div className={styles.eyebrow}>Знаки зодиака</div>
       <h1 className={styles.h1}>{pairTitle(a, b)}</h1>
-      <p className={styles.lede}>{note}</p>
+      <p className={styles.lede}>
+        {sameSign
+          ? `${a.name} — ${MODALITY_LABEL[a.modality].toLowerCase()} знак стихии ${ELEMENT_LABEL[a.element]}, ${a.dateRange}, управитель ${a.ruler}. Сильная сторона знака — ${a.strength}, теневая — ${a.shadow}. Ниже разобрано, как ${a.name} ${verb(a, "сходится", "сходятся")} с каждым из двенадцати знаков и что происходит, когда оба партнёра родились под этим знаком.`
+          : note}
+      </p>
+
+      {sameSign && (
+        <section className={styles.card}>
+          <h2 className={styles.h2}>Что за знак {a.name}</h2>
+          <p className={styles.text}>
+            {/* «Солнце проходит Льва / Весы» требует разных падежей для
+                одушевлённых и неодушевлённых знаков — конструкция «в знаке
+                <Именительный>» работает для всех двенадцати. */}
+            Солнце находится в знаке {a.name} в период {a.dateRange}. Это{" "}
+            {MODALITY_LABEL[a.modality].toLowerCase()} знак стихии{" "}
+            {ELEMENT_LABEL[a.element].toLowerCase()} — то есть{" "}
+            {a.modality === "cardinal"
+              ? "знак, который начинает сезон и потому склонен запускать новое"
+              : a.modality === "fixed"
+                ? "знак середины сезона: он не начинает и не завершает, а удерживает"
+                : "знак на сломе сезонов, отсюда гибкость и умение перестраиваться"}
+            . Управитель — {a.ruler}.
+          </p>
+          <p className={styles.text}>
+            <strong>Сильная сторона: </strong>
+            {a.strength}. Это то, ради чего с {a.genitive} хорошо иметь дело, и то, что партнёр
+            замечает первым.
+          </p>
+          <p className={styles.text}>
+            <strong>Теневая сторона: </strong>
+            {a.shadow}. Обычно это оборотная сторона той же силы, а не отдельный недостаток:
+            она включается там, где знак перестаёт себя сдерживать.
+          </p>
+          <p className={styles.note}>
+            Дальше на странице — что происходит, когда оба партнёра {a.name}, а в конце ссылки на
+            все одиннадцать пар этого знака с остальными.
+          </p>
+        </section>
+      )}
 
       <div className={styles.card} style={{ display: "flex", flexDirection: "column", gap: 22 }}>
-        <div className={styles.grid} style={{ gridTemplateColumns: "1fr 1fr" }}>
-          <div>
-            <h2 style={{ font: "600 14px var(--font-body)", color: "var(--ink)", margin: "0 0 6px" }}>{a.name}</h2>
-            <p style={{ font: "400 13px/1.6 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
-              {a.dateRange} · Стихия: {ELEMENT_LABEL[a.element]} · Крест: {MODALITY_LABEL[a.modality]} · Управитель: {a.ruler}
-            </p>
-          </div>
-          <div>
-            <h2 style={{ font: "600 14px var(--font-body)", color: "var(--ink)", margin: "0 0 6px" }}>{b.name}</h2>
-            <p style={{ font: "400 13px/1.6 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
-              {b.dateRange} · Стихия: {ELEMENT_LABEL[b.element]} · Крест: {MODALITY_LABEL[b.modality]} · Управитель: {b.ruler}
-            </p>
+        {/* Раньше здесь стояли два h2 с одними именами знаков — «Лев», «Овен».
+            Как заголовки разделов они пустые: не говорят, о чём раздел. */}
+        <div>
+          <h2 className={styles.h2}>
+            {sameSign ? `${a.name}: даты, стихия, управитель` : `${a.name} и ${b.name}: даты, стихии, управители`}
+          </h2>
+          <div className={styles.grid} style={{ gridTemplateColumns: "1fr 1fr" }}>
+            <div>
+              <h3 style={{ font: "600 14px var(--font-body)", color: "var(--ink)", margin: "0 0 6px" }}>{a.name}</h3>
+              <p style={{ font: "400 13px/1.6 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
+                {a.dateRange} · Стихия: {ELEMENT_LABEL[a.element]} · Крест: {MODALITY_LABEL[a.modality]} · Управитель: {a.ruler}
+              </p>
+            </div>
+            <div>
+              <h3 style={{ font: "600 14px var(--font-body)", color: "var(--ink)", margin: "0 0 6px" }}>{b.name}</h3>
+              <p style={{ font: "400 13px/1.6 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
+                {b.dateRange} · Стихия: {ELEMENT_LABEL[b.element]} · Крест: {MODALITY_LABEL[b.modality]} · Управитель: {b.ruler}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -185,8 +253,13 @@ export default async function ZodiacPairPage({ params }: { params: Promise<{ pai
           <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: "0 0 8px" }}>
             <strong style={{ color: "var(--ink)" }}>Конструктивно: </strong>{elements.light}
           </p>
-          <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
+          <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: "0 0 8px" }}>
             <strong style={{ color: "var(--ink)" }}>Тень: </strong>{elements.shadow}
+          </p>
+          {/* Теория стихий одинакова у всех пар этого сочетания — абзац ниже
+              привязывает её к двум конкретным знакам. */}
+          <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
+            {elementsInPair(a, b)}
           </p>
         </div>
 
@@ -197,8 +270,11 @@ export default async function ZodiacPairPage({ params }: { params: Promise<{ pai
           <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: "0 0 8px" }}>
             <strong style={{ color: "var(--ink)" }}>Конструктивно: </strong>{modalities.light}
           </p>
-          <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
+          <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: "0 0 8px" }}>
             <strong style={{ color: "var(--ink)" }}>Тень: </strong>{modalities.shadow}
+          </p>
+          <p style={{ font: "400 14px/1.75 var(--font-body)", color: "var(--ink-soft)", margin: 0 }}>
+            {modalitiesInPair(a, b)}
           </p>
         </div>
 
@@ -217,12 +293,87 @@ export default async function ZodiacPairPage({ params }: { params: Promise<{ pai
         </p>
       </div>
 
+      <section className={styles.card} aria-labelledby="aspect-block">
+        <h2 id="aspect-block" className={styles.h2}>
+          Аспект между знаками: {aspect.name} ({aspect.angle})
+        </h2>
+        <p className={styles.text}>
+          Кроме стихии и креста у двух знаков есть третья характеристика — расстояние между
+          ними по кругу зодиака. {sameSign ? `${a.name} и ${a.name} — это` : `${a.name} и ${b.name} разделяет`}{" "}
+          {aspect.angle}, такой угол называют «{aspect.name}». Именно он объясняет, почему две
+          пары с похожими стихиями ощущаются по-разному.
+        </p>
+        <p className={styles.text}>
+          <strong>Что это даёт: </strong>
+          {aspect.light}
+        </p>
+        <p className={styles.text}>
+          <strong>Чем оборачивается: </strong>
+          {aspect.shadow}
+        </p>
+        <p className={styles.text}>{aspectInPair(a, b)}</p>
+
+        <h3 className={styles.h3}>Справочный балл пары: {score.total} из 90</h3>
+        <p className={styles.text}>
+          По классическим правилам {scoreVerdict(score.total)}. Балл складывается из четырёх
+          частей, и мы показываем их полностью — чтобы было видно, из чего он получился:
+        </p>
+        <ul className={styles.list}>
+          {score.parts.map((p) => (
+            <li key={p.label} className={styles.listItem}>
+              <strong>
+                {p.label}: {p.value} из {p.max}
+              </strong>{" "}
+              — {p.why}
+            </li>
+          ))}
+        </ul>
+        <p className={styles.note}>
+          Важная оговорка: процентов совместимости в самой астрологии не существует — это наша
+          арифметика поверх классических правил, и публикуем мы её именно поэтому. Число
+          описывает сочетание двух знаков, а не двух конкретных людей: месяц рождения — один
+          параметр из многих.
+        </p>
+      </section>
+
+      {rulers && (
+        <section className={styles.card}>
+          <h2 className={styles.h2}>{rulers.heading}</h2>
+          <p className={styles.text}>{rulers.intro}</p>
+          <p className={styles.text}>
+            <strong>Что каждый приносит: </strong>
+            {rulers.light}
+          </p>
+          <p className={styles.text}>
+            <strong>Чем это оплачивается: </strong>
+            {rulers.shadow}
+          </p>
+        </section>
+      )}
+
+      {spheres.map((s) => (
+        <section key={s.heading} className={styles.card}>
+          <h2 className={styles.h2}>{s.heading}</h2>
+          <p className={styles.text}>{s.light}</p>
+          <p className={styles.text}>{s.shadow}</p>
+        </section>
+      ))}
+
+      <div className={styles.card}>
+        <HubFaq
+          items={zodiacPairFaq(a, b)}
+          /* Через «про» нужен винительный, а он у знаков разный: «про Льва»,
+             но «про Весы». Двоеточие снимает падеж вовсе. */
+          title={sameSign ? `Частые вопросы: пара ${a.name} и ${a.name}` : `Частые вопросы: ${a.name} и ${b.name}`}
+        />
+      </div>
+
       <RelatedPages
         headingId="zodiac-related"
         title={sameSign ? `Совместимость ${a.genitive} с другими знаками` : "Что почитать рядом"}
         lede={
           sameSign
-            ? `Как ${a.name} сходится с каждым из остальных одиннадцати знаков — со стихиями, крестами и теневыми сторонами каждой пары.`
+            ? `Как ${a.name} ${verb(a, "сходится", "сходятся")} с каждым из остальных одиннадцати знаков — со стихиями, крестами и теневыми сторонами каждой пары.`
             : `Разборы двух этих знаков по отдельности и их пары с другими знаками той же стихии.`
         }
         links={relatedLinks(a, b)}
