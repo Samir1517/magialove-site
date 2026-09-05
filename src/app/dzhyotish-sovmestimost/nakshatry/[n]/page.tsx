@@ -5,6 +5,10 @@ import { ContentShell, CalcCta } from "@/components/content/ContentShell";
 import { ArticleFull } from "@/components/content/ArticleFull";
 import { allJyotishNakshatraArticles, getJyotishNakshatraArticle } from "@/lib/content/articles";
 import { RelatedPages, type RelatedLink } from "@/components/content/RelatedPages";
+import { NakshatraProfile } from "@/components/content/NakshatraProfile";
+import { HubFaq } from "@/components/content/HubDepth";
+import { nakshatraFaq } from "@/lib/content/nakshatra-faq";
+import { NAKSHATRA_FACTS, sameGana, sameYoni } from "@/lib/content/nakshatra-facts";
 import { ZODIAC_SIGNS } from "@/lib/data/zodiac";
 import nakshatraData from "@/lib/data/jyotish/nakshatra.json";
 import styles from "@/components/content/content.module.css";
@@ -34,17 +38,49 @@ function relatedNakshatra(num: number): RelatedLink[] {
 
   const links: RelatedLink[] = [];
   const href = (i: number) => `/dzhyotish-sovmestimost/nakshatry/${i}/`;
+  const nameOf = (i: number) => NAKSHATRAS.find((x) => x.i === i)?.name ?? String(i);
+  const add = (i: number, note: string) => {
+    if (i === num || links.some((l) => l.href === href(i))) return;
+    links.push({ href: href(i), label: `Накшатра ${nameOf(i)}`, note });
+  };
 
-  for (const x of NAKSHATRAS) {
-    if (x.i === num || links.length >= 3) continue;
-    if (x.rashi === self.rashi) {
-      links.push({ href: href(x.i), label: `Накшатра ${x.name}`, note: `Тот же раши — ${x.rashi}` });
-    }
+  /**
+   * Выбор идёт не с начала списка, а по кругу от текущего номера.
+   *
+   * Иначе граф перекашивало: `slice(0, 3)` от начала означал, что ссылки почти
+   * всегда достаются накшатрам с малыми номерами, а хвост списка оставался с
+   * четырьмя входящими. Замер это и показал — 10 входящих у Читры против 5 у
+   * Уттара Ашадхи. Обход по кругу раздаёт ссылки поровну.
+   */
+  const pickAround = (pool: number[], k: number): number[] => {
+    const sorted = [...pool].sort((a, b) => a - b);
+    const after = sorted.filter((i) => i > num);
+    const before = sorted.filter((i) => i < num);
+    return [...after, ...before].slice(0, k);
+  };
+
+  for (const i of pickAround(
+    NAKSHATRAS.filter((x) => x.rashi === self.rashi).map((x) => x.i),
+    2
+  )) {
+    add(i, `Тот же раши — ${self.rashi}`);
   }
-  for (const x of NAKSHATRAS) {
-    if (x.i === num || links.length >= 6) continue;
-    if (x.nadi === self.nadi && !links.some((l) => l.href === href(x.i))) {
-      links.push({ href: href(x.i), label: `Накшатра ${x.name}`, note: `Та же нади — ${x.nadi}` });
+  for (const i of pickAround(
+    NAKSHATRAS.filter((x) => x.nadi === self.nadi).map((x) => x.i),
+    2
+  )) {
+    add(i, `Та же нади — ${self.nadi}`);
+  }
+  // Йони и гана — оси, которых в связях не было, а в подсчёте совместимости
+  // они весят 4 и 6 баллов. Заодно связывают накшатры из разных знаков, тогда
+  // как раши и нади тянут только соседей по кругу.
+  const facts = NAKSHATRA_FACTS[num];
+  if (facts) {
+    for (const i of pickAround(sameYoni(num), 2)) {
+      add(i, `Та же йони — ${facts.yoni.toLowerCase()}`);
+    }
+    for (const i of pickAround(sameGana(num), 3)) {
+      add(i, `Та же гана — ${facts.gana}`);
     }
   }
 
@@ -81,10 +117,25 @@ export async function generateMetadata({
   const { n } = await params;
   const data = getData(n);
   if (!data) return {};
+  const row = NAKSHATRAS.find((x) => x.i === data.num);
+  // Было `${article.title} — значение для совместимости`, а сам заголовок уже
+  // заканчивается на «в совместимости пары» — выходило «…в совместимости пары
+  // — значение для совместимости».
+  const title = row
+    ? `Накшатра ${row.name}: значение в совместимости, гана и йони`
+    : data.article.title;
+
+  // Обрезка описания по границе слова: `slice(155)` рубила посреди слова.
+  const capsule = data.article.capsule.replace(/\*\*/g, "");
+  const description =
+    capsule.length <= 158
+      ? capsule
+      : `${capsule.slice(0, capsule.lastIndexOf(" ", 158))}…`;
+
   return {
     alternates: { canonical: `/dzhyotish-sovmestimost/nakshatry/${n}/` },
-    title: `${data.article.title} — значение для совместимости`,
-    description: data.article.capsule.slice(0, 155),
+    title,
+    description,
   };
 }
 
@@ -111,10 +162,21 @@ export default async function NakshatraPage({ params }: { params: Promise<{ n: s
 
       <ArticleFull article={article} />
 
+      {/* Имя берём из данных движка, а не вырезаем из заголовка: заголовок
+          редактируется в .md, и регулярка отвалилась бы молча. */}
+      <NakshatraProfile n={num} name={NAKSHATRAS.find((x) => x.i === num)?.name ?? `${num}`} />
+
+      <div className={styles.card}>
+        <HubFaq
+          items={nakshatraFaq(num)}
+          title={`Частые вопросы про накшатру ${NAKSHATRAS.find((x) => x.i === num)?.name ?? num}`}
+        />
+      </div>
+
       <RelatedPages
         headingId="nakshatra-related"
         title="Накшатры и знак рядом"
-        lede="Накшатры одной нади и одного раши читаются вместе: нади — самый весомый параметр в подсчёте совместимости, а раши показывает, в каком знаке зодиака лежит эта лунная стоянка."
+        lede="Лунные стоянки читаются группами: одна нади — общий склад, один раши — общий знак, одна йони — близкий темп, одна гана — похожая манера в споре. Каждая из этих осей даёт баллы в подсчёте совместимости."
         links={relatedNakshatra(num)}
       />
 
